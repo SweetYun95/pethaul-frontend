@@ -1,0 +1,51 @@
+.logo {
+    font-size: 24px;
+    padding: 20px;
+}
+
+ul {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+li {
+    display: flex;
+    font-size: 16px;
+    list-style: none;
+    padding: 20px 0;
+}
+
+.mobile-menu,
+.mob-search-icon{
+    display: none;
+}
+
+.right-icon-bar{
+display: flex;
+align-items: center;
+gap: 20px;
+}
+
+@media (max-width: 1024px) {
+    ul, 
+    .icon,
+    .pc-search-icon {
+        display: none;
+    }
+
+.mobile-menu,
+.mob-search-icon{
+    display: flex;
+}
+
+.right-icon-bar{
+    gap: 10px;
+}
+
+
+}
+
+
+
+
