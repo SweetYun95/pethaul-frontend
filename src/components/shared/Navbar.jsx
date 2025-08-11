@@ -21,9 +21,10 @@ import '../css/Navbar_v-ysy.css' // 기존걸 복사하여 수정함
 function Navbar() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
-   const { isAuthenticated } = useSelector((state) => state.auth)
+   const { user, isAuthenticated } = useSelector((state) => state.auth)
 
    console.log('🎈', isAuthenticated)
+   console.log('🎈', user)
 
    const [anchorEl, setAnchorEl] = useState(null)
    const open = Boolean(anchorEl)
@@ -44,6 +45,7 @@ function Navbar() {
    const handleLogout = () => {
       dispatch(logoutUserThunk())
       handleMenuClose()
+      alert('성공적으로 로그아웃했습니다.')
    }
 
    return (
@@ -118,6 +120,18 @@ function Navbar() {
                                              >
                                                 마이페이지
                                              </MenuItem>
+                                             {user.role === 'ADMIN' ? (
+                                                <MenuItem
+                                                   onClick={() => {
+                                                      navigate('/admin')
+                                                   }}
+                                                   sx={{ fontSize: 14, padding: '6px 16px' }}
+                                                >
+                                                   관리자 페이지
+                                                </MenuItem>
+                                             ) : (
+                                                ''
+                                             )}
                                           </>
                                        ) : (
                                           <MenuItem onClick={handleLogin} sx={{ fontSize: 14, padding: '6px 16px' }}>
