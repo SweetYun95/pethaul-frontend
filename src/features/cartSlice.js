@@ -22,20 +22,20 @@ export const addToCartThunk = createAsyncThunk('cart/addToCart', async ({ itemId
 })
 
 // 수량 변경
-export const updateCartItemThunk = createAsyncThunk('cart/updateCartItem', async ({ cartItemId, count }, { rejectWithValue }) => {
+export const updateCartItemThunk = createAsyncThunk('cart/updateCartItem', async ({ itemId, count }, { rejectWithValue }) => {
    try {
-      await updateCartItem({ cartItemId, count })
-      return { cartItemId, count }
+      await updateCartItem({ itemId, count })
+      return { itemId, count }
    } catch (err) {
       return rejectWithValue(err.response?.data?.message || '수정 실패')
    }
 })
 
 // 상품 삭제
-export const deleteCartItemThunk = createAsyncThunk('cart/deleteCartItem', async (cartItemId, { rejectWithValue }) => {
+export const deleteCartItemThunk = createAsyncThunk('cart/deleteCartItem', async (itemId, { rejectWithValue }) => {
    try {
-      await deleteCartItem(cartItemId)
-      return cartItemId
+      await deleteCartItem(itemId)
+      return itemId
    } catch (err) {
       return rejectWithValue(err.response?.data?.message || '삭제 실패')
    }
@@ -81,8 +81,11 @@ const cartSlice = createSlice({
             state.loading = true
             state.error = null
          })
-         .addCase(updateCartItemThunk.fulfilled, (state) => {
+         .addCase(updateCartItemThunk.fulfilled, (state, action) => {
             state.loading = false
+            const { itemId, count } = action.payload 
+            const target = state.items.find((ci) => ci.itemId === itemId) //원소(ci)는 장바구니 항목(CartItem) 객체이고, 안에 itemId라는 속성이 있다
+            if (target) target.count = count
          })
          .addCase(updateCartItemThunk.rejected, (state, action) => {
             state.loading = false
@@ -93,8 +96,9 @@ const cartSlice = createSlice({
             state.loading = true
             state.error = null
          })
-         .addCase(deleteCartItemThunk.fulfilled, (state) => {
+         .addCase(deleteCartItemThunk.fulfilled, (state, action) => {
             state.loading = false
+            state.items = state.items.filter((item) => item.itemId !== action.payload)
          })
          .addCase(deleteCartItemThunk.rejected, (state, action) => {
             state.loading = false

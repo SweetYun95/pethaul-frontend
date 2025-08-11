@@ -16,14 +16,14 @@ export const addToCart = async ({ itemId, count }) => {
 }
 
 // 장바구니 수량 수정
-export const updateCartItem = async ({ cartItemId, count }) => {
-   const res = await shopmaxApi.put(`/cart/update/${cartItemId}`, { count }, { withCredentials: true })
+export const updateCartItem = async ({ itemId, count }) => {
+   const res = await shopmaxApi.put(`/cart/update/${itemId}`, { count }, { withCredentials: true })
    return res.data
 }
 
 // 장바구니 상품 삭제
-export const deleteCartItem = async (cartItemId) => {
-   const res = await shopmaxApi.delete(`/cart/delete/${cartItemId}`, {
+export const deleteCartItem = async (itemId) => {
+   const res = await shopmaxApi.delete(`/cart/delete/${itemId}`, {
       withCredentials: true,
    })
    console.log('res:', res)

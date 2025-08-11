@@ -13,13 +13,13 @@ const ItemCartForm = () => {
       dispatch(fetchCartItemsThunk(id))
    }, [dispatch])
 
-   const handleUpdate = (cartItemId, count) => {
+   const handleUpdate = (itemId, count) => {
       if (count < 1) return
-      dispatch(updateCartItemThunk({ cartItemId, count }))
+      dispatch(updateCartItemThunk({ itemId, count }))
    }
 
-   const handleDelete = (cartItemId) => {
-      dispatch(deleteCartItemThunk(cartItemId))
+   const handleDelete = (itemId) => {
+      dispatch(deleteCartItemThunk(itemId))
    }
 
    const totalPrice = cartItems.reduce((acc, item) => acc + item.count * item.Item.price, 0)
@@ -34,7 +34,6 @@ const ItemCartForm = () => {
                장바구니
             </Typography>
             {cartItems.map((item) => {
-               console.log('cartItem.id:', item.id, 'itemId:', item.Item.id);
                const repImage = item.Item.ItemImages?.find((img) => img.repImgYn === 'Y')?.imgUrl || '/images/no-image.jpg'
                return (
                   <Card key={`${item.id}-${item.Item.id}`} sx={{ display: 'flex', mb: 2 }}>
@@ -45,8 +44,19 @@ const ItemCartForm = () => {
                            가격: {item.Item.price.toLocaleString()}원
                         </Typography>
                         <Box display="flex" alignItems="center" gap={1} mt={1}>
-                           <TextField type="number" size="small" value={item.count} onChange={(e) => handleUpdate(item.id, parseInt(e.target.value))} inputProps={{ min: 1 }} sx={{ width: 80 }} />
-                           <IconButton onClick={() => handleDelete(item.id)}>
+                           <TextField
+                              type="number"
+                              size="small"
+                              value={item.count}
+                              onChange={(e) => {
+                                 const v = parseInt(e.target.value, 10)
+                                 if (Number.isNaN(v)) return // 빈 입력 방지
+                                 handleUpdate(item.itemId, v) // ← item.id X, item.itemId O
+                              }}
+                              inputProps={{ min: 1 }}
+                              sx={{ width: 80 }}
+                           />
+                           <IconButton onClick={() => handleDelete(item.itemId)}>
                               <DeleteIcon color="error" />
                            </IconButton>
                         </Box>
