@@ -41,16 +41,14 @@ function ItemDetailForm({ item }) {
       }
    }
 
-  const handleAddToCart = async () => {
-     try {
-        await dispatch(addToCartThunk({ itemId: item.id, count: quantity })).unwrap()
-        alert('장바구니에 추가되었습니다.')
-        
-     } catch (err) {
-        alert(`장바구니 추가 실패: ${err}`)
-     }
-  }
-
+   const handleAddToCart = async () => {
+      try {
+         await dispatch(addToCartThunk({ itemId: item.id, count: quantity })).unwrap()
+         alert('장바구니에 추가되었습니다.')
+      } catch (err) {
+         alert(`장바구니 추가 실패: ${err}`)
+      }
+   }
 
    return (
       <>
@@ -129,6 +127,8 @@ function ItemDetailForm({ item }) {
                   {item.itemDetail}
                </Typography>
             )}
+            {/* 카테고리 출력 영역 */}
+            {item.Categories && <Typography variant="caption">{item.Categories.map((c) => `#${c.categoryName} `)}</Typography>}
          </Box>
       </>
    )
