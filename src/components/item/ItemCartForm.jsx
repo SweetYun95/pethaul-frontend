@@ -34,7 +34,6 @@ const ItemCartForm = () => {
                장바구니
             </Typography>
             {cartItems.map((item) => {
-               console.log('cartItem.id:', item.id, 'itemId:', item.Item.id);
                const repImage = item.Item.ItemImages?.find((img) => img.repImgYn === 'Y')?.imgUrl || '/images/no-image.jpg'
                return (
                   <Card key={`${item.id}-${item.Item.id}`} sx={{ display: 'flex', mb: 2 }}>

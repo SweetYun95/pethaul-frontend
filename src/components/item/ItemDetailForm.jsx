@@ -1,6 +1,6 @@
 // src/components/item/ItemDetailForm.jsx
 import { Box, Button, Typography, Stack, TextField, keyframes } from '@mui/material'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { addToCartThunk } from '../../features/cartSlice'
 
@@ -41,16 +41,25 @@ function ItemDetailForm({ item }) {
       }
    }
 
-  const handleAddToCart = async () => {
-     try {
-        await dispatch(addToCartThunk({ itemId: item.id, count: quantity })).unwrap()
-        alert('장바구니에 추가되었습니다.')
-        
-     } catch (err) {
-        alert(`장바구니 추가 실패: ${err}`)
-     }
-  }
+   const handleAddToCart = async () => {
+      try {
+         await dispatch(addToCartThunk({ itemId: item.id, count: quantity })).unwrap()
+         alert('장바구니에 추가되었습니다.')
+      } catch (err) {
+         alert(`장바구니 추가 실패: ${err}`)
+      }
+   }
+   //해당 상품 평균 평점 계산
+   const { avgRating, reviewCount } = useMemo(() => {
+      const list = Array.isArray(item?.Reviews) ? item.Reviews : []
+      const valid = list.filter((r) => r?.rating !== null && r?.rating !== undefined)
+      const total = valid.reduce((sum, r) => sum + Number(r.rating || 0), 0)
+      const count = valid.length
+      const avg = count ? total / count : 0
+      return { avgRating: Math.round(avg * 10) / 10, reviewCount: count }
+   }, [item?.Reviews])
 
+   // console.log('🎀', avgRating, '🎀', reviewCount)
 
    return (
       <>
@@ -121,7 +130,7 @@ function ItemDetailForm({ item }) {
             </Stack>
 
             {/* 상품에 대한 리뷰 리스트 출력 */}
-            <ItemReviewList item={item} />
+            <ItemReviewList item={item} avgRating={avgRating} reviewCount={reviewCount} />
 
             {/* 상세설명 출력 영역 */}
             {item.itemDetail && (
@@ -129,6 +138,8 @@ function ItemDetailForm({ item }) {
                   {item.itemDetail}
                </Typography>
             )}
+            {/* 카테고리 출력 영역 */}
+            {item.Categories && <Typography variant="caption">{item.Categories.map((c) => `#${c.categoryName} `)}</Typography>}
          </Box>
       </>
    )
