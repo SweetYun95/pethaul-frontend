@@ -21,12 +21,15 @@ function Navbar() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const { isAuthenticated, user } = useSelector((state) => state.auth)
+      console.log('🎈', isAuthenticated)
+   console.log('🎈', user)
 
    // useEffect를 사용하여 컴포넌트가 마운트될 때마다 로그인 상태 확인
    useEffect(() => {
       dispatch(checkAuthStatusThunk()) // 일반 로그인 상태 확인
       dispatch(googleCheckStatusThunk()) // 구글 로그인 상태 확인
    }, [dispatch])
+
 
    const [anchorEl, setAnchorEl] = useState(null)
    const open = Boolean(anchorEl)
@@ -47,6 +50,7 @@ function Navbar() {
    const handleLogout = () => {
       dispatch(logoutUserThunk())
       handleMenuClose()
+      alert('성공적으로 로그아웃했습니다.')
    }
 
    // 구글 로그인 여부 확인
@@ -167,6 +171,7 @@ function Navbar() {
                                                       </MenuItem>
                                                    )}
                                                 </>
+
                                              )}
                                           </>
                                        ) : (
