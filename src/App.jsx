@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import Navbar from './components/shared/Navbar'
 import MainPage from './pages/MainPage'
@@ -12,13 +12,14 @@ import OrderPage from './pages/OrderPage'
 import ReviewCreatePage from './pages/ReviewCreatePage'
 import AdminPage from './pages/AdminPage'
 import Footer from './components/shared/Footer'
-import GoogleSuccessPage from './pages/GoogleSuccessPage' // ✅ 추가
+import GoogleSuccessPage from './pages/GoogleSuccessPage'
 
 import './App.css'
 import ItemEditPage from './pages/ItemEditPage'
 import MyPage from './pages/MyPage'
 import ItemLikePage from './pages/ItemLikePage'
 import ItemCartForm from './components/item/ItemCartForm'
+import MyOrderList from './pages/MyOrderList'
 
 function App() {
    return (
@@ -29,7 +30,7 @@ function App() {
             {/* 로그인 페이지 */}
             <Route path="/login" element={<LoginPage />} />
             {/* 구글로그인 이동 */}
-            <Route path="/google-success" element={<GoogleSuccessPage />} /> {/* ✅ 추가 */}
+            <Route path="/google-success" element={<GoogleSuccessPage />} />
             {/* 회원가입 페이지 */}
             <Route path="/join" element={<RegisterPage />} />
             {/* 토큰 발급 페이지 */}
@@ -47,7 +48,9 @@ function App() {
             {/* 리뷰 등록 */}
             <Route path="/review/create" element={<ReviewCreatePage />} />
             {/* 마이페이지 */}
-            <Route path="mypage" element={<MyPage />} />
+            <Route path="/mypage" element={<MyPage />} />
+            {/* 회원 주문내역 페이지 */}
+            <Route path="/myorderlist" element={<MyOrderList />} />
             {/* 관리자 전용 페이지 */}
             <Route path="/admin" element={<AdminPage />} />
             {/* 상품 등록 */}

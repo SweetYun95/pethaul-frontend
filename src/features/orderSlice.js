@@ -82,7 +82,7 @@ const orderSlice = createSlice({
          })
          .addCase(fetchOrdersThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.orders = action.payload
+            state.orders = action.payload.orders
          })
          .addCase(fetchOrdersThunk.rejected, (state, action) => {
             state.loading = false

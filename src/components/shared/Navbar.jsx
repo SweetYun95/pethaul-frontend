@@ -106,7 +106,7 @@ function Navbar() {
                      <IconButton>
                         <iconify-icon icon="pixelarticons:heart" width="24" height="24"></iconify-icon>
                      </IconButton>
-                     <IconButton>
+                     <IconButton onClick={() => navigate('/cart')}>
                         <iconify-icon icon="streamline-pixel:shopping-shipping-basket" width="24" height="24"></iconify-icon>
                      </IconButton>
 
