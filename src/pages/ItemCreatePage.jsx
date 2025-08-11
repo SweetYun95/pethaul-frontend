@@ -22,10 +22,9 @@ function ItemCreatePage() {
          })
    }
    return (
-      <Container maxWidth="md" sx={{ marginTop: 10, marginBottom: 13 }}>
-         <h1>상품 등록</h1>
+      <div style={{backgroundColor: '#F2FAFF', paddingTop: '74px'}}>
          <ItemCreateForm onCreateSubmit={onCreateSubmit} />
-      </Container>
+      </div>
    )
 }
 
