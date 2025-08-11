@@ -22,9 +22,9 @@ export const updateReviewThunk = createAsyncThunk('review/updateReview', async (
 })
 
 //회원이 작성한 리뷰 조회하기
-export const getUserReviewThunk = createAsyncThunk('review/getUserReview', async (id, { rejectWithValue }) => {
+export const getUserReviewThunk = createAsyncThunk('review/getUserReview', async (_, { rejectWithValue }) => {
    try {
-      const response = await getUserReview(id)
+      const response = await getUserReview()
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message)

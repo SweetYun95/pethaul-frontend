@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchCartItemsThunk, updateCartItemThunk, deleteCartItemThunk } from '../../features/cartSlice'
 import { Box, Typography, Card, CardMedia, CardContent, IconButton, Button, TextField, Divider } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const ItemCartForm = () => {
    const dispatch = useDispatch()
@@ -74,9 +74,11 @@ const ItemCartForm = () => {
                   {finalPrice.toLocaleString()}원
                </Typography>
             </Box>
-            <Button fullWidth variant="contained" color="primary" sx={{ mt: 3 }} disabled={cartItems.length === 0}>
-               주문하기
-            </Button>
+            <Link to={`/order`}>
+               <Button fullWidth variant="contained" color="primary" sx={{ mt: 3 }} disabled={cartItems.length === 0}>
+                  주문하기
+               </Button>
+            </Link>
          </Box>
       </Box>
    )

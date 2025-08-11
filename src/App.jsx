@@ -20,6 +20,8 @@ import MyPage from './pages/MyPage'
 import ItemLikePage from './pages/ItemLikePage'
 import ItemCartForm from './components/item/ItemCartForm'
 import MyOrderList from './pages/MyOrderList'
+import MyReviewList from './pages/MyReviewList'
+import ReviewEditPage from './pages/ReviewEditPage'
 
 function App() {
    return (
@@ -47,10 +49,14 @@ function App() {
             <Route path="/order" element={<OrderPage />} />
             {/* 리뷰 등록 */}
             <Route path="/review/create" element={<ReviewCreatePage />} />
+            {/* 리뷰 수정  */}
+            <Route path="/review/edit/:id" element={<ReviewEditPage />} />
             {/* 마이페이지 */}
             <Route path="/mypage" element={<MyPage />} />
             {/* 회원 주문내역 페이지 */}
             <Route path="/myorderlist" element={<MyOrderList />} />
+            {/* 회원 리뷰 조회 페이지 */}
+            <Route path="/myreviewlist" element={<MyReviewList />} />
             {/* 관리자 전용 페이지 */}
             <Route path="/admin" element={<AdminPage />} />
             {/* 상품 등록 */}
