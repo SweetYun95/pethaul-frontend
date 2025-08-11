@@ -24,7 +24,7 @@ export const updateReview = async (formData, id) => {
             'Content-Type': 'multipart/form-data',
          },
       }
-      const response = await shopmaxApi.put(`/review/${id}`, formData, config)
+      const response = await shopmaxApi.put(`/review/edit/${id}`, formData, config)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -33,9 +33,9 @@ export const updateReview = async (formData, id) => {
 }
 
 // 회원이 작성한 리뷰 목록 조회
-export const getUserReview = async (id) => {
+export const getUserReview = async () => {
    try {
-      const response = await shopmaxApi.get(`/review/user/${id}`)
+      const response = await shopmaxApi.get(`/review`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)

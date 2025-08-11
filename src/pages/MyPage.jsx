@@ -13,6 +13,7 @@ function MyPage() {
       dispatch(checkAuthStatusThunk())
    }, [dispatch])
 
+   console.log('🎈user:', user)
    if (loading) return <p>로딩 중...</p>
    if (error) return <p>에러 발생:{error}</p>
 
