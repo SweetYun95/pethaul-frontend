@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import Navbar from './components/shared/Navbar'
 import MainPage from './pages/MainPage'
@@ -12,7 +12,7 @@ import OrderPage from './pages/OrderPage'
 import ReviewCreatePage from './pages/ReviewCreatePage'
 import AdminPage from './pages/AdminPage'
 import Footer from './components/shared/Footer'
-import GoogleSuccessPage from './pages/GoogleSuccessPage' // ✅ 추가
+import GoogleSuccessPage from './pages/GoogleSuccessPage'
 
 import './App.css'
 import ItemEditPage from './pages/ItemEditPage'
@@ -29,7 +29,7 @@ function App() {
             {/* 로그인 페이지 */}
             <Route path="/login" element={<LoginPage />} />
             {/* 구글로그인 이동 */}
-            <Route path="/google-success" element={<GoogleSuccessPage />} /> {/* ✅ 추가 */}
+            <Route path="/google-success" element={<GoogleSuccessPage />} />
             {/* 회원가입 페이지 */}
             <Route path="/join" element={<RegisterPage />} />
             {/* 토큰 발급 페이지 */}
