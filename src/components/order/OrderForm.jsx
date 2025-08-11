@@ -215,7 +215,7 @@ const handleExpiryChange = (e) => {
                </div>
 
                <div className='order-paying'>
-                <p className='sub-title'>예상 결제금액</p>
+                <p className='sub-title'>결제금액</p>
                 <div className='paying-group'>
                   <div>
                   <p>총 상품금액: </p>

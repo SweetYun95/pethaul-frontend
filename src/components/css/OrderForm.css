@@ -18,7 +18,7 @@
 }
 
 .right {
-    height: 500px;
+    max-height: 500px;
 }
 
 /* 배송지입력 */
@@ -239,6 +239,7 @@ width: 25%;
     display: flex;
     justify-content: space-between;
     font-size: 16px;
+    gap: 10px;
 }
 
 .total-sum {
