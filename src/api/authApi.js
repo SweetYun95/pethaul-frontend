@@ -63,16 +63,26 @@ export const checkUsername = async (userId) => {
 // 구글 로그인 리다이렉트
 export const redirectToGoogleLogin = () => {
    window.location.href = `${BASE_API_URL}/auth/google`
-   // 배포 시에는 BASE_API_URL을 환경변수로 자동 적용하므로 별도 수정 불필요
 }
 
-// 구글 로그인(DB 저장용 요청 함수) - 나중에 백엔드에 POST 요청 필요 시 사용
+// 구글 로그인(DB 저장용 요청 함수)
 export const googleLoginUser = async (googleData) => {
    try {
       const response = await shopmaxApi.post('/auth/google/callback', googleData)
       return response
    } catch (error) {
       console.error(`구글 로그인 API 오류: ${error}`)
+      throw error
+   }
+}
+
+// 구글 로그인 상태 확인
+export const googleCheckStatus = async () => {
+   try {
+      const response = await shopmaxApi.get('/auth/googlecheck')
+      return response.data
+   } catch (error) {
+      console.error(`구글 로그인 상태 확인 오류: ${error}`)
       throw error
    }
 }
