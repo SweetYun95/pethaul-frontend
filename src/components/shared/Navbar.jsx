@@ -181,6 +181,9 @@ function Navbar() {
                         )}
                      </Popper>
                   </div>
+                  <div className="mobile-menu">
+                     <iconify-icon icon="streamline-pixel:interface-essential-navigation-menu-3" width="35" height="35"></iconify-icon>
+                  </div>
                </div>
             </Toolbar>
          </Container>
