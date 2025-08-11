@@ -1,5 +1,4 @@
-// src/components/shared/Navbar.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -14,17 +13,23 @@ import Grow from '@mui/material/Grow'
 import Popper from '@mui/material/Popper'
 import Stack from '@mui/material/Stack'
 
-import { logoutUserThunk } from '../../features/authSlice'
+import { logoutUserThunk, checkAuthStatusThunk, googleCheckStatusThunk } from '../../features/authSlice'
 
 import '../css/Navbar_v-ysy.css' // 기존걸 복사하여 수정함
 
 function Navbar() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
-   const { user, isAuthenticated } = useSelector((state) => state.auth)
-
-   console.log('🎈', isAuthenticated)
+   const { isAuthenticated, user } = useSelector((state) => state.auth)
+      console.log('🎈', isAuthenticated)
    console.log('🎈', user)
+
+   // useEffect를 사용하여 컴포넌트가 마운트될 때마다 로그인 상태 확인
+   useEffect(() => {
+      dispatch(checkAuthStatusThunk()) // 일반 로그인 상태 확인
+      dispatch(googleCheckStatusThunk()) // 구글 로그인 상태 확인
+   }, [dispatch])
+
 
    const [anchorEl, setAnchorEl] = useState(null)
    const open = Boolean(anchorEl)
@@ -48,13 +53,20 @@ function Navbar() {
       alert('성공적으로 로그아웃했습니다.')
    }
 
+   // 구글 로그인 여부 확인
+   const isGoogleUser = user?.provider === 'google'
+   const isAdmin = user?.role === 'ADMIN' // 관리자 여부 확인
+
    return (
       <AppBar position="fixed" color="transparent" sx={{ backgroundColor: 'transparent', color: '#000', boxShadow: 'none' }}>
          <Container maxWidth="xl">
             <Toolbar sx={{ margin: '0 auto', justifyContent: 'space-between', maxWidth: '1200px' }}>
+               {/* 로고 */}
                <NavLink to="/" className="galindo logo">
                   PETHAUL
                </NavLink>
+
+               {/* 메뉴 항목 */}
                <ul>
                   <li>
                      <NavLink>MENU</NavLink>
@@ -75,6 +87,8 @@ function Navbar() {
                      <NavLink>고객센터</NavLink>
                   </li>
                </ul>
+
+               {/* 오른쪽 아이콘 영역 */}
                <div className="right-icon-bar">
                   <div className="pc-search-icon search">
                      <IconButton>
@@ -87,7 +101,7 @@ function Navbar() {
                      </IconButton>
                   </div>
 
-                  {/* 오른쪽 아이콘 영역 */}
+                  {/* 아이콘 버튼들 */}
                   <div className="icon">
                      <IconButton>
                         <iconify-icon icon="pixelarticons:heart" width="24" height="24"></iconify-icon>
@@ -109,28 +123,55 @@ function Navbar() {
                                     <Stack spacing={1}>
                                        {isAuthenticated ? (
                                           <>
-                                             <MenuItem onClick={handleLogout} sx={{ fontSize: 14, padding: '6px 16px' }}>
-                                                로그아웃
-                                             </MenuItem>
-                                             <MenuItem
-                                                onClick={() => {
-                                                   navigate('/mypage')
-                                                }}
-                                                sx={{ fontSize: 14, padding: '6px 16px' }}
-                                             >
-                                                마이페이지
-                                             </MenuItem>
-                                             {user.role === 'ADMIN' ? (
-                                                <MenuItem
-                                                   onClick={() => {
-                                                      navigate('/admin')
-                                                   }}
-                                                   sx={{ fontSize: 14, padding: '6px 16px' }}
-                                                >
-                                                   관리자 페이지
-                                                </MenuItem>
+                                             {isGoogleUser ? (
+                                                <>
+                                                   <MenuItem onClick={handleLogout} sx={{ fontSize: 14, padding: '6px 16px' }}>
+                                                      로그아웃
+                                                   </MenuItem>
+                                                   <MenuItem
+                                                      onClick={() => {
+                                                         navigate('/mypage')
+                                                      }}
+                                                      sx={{ fontSize: 14, padding: '6px 16px' }}
+                                                   >
+                                                      마이페이지
+                                                   </MenuItem>
+                                                   {isAdmin && (
+                                                      <MenuItem
+                                                         onClick={() => {
+                                                            navigate('/admin')
+                                                         }}
+                                                         sx={{ fontSize: 14, padding: '6px 16px' }}
+                                                      >
+                                                         관리자 페이지
+                                                      </MenuItem>
+                                                   )}
+                                                </>
                                              ) : (
-                                                ''
+                                                <>
+                                                   <MenuItem onClick={handleLogout} sx={{ fontSize: 14, padding: '6px 16px' }}>
+                                                      로그아웃
+                                                   </MenuItem>
+                                                   <MenuItem
+                                                      onClick={() => {
+                                                         navigate('/mypage')
+                                                      }}
+                                                      sx={{ fontSize: 14, padding: '6px 16px' }}
+                                                   >
+                                                      마이페이지
+                                                   </MenuItem>
+                                                   {isAdmin && (
+                                                      <MenuItem
+                                                         onClick={() => {
+                                                            navigate('/admin')
+                                                         }}
+                                                         sx={{ fontSize: 14, padding: '6px 16px' }}
+                                                      >
+                                                         관리자 페이지
+                                                      </MenuItem>
+                                                   )}
+                                                </>
+
                                              )}
                                           </>
                                        ) : (
@@ -145,7 +186,6 @@ function Navbar() {
                         )}
                      </Popper>
                   </div>
-
                   <div className="mobile-menu">
                      <iconify-icon icon="streamline-pixel:interface-essential-navigation-menu-3" width="35" height="35"></iconify-icon>
                   </div>

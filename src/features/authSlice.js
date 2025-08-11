@@ -1,14 +1,23 @@
-// src/features/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser } from '../api/authApi'
+import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser, googleCheckStatus } from '../api/authApi'
 
 // ✅ 구글 로그인(DB 저장 전용)
 export const googleLoginUserThunk = createAsyncThunk('auth/googleLoginUser', async (googleData, { rejectWithValue }) => {
    try {
       const response = await googleLoginUser(googleData)
-      return response.data.user
+      return response.data.user // 구글 로그인 후 사용자 정보를 반환
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '구글 로그인 실패')
+   }
+})
+
+// ✅ 구글 로그인 상태 확인
+export const googleCheckStatusThunk = createAsyncThunk('auth/googleCheckStatus', async (_, { rejectWithValue }) => {
+   try {
+      const response = await googleCheckStatus()
+      return response
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '구글 로그인 상태 확인 실패')
    }
 })
 
@@ -57,6 +66,7 @@ const authSlice = createSlice({
    initialState: {
       user: null,
       isAuthenticated: false,
+      googleAuthenticated: false, // 구글 로그인 상태 추가
       loading: false,
       error: null,
    },
@@ -101,6 +111,7 @@ const authSlice = createSlice({
             state.loading = false
             state.isAuthenticated = true
             state.user = action.payload
+            state.googleAuthenticated = true
          })
          .addCase(googleLoginUserThunk.rejected, (state, action) => {
             state.loading = false
@@ -116,27 +127,30 @@ const authSlice = createSlice({
             state.loading = false
             state.isAuthenticated = false
             state.user = null
+            state.googleAuthenticated = false // 구글 로그인 상태 초기화
          })
          .addCase(logoutUserThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
 
-         // 로그인 상태 확인
-         .addCase(checkAuthStatusThunk.pending, (state) => {
+         // 구글 로그인 상태 확인
+         .addCase(googleCheckStatusThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
-         .addCase(checkAuthStatusThunk.fulfilled, (state, action) => {
+         .addCase(googleCheckStatusThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.isAuthenticated = action.payload.isAuthenticated
+            state.isAuthenticated = action.payload.googleAuthenticated
             state.user = action.payload.user || null
+            state.googleAuthenticated = action.payload.googleAuthenticated // 구글 인증 상태 업데이트
          })
-         .addCase(checkAuthStatusThunk.rejected, (state, action) => {
+         .addCase(googleCheckStatusThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
             state.isAuthenticated = false
             state.user = null
+            state.googleAuthenticated = false
          })
    },
 })
