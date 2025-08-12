@@ -29,12 +29,11 @@ function MyOrderList() {
                {/* 주문건 상세정보 출력 박스 */}
                <Box sx={{ width: '100%' }}>
                   {rows.map((order) => (
-                     <>
+                     <Box key={order.id}>
                         <Box>
                            <Typography>{order.orderDate.slice(0, 10)}</Typography>
                         </Box>
                         <Box
-                           key={order.id}
                            sx={{
                               display: 'flex',
                            }}
@@ -61,7 +60,7 @@ function MyOrderList() {
                               <Button>배송조회</Button>
                            </Box>
                         </Box>
-                     </>
+                     </Box>
                   ))}
                </Box>
 

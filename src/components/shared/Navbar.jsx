@@ -15,7 +15,7 @@ import Stack from '@mui/material/Stack'
 
 import { logoutUserThunk, checkAuthStatusThunk, googleCheckStatusThunk } from '../../features/authSlice'
 
-import '../css/Navbar_v-ysy.css' // 기존걸 복사하여 수정함
+import '../css/shared/Navbar_v-ysy.css' // 기존걸 복사하여 수정함
 
 function Navbar() {
    const dispatch = useDispatch()
@@ -171,14 +171,24 @@ function Navbar() {
                                                       마이페이지
                                                    </MenuItem>
                                                    {isAdmin && (
-                                                      <MenuItem
-                                                         onClick={() => {
-                                                            navigate('/admin')
-                                                         }}
-                                                         sx={{ fontSize: 14, padding: '6px 16px' }}
-                                                      >
-                                                         관리자 페이지
-                                                      </MenuItem>
+                                                      <>
+                                                         <MenuItem
+                                                            onClick={() => {
+                                                               navigate('/admin')
+                                                            }}
+                                                            sx={{ fontSize: 14, padding: '6px 16px' }}
+                                                         >
+                                                            관리자 페이지
+                                                         </MenuItem>
+                                                         <MenuItem
+                                                            onClick={() => {
+                                                               navigate('/items/create')
+                                                            }}
+                                                            sx={{ fontSize: 14, padding: '6px 16px' }}
+                                                         >
+                                                            상품 등록
+                                                         </MenuItem>
+                                                      </>
                                                    )}
                                                 </>
                                              )}

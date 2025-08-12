@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createReviewThunk } from '../../features/reviewSlice'
 import { useNavigate } from 'react-router-dom'
-import '../css/CreateReviewForm.css'
+import '../css/review/CreateReviewForm.css'
 
 function CreateReviewForm({ item }) {
    const dispatch = useDispatch()

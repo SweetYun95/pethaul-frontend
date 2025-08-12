@@ -7,7 +7,7 @@ import { checkUsername } from '../../api/authApi'
 import { registerUserThunk } from '../../features/authSlice'
 import { formatPhoneNumber } from '../../utils/phoneFormat'
 
-import '../css/RegisterForm.css'
+import '../css/auth/RegisterForm.css'
 
 function RegisterForm() {
    const dispatch = useDispatch()
