@@ -1,5 +1,5 @@
 // src/components/item/ItemDetailForm.jsx
-import { Box, Button, Typography, Stack, TextField, keyframes } from '@mui/material'
+import { Box, Button, Typography, Stack, TextField } from '@mui/material'
 import { useState, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { addToCartThunk } from '../../features/cartSlice'
@@ -11,6 +11,15 @@ function ItemDetailForm({ item }) {
    const dispatch = useDispatch()
    const [quantity, setQuantity] = useState(1)
 
+   //해당 상품 평균 평점 계산
+   const { avgRating, reviewCount } = useMemo(() => {
+      const list = Array.isArray(item?.Reviews) ? item.Reviews : []
+      const valid = list.filter((r) => r?.rating !== null && r?.rating !== undefined)
+      const total = valid.reduce((sum, r) => sum + Number(r.rating || 0), 0)
+      const count = valid.length
+      const avg = count ? total / count : 0
+      return { avgRating: Math.round(avg * 10) / 10, reviewCount: count }
+   }, [item?.Reviews])
    if (!item) {
       return <Typography>상품 정보를 불러오는 중입니다...</Typography>
    }
@@ -49,15 +58,6 @@ function ItemDetailForm({ item }) {
          alert(`장바구니 추가 실패: ${err}`)
       }
    }
-   //해당 상품 평균 평점 계산
-   const { avgRating, reviewCount } = useMemo(() => {
-      const list = Array.isArray(item?.Reviews) ? item.Reviews : []
-      const valid = list.filter((r) => r?.rating !== null && r?.rating !== undefined)
-      const total = valid.reduce((sum, r) => sum + Number(r.rating || 0), 0)
-      const count = valid.length
-      const avg = count ? total / count : 0
-      return { avgRating: Math.round(avg * 10) / 10, reviewCount: count }
-   }, [item?.Reviews])
 
    // console.log('🎀', avgRating, '🎀', reviewCount)
 
