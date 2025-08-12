@@ -1,0 +1,36 @@
+#order-state {
+width: 100%;
+height: 100%;
+}
+
+.top {
+    height: 100%;
+}
+
+.order-state-details {
+    height: 100%;
+     display: grid;
+    grid-template-columns: repeat(4,1fr);
+    place-items: center;
+}
+
+.order-state-details > div {
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.order-state-details > div > p:not(:first-child){
+    font-size: 13px;
+}
+
+
+.order-state-details > div > a{
+    text-decoration: underline;
+    font-size: 13px;
+
+}

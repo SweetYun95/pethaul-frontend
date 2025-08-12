@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom'
 
 import { loginUserThunk } from '../../features/authSlice'
 
-import '../css/LoginForm.css'
+import '../css/auth/LoginForm.css'
 
 function LoginForm() {
    const dispatch = useDispatch()

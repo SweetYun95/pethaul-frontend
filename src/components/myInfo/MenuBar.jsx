@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getUserReviewThunk } from '../../features/reviewSlice'
 import { fetchOrdersThunk } from '../../features/orderSlice'
 
-import '../css/MenuBar.css'
+import '../css/myInfo/MenuBar.css'
 
 function MenuBar({ id }) {
    const dispatch = useDispatch()
@@ -34,7 +34,7 @@ function MenuBar({ id }) {
                   </div>
                   <span className='card-title'>주문</span>
                </div>
-                  <div className="">
+                  <div className="menubar-card">
                      {orders.length}
                   </div>
                </div>
@@ -48,7 +48,9 @@ function MenuBar({ id }) {
                   </div>
                   <span className='card-title'>취소</span>
                </div>
-                  <div className=""></div>
+                  <div className="menubar-card">
+                      {orders.length}
+                  </div>
                </div>
 
                <div className='contents-card'>
@@ -60,7 +62,7 @@ function MenuBar({ id }) {
                   </div>
                   <span className='card-title'>리뷰</span>
                </div>
-                  <div className="">
+                  <div className="menubar-card">
                      {reviews.length}
                   </div>
                </div>
@@ -74,7 +76,9 @@ function MenuBar({ id }) {
                   </div>
                   <span className='card-title'>1:1 문의</span>
                </div>
-                  <div className=""></div>
+                  <div className="menubar-card">
+                      {orders.length}
+                  </div>
                </div>
 
                </section>  
