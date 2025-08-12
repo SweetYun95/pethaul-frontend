@@ -15,7 +15,7 @@ import Stack from '@mui/material/Stack'
 
 import { logoutUserThunk, checkAuthStatusThunk, googleCheckStatusThunk } from '../../features/authSlice'
 
-import '../css/Navbar_v-ysy.css' // 기존걸 복사하여 수정함
+import '../css/shared/Navbar_v-ysy.css' // 기존걸 복사하여 수정함
 
 function Navbar() {
    const dispatch = useDispatch()

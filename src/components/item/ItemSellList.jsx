@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { toggleLike } from '../../features/likeSlice'
-import '../css/ItemSellList.css'
+import '../css/item/ItemSellList.css'
 
 export default function ItemSellList() {
   const dispatch = useDispatch()
