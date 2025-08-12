@@ -59,8 +59,8 @@ function RegisterForm() {
             alert('이미 사용 중인 아이디입니다')
             setIsIdAvailable(false)
          }
-      } catch (e) {
-         alert('중복 확인 중 오류가 발생했습니다')
+      } catch (error) {
+         alert('중복 확인 중 오류가 발생했습니다:', error)
          setIsIdAvailable(false)
       } finally {
          setIdChecking(false)

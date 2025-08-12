@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserReviewThunk } from '../../features/reviewSlice'
 import { fetchOrdersThunk } from '../../features/orderSlice'
+import { Link } from 'react-router-dom'
 
 import '../css/myInfo/MenuBar.css'
 
@@ -80,7 +81,6 @@ function MenuBar({ id }) {
                       {orders.length}
                   </div>
                </div>
-
                </section>  
    )
 }
