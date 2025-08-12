@@ -22,6 +22,8 @@ import ItemCartForm from './components/item/ItemCartForm'
 import MyOrderList from './pages/MyOrderList'
 import MyReviewList from './pages/MyReviewList'
 import ReviewEditPage from './pages/ReviewEditPage'
+import PetCreatePage from './pages/PetCreatePage'
+import PetEditPage from './pages/PetEditPage'
 
 function App() {
    return (
@@ -63,6 +65,10 @@ function App() {
             <Route path="/items/create" element={<ItemCreatePage />} />
             {/* 상품 수정 */}
             <Route path="/items/edit/:id" element={<ItemEditPage />} />
+            {/* 펫 등록 */}
+            <Route path="/pets" element={<PetCreatePage />} />
+            {/* 펫 수정 */}
+            <Route path="/pets/:id/edit" element={<PetEditPage />} />
          </Routes>
          <Footer />
       </>

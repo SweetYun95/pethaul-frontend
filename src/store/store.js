@@ -6,7 +6,7 @@ import orderReducer from '../features/orderSlice' // 주문 slice 추가
 import reviewSlice from '../features/reviewSlice'
 import likeSlice from '../features/likeSlice'
 import cartReducer from '../features/cartSlice'
-
+import petReducer from '../features/petSlice'
 const store = configureStore({
    reducer: {
       auth: authReducer,
@@ -17,6 +17,7 @@ const store = configureStore({
       cart: cartReducer,
       review: reviewSlice,
       like: likeSlice,
+      pet: petReducer,
 
    },
 })
