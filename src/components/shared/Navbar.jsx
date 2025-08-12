@@ -20,16 +20,26 @@ import '../css/Navbar_v-ysy.css' // 기존걸 복사하여 수정함
 function Navbar() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
+
+   // 로그인 상태와 사용자 정보
    const { isAuthenticated, user } = useSelector((state) => state.auth)
-      console.log('🎈', isAuthenticated)
-   console.log('🎈', user)
 
    // useEffect를 사용하여 컴포넌트가 마운트될 때마다 로그인 상태 확인
    useEffect(() => {
-      dispatch(checkAuthStatusThunk()) // 일반 로그인 상태 확인
-      dispatch(googleCheckStatusThunk()) // 구글 로그인 상태 확인
+      const checkLoginStatus = async () => {
+         // 로그인 상태 확인
+         await dispatch(checkAuthStatusThunk()) // 일반 로그인 상태 확인
+         await dispatch(googleCheckStatusThunk()) // 구글 로그인 상태 확인
+      }
+
+      checkLoginStatus()
    }, [dispatch])
 
+   // 로그인 상태가 변경되면 콘솔로그로 확인
+   useEffect(() => {
+      console.log('🎈 isAuthenticated:', isAuthenticated)
+      console.log('🎈 user:', user)
+   }, [isAuthenticated, user])
 
    const [anchorEl, setAnchorEl] = useState(null)
    const open = Boolean(anchorEl)
@@ -171,7 +181,6 @@ function Navbar() {
                                                       </MenuItem>
                                                    )}
                                                 </>
-
                                              )}
                                           </>
                                        ) : (
