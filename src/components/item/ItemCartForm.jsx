@@ -12,6 +12,7 @@ const ItemCartForm = () => {
    useEffect(() => {
       dispatch(fetchCartItemsThunk(id))
    }, [dispatch])
+   console.log('🎈id:', id, '🎈items:', cartItems)
 
    const handleUpdate = (itemId, count) => {
       if (count < 1) return
@@ -85,11 +86,10 @@ const ItemCartForm = () => {
                   {finalPrice.toLocaleString()}원
                </Typography>
             </Box>
-            <Link to={`/order`}>
-               <Button fullWidth variant="contained" color="primary" sx={{ mt: 3 }} disabled={cartItems.length === 0}>
-                  주문하기
-               </Button>
-            </Link>
+
+            <Button component={Link} to={`/order`} state={{ cartItems }} fullWidth variant="contained" color="primary" sx={{ mt: 3 }} disabled={cartItems.length === 0}>
+               주문하기
+            </Button>
          </Box>
       </Box>
    )

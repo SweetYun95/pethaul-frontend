@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserReviewThunk } from '../../features/reviewSlice'
 import { fetchOrdersThunk } from '../../features/orderSlice'
+import { Link } from 'react-router-dom'
 
 function MenuBar({ id }) {
    const dispatch = useDispatch()
@@ -26,11 +27,11 @@ function MenuBar({ id }) {
    return (
       <>
          <Box display="flex">
-            <Box>
+            <Box component={Link} to={`/myorderlist`}>
                <div>주문</div>
                <Typography>{orders.length}</Typography>
             </Box>
-            <Box>
+            <Box component={Link} to={`/myreviewlist`}>
                <div>리뷰</div>
                <Typography>{reviews.length}</Typography>
             </Box>

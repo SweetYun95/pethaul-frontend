@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchOrdersThunk } from '../features/orderSlice'
 import { Container, Typography, Box, Card, CardMedia, CardContent, Button } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 function MyOrderList() {
    const dispatch = useDispatch()
@@ -48,6 +48,9 @@ function MyOrderList() {
                                     <Typography variant="body2">{item.OrderItem.count}개</Typography>
                                     <Button>장바구니</Button>
                                     <Button>바로구매</Button>
+                                    <Button component={Link} to={`/review/create`} state={{ item }}>
+                                       리뷰 작성
+                                    </Button>
                                  </CardContent>
                               </Card>
                            ))}

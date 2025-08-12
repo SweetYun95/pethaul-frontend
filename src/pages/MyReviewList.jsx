@@ -20,6 +20,7 @@ function MyReviewList() {
             const res = confirm('정말 삭제하시겠습니까?')
             if (res) {
                alert('후기를 삭제했습니다!')
+               dispatch(getUserReviewThunk())
                navigate('/myreviewlist')
             }
          })

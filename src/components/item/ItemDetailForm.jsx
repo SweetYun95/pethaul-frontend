@@ -4,8 +4,8 @@ import { useState, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { addToCartThunk } from '../../features/cartSlice'
 
-import { createOrderThunk } from '../../features/orderSlice'
 import ItemReviewList from '../review/ItemReviewList'
+import { Link } from 'react-router-dom'
 
 function ItemDetailForm({ item }) {
    const dispatch = useDispatch()
@@ -27,27 +27,6 @@ function ItemDetailForm({ item }) {
    const handleQuantityChange = (e) => {
       const value = Math.max(1, Number(e.target.value) || 1)
       setQuantity(value)
-   }
-
-   const handleBuyNow = async () => {
-      try {
-         const orderData = {
-            items: [
-               {
-                  itemId: item.id,
-                  price: item.price,
-                  quantity: quantity,
-               },
-            ],
-         }
-
-         console.log('📁[ItemDetailForm.jsx] orderData:', orderData)
-
-         await dispatch(createOrderThunk(orderData)).unwrap()
-         alert('주문이 완료되었습니다.')
-      } catch (err) {
-         alert(`주문 실패: ${err}`)
-      }
    }
 
    const handleAddToCart = async () => {
@@ -124,7 +103,21 @@ function ItemDetailForm({ item }) {
                <Button variant="outlined" onClick={handleAddToCart} fullWidth>
                   장바구니
                </Button>
-               <Button variant="contained" color="primary" onClick={handleBuyNow} fullWidth>
+               <Button
+                  variant="outlined"
+                  component={Link}
+                  to="/order"
+                  state={{
+                     item: [
+                        {
+                           itemId: item.id,
+                           price: item.price,
+                           quantity: quantity,
+                        },
+                     ],
+                  }}
+                  fullWidth
+               >
                   구매하기
                </Button>
             </Stack>
