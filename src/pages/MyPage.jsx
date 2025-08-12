@@ -1,4 +1,4 @@
-import { Container, Box } from '@mui/material'
+import { Box } from '@mui/material'
 import { checkAuthStatusThunk } from '../features/authSlice'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,14 +18,14 @@ function MyPage() {
    if (error) return <p>에러 발생:{error}</p>
 
    return (
-      <Container>
-         <Box display="flex">
+       <div style={{backgroundColor: '#F2FAFF', paddingTop: '74px'}}>
+         <Box style={{display: 'grid', gridTemplateColumns: '1fr 2fr'}}>
             <Profile user={user} />
             <OrderState />
          </Box>
          {user?.id && <MenuBar id={user.id} />}
          <PetProfile />
-      </Container>
+      </div>
    )
 }
 

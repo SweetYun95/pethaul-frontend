@@ -1,10 +1,10 @@
-import { Box, Typography } from '@mui/material'
-
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserReviewThunk } from '../../features/reviewSlice'
 import { fetchOrdersThunk } from '../../features/orderSlice'
 import { Link } from 'react-router-dom'
+
+import '../css/MenuBar.css'
 
 function MenuBar({ id }) {
    const dispatch = useDispatch()

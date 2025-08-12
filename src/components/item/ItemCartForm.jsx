@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+
 import { fetchCartItemsThunk, updateCartItemThunk, deleteCartItemThunk } from '../../features/cartSlice'
-import { Box, Typography, Card, CardMedia, CardContent, IconButton, Button, TextField, Divider } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { Link, useParams } from 'react-router-dom'
+
+import '../css/itemCartForm.css'
 
 const ItemCartForm = () => {
    const dispatch = useDispatch()
