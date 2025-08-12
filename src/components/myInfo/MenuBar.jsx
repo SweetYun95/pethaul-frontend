@@ -1,10 +1,10 @@
-import { Box, Typography } from '@mui/material'
-
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserReviewThunk } from '../../features/reviewSlice'
 import { fetchOrdersThunk } from '../../features/orderSlice'
 import { Link } from 'react-router-dom'
+
+import '../css/myInfo/MenuBar.css'
 
 function MenuBar({ id }) {
    const dispatch = useDispatch()
@@ -25,18 +25,63 @@ function MenuBar({ id }) {
    if (reviewError || orderError) return <p>에러 발생:{reviewError}</p>
 
    return (
-      <>
-         <Box display="flex">
-            <Box component={Link} to={`/myorderlist`}>
-               <div>주문</div>
-               <Typography>{orders.length}</Typography>
-            </Box>
-            <Box component={Link} to={`/myreviewlist`}>
-               <div>리뷰</div>
-               <Typography>{reviews.length}</Typography>
-            </Box>
-         </Box>
-      </>
+      <section id="menubar"> 
+               <div className='contents-card'>
+               <div className='card-header' >
+                  <div className='window-btn'>
+                  <span className='red'></span>
+                  <span className='green'></span>
+                  <span className='blue'></span>
+                  </div>
+                  <span className='card-title'>주문</span>
+               </div>
+                  <div className="menubar-card">
+                     {orders.length}
+                  </div>
+               </div>
+
+               <div className='contents-card'>
+               <div className='card-header' >
+                  <div className='window-btn'>
+                  <span className='red'></span>
+                  <span className='green'></span>
+                  <span className='blue'></span>
+                  </div>
+                  <span className='card-title'>취소</span>
+               </div>
+                  <div className="menubar-card">
+                      {orders.length}
+                  </div>
+               </div>
+
+               <div className='contents-card'>
+               <div className='card-header' >
+                  <div className='window-btn'>
+                  <span className='red'></span>
+                  <span className='green'></span>
+                  <span className='blue'></span>
+                  </div>
+                  <span className='card-title'>리뷰</span>
+               </div>
+                  <div className="menubar-card">
+                     {reviews.length}
+                  </div>
+               </div>
+
+               <div className='contents-card'>
+               <div className='card-header' >
+                  <div className='window-btn'>
+                  <span className='red'></span>
+                  <span className='green'></span>
+                  <span className='blue'></span>
+                  </div>
+                  <span className='card-title'>1:1 문의</span>
+               </div>
+                  <div className="menubar-card">
+                      {orders.length}
+                  </div>
+               </div>
+               </section>  
    )
 }
 

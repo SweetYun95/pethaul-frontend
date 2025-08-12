@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import '../css/ItemCreateForm.css'
+import '../css/item/ItemCreateForm.css'
 
 import { useState } from 'react'
 import { formatWithComma, stripComma } from '../../utils/priceSet'
