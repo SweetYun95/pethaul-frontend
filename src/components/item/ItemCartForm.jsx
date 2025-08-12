@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchCartItemsThunk, updateCartItemThunk, deleteCartItemThunk } from '../../features/cartSlice'
 import { useParams } from 'react-router-dom'
+
+import { fetchCartItemsThunk, updateCartItemThunk, deleteCartItemThunk } from '../../features/cartSlice'
+
 import '../css/itemCartForm.css'
 
 const ItemCartForm = () => {
@@ -155,6 +157,7 @@ const ItemCartForm = () => {
      </div>
     </section>
   )
+
 }
 
 export default ItemCartForm

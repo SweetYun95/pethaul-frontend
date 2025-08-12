@@ -2,7 +2,7 @@ import { Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '
 
 import { useDispatch, useSelector } from 'react-redux'
 
-function ItemReviewList({ item }) {
+function ItemReviewList({ item, avgRating, reviewCount }) {
    console.log('🎁[ItemReviewList.jsx] 아이템 데이터 확인:', item)
    const Reviews = item.Reviews
    console.log('🎁[ItemReviewList.jsx] 리뷰 데이터 확인:', Reviews)
@@ -14,7 +14,12 @@ function ItemReviewList({ item }) {
             <Box>
                <Accordion>
                   <AccordionSummary>
-                     <Typography>REVIEW</Typography>
+                     <Box>
+                        <Typography>REVIEW({reviewCount > 1 ? `${reviewCount}` : '0'}) </Typography>
+                     </Box>
+                     <Box>
+                        <Typography>{avgRating} / 5.0</Typography>
+                     </Box>
                   </AccordionSummary>
                   <AccordionDetails>
                      {Reviews.length > 0 ? (
@@ -26,22 +31,31 @@ function ItemReviewList({ item }) {
                               }}
                               key={review.id}
                            >
+                              {/* 리뷰 이미지 */}
                               <Box>
                                  {review.ReviewImages.map((data, index) => (
                                     <img src={`${import.meta.env.VITE_APP_API_URL}${data.imgUrl}`} key={index} width="80px" />
                                  ))}
                               </Box>
 
-                              <Typography
-                                 sx={{
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    maxWidth: '500px',
-                                 }}
-                              >
-                                 {review?.reviewContent}
-                              </Typography>
+                              {/* 리뷰 본문 */}
+                              <Box>
+                                 <Typography
+                                    sx={{
+                                       whiteSpace: 'nowrap',
+                                       overflow: 'hidden',
+                                       textOverflow: 'ellipsis',
+                                       maxWidth: '500px',
+                                    }}
+                                 >
+                                    {review?.reviewContent}
+                                 </Typography>
+                              </Box>
+                              {/* 별점 */}
+                              <Box>
+                                 <Typography>별점 {review.rating}</Typography>
+                              </Box>
+
                               <Box maxWidth="120px">
                                  <Typography sx={{ fontWeight: 'bold' }}>{review.User.name}</Typography>
                                  <Typography>{review?.reviewDate.slice(0, 10)}</Typography>
