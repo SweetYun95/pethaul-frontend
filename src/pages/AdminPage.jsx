@@ -1,13 +1,15 @@
 import { Container } from '@mui/material'
 import ItemPanel from '../components/admin/ItemPanel'
 import OrderPanel from '../components/admin/OrderPanel'
+import ChartPanel from '../components/admin/ChartPanel'
 
 function AdminPage() {
    return (
       <>
          <Container>
-            <OrderPanel />
+            {/* <OrderPanel /> */}
             {/* <ItemPanel /> */}
+            <ChartPanel />
          </Container>
       </>
    )

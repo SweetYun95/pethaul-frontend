@@ -6,6 +6,8 @@ import { Box, Typography, Button } from '@mui/material'
 function OrderPanel() {
    const dispatch = useDispatch()
    const { orders, loading, error } = useSelector((state) => state.order)
+   console.log('🎀orders:', orders)
+
    const [statusValue, setStatusValue] = useState({})
 
    useEffect(() => {
@@ -73,7 +75,7 @@ function OrderPanel() {
                         <Typography>주소: {order.User.address}</Typography>
                      </Box>
                      <Box sx={{ backgroundColor: 'skyblue' }}>
-                        <Typography>주문상품: {order.Items[0].itemNm}</Typography>
+                        <Typography>주문상품: {order.itemNm}</Typography>
                         {/* 여기 나중에 수정 필요 */}
                      </Box>
 
