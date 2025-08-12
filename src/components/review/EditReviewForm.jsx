@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import '../css/CreateReviewForm.css'
+import '../css/review/CreateReviewForm.css'
 import { updateReviewThunk } from '../../features/reviewSlice'
 import { useNavigate } from 'react-router-dom'
 

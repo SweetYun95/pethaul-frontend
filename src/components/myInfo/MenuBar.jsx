@@ -17,71 +17,64 @@ function MenuBar({ id }) {
          dispatch(fetchOrdersThunk())
       }
    }, [dispatch, id])
+   console.log('🎈id:', id)
 
-   // console.log('🎈리뷰 데이터:', reviews)
-   // console.log('🎈주문 데이터:', orders)
+   console.log('🎈리뷰 데이터:', reviews)
+   console.log('🎈주문 데이터:', orders)
 
    if (reviewLoading || orderLoading) return <p>로딩 중...</p>
    if (reviewError || orderError) return <p>에러 발생:{reviewError}</p>
 
    return (
-      <section id="menubar"> 
-               <div className='contents-card'>
-               <div className='card-header' >
-                  <div className='window-btn'>
-                  <span className='red'></span>
-                  <span className='green'></span>
-                  <span className='blue'></span>
-                  </div>
-                  <span className='card-title'>주문</span>
+      <section id="menubar">
+         <div className="contents-card">
+            <div className="card-header">
+               <div className="window-btn">
+                  <span className="red"></span>
+                  <span className="green"></span>
+                  <span className="blue"></span>
                </div>
-                  <div className="menubar-card">
-                     {orders.length}
-                  </div>
-               </div>
+               <span className="card-title">주문</span>
+            </div>
+            <div className="menubar-card">{orders.length}</div>
+         </div>
 
-               <div className='contents-card'>
-               <div className='card-header' >
-                  <div className='window-btn'>
-                  <span className='red'></span>
-                  <span className='green'></span>
-                  <span className='blue'></span>
-                  </div>
-                  <span className='card-title'>취소</span>
+         <div className="contents-card">
+            <div className="card-header">
+               <div className="window-btn">
+                  <span className="red"></span>
+                  <span className="green"></span>
+                  <span className="blue"></span>
                </div>
-                  <div className="menubar-card">
-                      {orders.length}
-                  </div>
-               </div>
+               <span className="card-title">취소</span>
+            </div>
+            <div className="menubar-card">{orders.length}</div>
+         </div>
 
-               <div className='contents-card'>
-               <div className='card-header' >
-                  <div className='window-btn'>
-                  <span className='red'></span>
-                  <span className='green'></span>
-                  <span className='blue'></span>
-                  </div>
-                  <span className='card-title'>리뷰</span>
+         <div className="contents-card">
+            <div className="card-header">
+               <div className="window-btn">
+                  <span className="red"></span>
+                  <span className="green"></span>
+                  <span className="blue"></span>
                </div>
-                  <div className="menubar-card">
-                     {reviews.length}
-                  </div>
-               </div>
+               <span className="card-title">리뷰</span>
+            </div>
+            <div className="menubar-card">{reviews.length}</div>
+         </div>
 
-               <div className='contents-card'>
-               <div className='card-header' >
-                  <div className='window-btn'>
-                  <span className='red'></span>
-                  <span className='green'></span>
-                  <span className='blue'></span>
-                  </div>
-                  <span className='card-title'>1:1 문의</span>
+         <div className="contents-card">
+            <div className="card-header">
+               <div className="window-btn">
+                  <span className="red"></span>
+                  <span className="green"></span>
+                  <span className="blue"></span>
                </div>
-                  <div className="menubar-card">
-                      {orders.length}
-                  </div>
-               </div>
-               </section>  
+               <span className="card-title">1:1 문의</span>
+            </div>
+            <div className="menubar-card">{orders.length}</div>
+         </div>
+      </section>
    )
 }
 
