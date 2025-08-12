@@ -1,3 +1,4 @@
+// src/features/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser, googleCheckStatus } from '../api/authApi'
 
@@ -54,10 +55,10 @@ export const logoutUserThunk = createAsyncThunk('auth/logoutUser', async (_, { r
 // 로그인 상태 확인
 export const checkAuthStatusThunk = createAsyncThunk('auth/checkAuthStatus', async (_, { rejectWithValue }) => {
    try {
-      const response = await checkAuthStatus()
+      const response = await checkAuthStatus() // 서버에서 로그인 상태 확인
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '로그인 상태 확인 실패')
    }
 })
 
@@ -151,6 +152,21 @@ const authSlice = createSlice({
             state.isAuthenticated = false
             state.user = null
             state.googleAuthenticated = false
+         })
+         // 로그인 상태 확인
+         .addCase(checkAuthStatusThunk.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(checkAuthStatusThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.isAuthenticated = action.payload.isAuthenticated
+            state.user = action.payload.user || null
+         })
+         .addCase(checkAuthStatusThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+            state.isAuthenticated = false
+            state.user = null
          })
    },
 })
