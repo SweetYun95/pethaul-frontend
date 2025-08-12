@@ -5,7 +5,7 @@ export const getCartItems = async (id) => {
    const res = await shopmaxApi.get(`/cart/${id}`, {
       withCredentials: true,
    })
-   console.log('res:', res)
+
    return res.data
 }
 
