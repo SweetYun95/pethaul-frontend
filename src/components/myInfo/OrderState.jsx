@@ -1,30 +1,24 @@
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchOrdersThunk } from '../../features/orderSlice'
-import { Box, Typography } from '@mui/material'
+import '../css/OrderState.css'
 
 function OrderState() {
-   const dispatch = useDispatch()
-   const { orders, loading, error } = useSelector((state) => state.order)
-   useEffect(() => {
-      dispatch(fetchOrdersThunk())
-   }, [dispatch])
-   // console.log('🎈orders:', orders)
-   if (loading) return <p>로딩 중...</p>
-   if (error) return <p>에러 발생:{error}</p>
-   return (
-      <>
-         <Box>
-            <Box>
-               <Typography>주문현황 (임시)</Typography>
-            </Box>
-
-            <Box>
-               <Typography>{orders[0]?.orderStatus}</Typography>
-            </Box>
-         </Box>
-      </>
-   )
+   return <section id='order-state'>
+               <div className='contents-card'>
+               <div className='card-header' >
+                  <div className='window-btn'>
+                  <span className='red'></span>
+                  <span className='green'></span>
+                  <span className='blue'></span>
+                  </div>
+                  <span className='card-title'>주문현황</span>
+               </div>
+                  <div className="order-state-details">
+                     <div></div>
+                     <div></div>
+                     <div></div>
+                     <div></div>
+                  </div>
+               </div>
+         </section>
 }
 
 export default OrderState
