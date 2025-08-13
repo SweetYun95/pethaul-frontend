@@ -24,22 +24,10 @@ function AdminPage() {
    }
 
    return (
-      <Container sx={{ height: '100vh', marginTop: '100px' }}>
-         <Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="admin tabs">
-            <Tab label="상품 관리" {...a11yProps(0)} />
-            <Tab label="주문 관리" {...a11yProps(1)} />
-            <Tab label="통계" {...a11yProps(2)} />
-         </Tabs>
-         <CustomTabPanel value={value} index={0}>
-            <ItemPanel />
-         </CustomTabPanel>
-         <CustomTabPanel value={value} index={1}>
+      <div style={{ backgroundImage: 'url(/images/ribbon.jpeg)', backgroundRepeat:'repeat',backgroundSize:'20%', paddingTop:'74px', overflowY: 'hidden' }}>
             <OrderPanel />
-         </CustomTabPanel>
-         <CustomTabPanel value={value} index={2}>
-            <ChartPanel />
-         </CustomTabPanel>
-      </Container>
+            <ItemPanel />
+         </div>
    )
 }
 
