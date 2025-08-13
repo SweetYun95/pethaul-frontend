@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAllOrdersThunk, updateOrderStatusThunk } from '../../features/orderSlice'
+import { fetchAllOrdersThunk, updateOrderStatusThunk, cancelOrderThunk } from '../../features/orderSlice'
 import { Box, Typography, Button } from '@mui/material'
 
 function OrderPanel() {
@@ -51,6 +51,21 @@ function OrderPanel() {
             })
       }
    }
+   const handleOrderCancel = (id) => {
+      const res = confirm('정말 주문을 취소하시겠습니까?')
+      if (res) {
+         dispatch(cancelOrderThunk(id))
+            .unwrap()
+            .then(() => {
+               alert('주문을 취소했습니다.')
+               dispatch(fetchAllOrdersThunk())
+            })
+            .catch((error) => {
+               console.log('주문 취소 중 에러 발생:', error)
+               alert('주문 취소 중 에러가 발생했습니다.:' + error)
+            })
+      }
+   }
 
    return (
       <>
@@ -70,25 +85,29 @@ function OrderPanel() {
 
                      <Box sx={{ backgroundColor: 'gray' }}>
                         <Typography>주문일자: {order.orderDate.slice(0, 10)}</Typography>
-                        <Typography>주문자: {order.User.name}</Typography>
-                        <Typography>주문자 id: {order.User.userId}</Typography>
-                        <Typography>주소: {order.User.address}</Typography>
+                        <Typography>주문자: {order.User?.name}</Typography>
+                        <Typography>주문자 id: {order.User?.userId}</Typography>
+                        <Typography>주소: {order.User?.address}</Typography>
                      </Box>
                      <Box sx={{ backgroundColor: 'skyblue' }}>
                         <Typography>주문상품: {order.itemNm}</Typography>
                         {/* 여기 나중에 수정 필요 */}
                      </Box>
+                     {order.orderStatus === 'CANCEL' ? (
+                        <Typography color="error">취소 완료</Typography>
+                     ) : (
+                        <Box>
+                           <select value={statusValue[order.id]} onChange={(e) => handleStatusChange(order.id, e.target.value)}>
+                              <option value="ORDER">ORDER</option>
+                              <option value="READY">READY</option>
+                              <option value="SHIPPED">SHIPPED</option>
+                              <option value="DELIVERED">DELIVERED</option>
+                           </select>
 
-                     <select value={statusValue[order.id]} onChange={(e) => handleStatusChange(order.id, e.target.value)}>
-                        <option value="ORDER">ORDER</option>
-                        <option value="READY">READY</option>
-                        <option value="SHIPPED">SHIPPED</option>
-                        <option value="DELIVERED">DELIVERED</option>
-                     </select>
-                     <Box>
-                        <Button onClick={() => handleUpdateStatus(order.id)}>수정</Button>
-                        <Button>취소</Button>
-                     </Box>
+                           <Button onClick={() => handleUpdateStatus(order.id)}>수정</Button>
+                           <Button onClick={() => handleOrderCancel(order.id)}>취소</Button>
+                        </Box>
+                     )}
                   </Box>
                ))}
             </Box>

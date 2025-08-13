@@ -1,12 +1,11 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchOrdersThunk } from '../features/orderSlice'
+import { cancelOrderThunk, fetchOrdersThunk } from '../features/orderSlice'
 import { Container, Typography, Box, Card, CardMedia, CardContent, Button } from '@mui/material'
 import { useNavigate, Link } from 'react-router-dom'
 
 function MyOrderList() {
    const dispatch = useDispatch()
-   const navigate = useNavigate()
    const { orders, loading, error } = useSelector((state) => state.order)
    useEffect(() => {
       dispatch(fetchOrdersThunk())
@@ -15,6 +14,22 @@ function MyOrderList() {
 
    //    console.log('🎈orders:', orders)
    console.log('🎈rows:', rows)
+
+   const handleOrderCancel = (id) => {
+      const res = confirm('정말 주문을 취소하시겠습니까?')
+      if (res) {
+         dispatch(cancelOrderThunk(id))
+            .unwrap()
+            .then(() => {
+               alert('주문을 취소했습니다.')
+               dispatch(fetchOrdersThunk())
+            })
+            .catch((error) => {
+               console.log('주문 취소 중 에러 발생:', error)
+               alert('주문 취소 중 에러가 발생했습니다.:' + error)
+            })
+      }
+   }
 
    if (loading) return <p> 로딩 중...</p>
    if (error) return <p> 에러 발생: {error}</p>
@@ -47,9 +62,14 @@ function MyOrderList() {
                                     <Typography variant="body2">{item.OrderItem.count}개</Typography>
                                     <Button>장바구니</Button>
                                     <Button>바로구매</Button>
-                                    <Button component={Link} to={`/review/create`} state={{ item }}>
-                                       리뷰 작성
-                                    </Button>
+
+                                    {order.orderStatus === 'ORDER' && <Button onClick={() => handleOrderCancel(order.id)}>주문 취소</Button>}
+                                    {order.orderStatus === 'CANCEL' && <Typography color="error">취소된 주문입니다.</Typography>}
+                                    {order.orderStatus !== 'ORDER' && order.orderStatus !== 'CANCEL' && (
+                                       <Button component={Link} to={`/review/create`} state={{ item }}>
+                                          리뷰 작성
+                                       </Button>
+                                    )}
                                  </CardContent>
                               </Card>
                            ))}
