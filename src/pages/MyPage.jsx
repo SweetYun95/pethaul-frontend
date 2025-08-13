@@ -1,14 +1,18 @@
-import { checkAuthStatusThunk } from '../features/authSlice'
+// =============================
+// File: src/pages/MyPage.jsx
+// =============================
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { checkAuthStatusThunk } from '../features/authSlice'
+
 import Profile from '../components/myInfo/Profile'
 import OrderState from '../components/myInfo/OrderState'
 import MenuBar from '../components/myInfo/MenuBar'
 import PetProfileSlider from '../components/slider/PetProfileSlider'
+
 import { getUserPetsThunk } from '../features/petSlice'
 function MyPage() {
-   const { user, loading: userLoading, error: userError } = useSelector((state) => state.auth)
-   const { pets, loading: petsLoading, error: petsError } = useSelector((state) => state.pet)
+   const { user, loading, error } = useSelector((state) => state.auth)
    const dispatch = useDispatch()
 
    useEffect(() => {
@@ -16,8 +20,8 @@ function MyPage() {
       dispatch(getUserPetsThunk())
    }, [dispatch])
 
-   //  if (loading) return <p>로딩 중...</p>
-   //  if (error) return <p>에러 발생:{String(error)}</p>
+   if (loading) return <p>로딩 중...</p>
+   if (error) return <p>에러 발생:{String(error)}</p>
 
    const userId = user?.id ?? user?._id ?? user?.userId
    const isGuest = !userId
@@ -38,7 +42,7 @@ function MyPage() {
                <MenuBar id={userId} isGuest={isGuest} />
             </div>
 
-            <PetProfileSlider pets={pets} />
+            <PetProfileSlider />
          </div>
       </div>
    )
