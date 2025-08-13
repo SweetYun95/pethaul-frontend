@@ -17,10 +17,10 @@ function MenuBar({ id }) {
          dispatch(fetchOrdersThunk())
       }
    }, [dispatch, id])
-   console.log('🎈id:', id)
+   // console.log('🎈id:', id)
 
-   console.log('🎈리뷰 데이터:', reviews)
-   console.log('🎈주문 데이터:', orders)
+   // console.log('🎈리뷰 데이터:', reviews)
+   // console.log('🎈주문 데이터:', orders)
 
    if (reviewLoading || orderLoading) return <p>로딩 중...</p>
    if (reviewError || orderError) return <p>에러 발생:{reviewError}</p>

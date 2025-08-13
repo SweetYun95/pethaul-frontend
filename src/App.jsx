@@ -23,7 +23,8 @@ import ItemCartForm from './components/item/ItemCartForm'
 import MyReviewList from './pages/MyReviewList'
 import MyOrderList from './pages/MyOrderList'
 import ReviewEditPage from './pages/ReviewEditPage'
-import Test from './pages/Test'
+import PetCreatePage from './pages/PetCreatePage'
+import PetEditPage from './pages/PetEditPage'
 
 import { checkUnifiedAuthThunk } from './features/authSlice'
 
@@ -77,8 +78,10 @@ function App() {
             <Route path="/items/create" element={<ItemCreatePage />} />
             {/* 상품 수정 */}
             <Route path="/items/edit/:id" element={<ItemEditPage />} />
-            {/* 기능 테스트용 페이지 */}
-            <Route path="/test" element={<Test />} />
+            {/* 펫 등록 */}
+            <Route path="/pets" element={<PetCreatePage />} />
+            {/* 펫 수정 */}
+            <Route path="/peteditpage" element={<PetEditPage />} />
          </Routes>
          <Footer />
       </>
