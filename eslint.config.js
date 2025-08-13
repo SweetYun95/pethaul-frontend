@@ -5,6 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
+
    {
       // 전역적으로 무시할 파일 패턴 (dist 폴더 등)
       ignores: ['dist'],

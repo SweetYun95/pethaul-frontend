@@ -15,13 +15,13 @@ import Stack from '@mui/material/Stack'
 
 import { logoutUserThunk, checkAuthStatusThunk, googleCheckStatusThunk } from '../../features/authSlice'
 
-import '../css/Navbar_v-ysy.css' // 기존걸 복사하여 수정함
+import '../css/shared/Navbar_v-ysy.css' // 기존걸 복사하여 수정함
 
 function Navbar() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const { isAuthenticated, user } = useSelector((state) => state.auth)
-      console.log('🎈', isAuthenticated)
+   console.log('🎈', isAuthenticated)
    console.log('🎈', user)
 
    // useEffect를 사용하여 컴포넌트가 마운트될 때마다 로그인 상태 확인
@@ -29,7 +29,6 @@ function Navbar() {
       dispatch(checkAuthStatusThunk()) // 일반 로그인 상태 확인
       dispatch(googleCheckStatusThunk()) // 구글 로그인 상태 확인
    }, [dispatch])
-
 
    const [anchorEl, setAnchorEl] = useState(null)
    const open = Boolean(anchorEl)
@@ -161,17 +160,26 @@ function Navbar() {
                                                       마이페이지
                                                    </MenuItem>
                                                    {isAdmin && (
-                                                      <MenuItem
-                                                         onClick={() => {
-                                                            navigate('/admin')
-                                                         }}
-                                                         sx={{ fontSize: 14, padding: '6px 16px' }}
-                                                      >
-                                                         관리자 페이지
-                                                      </MenuItem>
+                                                      <>
+                                                         <MenuItem
+                                                            onClick={() => {
+                                                               navigate('/admin')
+                                                            }}
+                                                            sx={{ fontSize: 14, padding: '6px 16px' }}
+                                                         >
+                                                            관리자 페이지
+                                                         </MenuItem>
+                                                         <MenuItem
+                                                            onClick={() => {
+                                                               navigate('/items/create')
+                                                            }}
+                                                            sx={{ fontSize: 14, padding: '6px 16px' }}
+                                                         >
+                                                            상품 등록
+                                                         </MenuItem>
+                                                      </>
                                                    )}
                                                 </>
-
                                              )}
                                           </>
                                        ) : (

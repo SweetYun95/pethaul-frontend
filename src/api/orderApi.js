@@ -44,3 +44,25 @@ export const cancelOrder = async (orderId) => {
       throw error
    }
 }
+
+//주문 상태 변경
+export const updateOrderStatus = async (orderId, status) => {
+   try {
+      const response = await shopmaxApi.patch(`/order/${orderId}?status=${status}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error}`)
+      throw error
+   }
+}
+
+//전체 주문 조회(관리자용)
+export const fetchAllOrders = async () => {
+   try {
+      const response = await shopmaxApi.get('/order/all')
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error}`)
+      throw error
+   }
+}

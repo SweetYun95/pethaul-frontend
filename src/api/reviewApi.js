@@ -32,6 +32,18 @@ export const updateReview = async (formData, id) => {
    }
 }
 
+//리뷰 삭제
+export const deleteReview = async (id) => {
+   try {
+      const response = await shopmaxApi.delete(`review/${id}`)
+      console.log('🎈reviewApi.js:', response)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error}`)
+      throw error
+   }
+}
+
 // 회원이 작성한 리뷰 목록 조회
 export const getUserReview = async () => {
    try {

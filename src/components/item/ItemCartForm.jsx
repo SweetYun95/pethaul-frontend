@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { fetchCartItemsThunk, updateCartItemThunk, deleteCartItemThunk } from '../../features/cartSlice'
-
-import '../css/itemCartForm.css'
+import '../css/item/ItemCartForm.css'
 
 const ItemCartForm = () => {
    const dispatch = useDispatch()

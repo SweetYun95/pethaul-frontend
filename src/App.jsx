@@ -12,18 +12,17 @@ import OrderPage from './pages/OrderPage'
 import ReviewCreatePage from './pages/ReviewCreatePage'
 import AdminPage from './pages/AdminPage'
 import Footer from './components/shared/Footer'
-import GoogleSuccessPage from './pages/GoogleSuccessPage'
+import GoogleSuccessPage from './pages/GoogleSuccessPage' // ✅ 추가
 
 import './App.css'
 import ItemEditPage from './pages/ItemEditPage'
 import MyPage from './pages/MyPage'
 import ItemLikePage from './pages/ItemLikePage'
 import ItemCartForm from './components/item/ItemCartForm'
-import MyOrderList from './pages/MyOrderList'
 import MyReviewList from './pages/MyReviewList'
+import MyOrderList from './pages/MyOrderList'
 import ReviewEditPage from './pages/ReviewEditPage'
 import PetCreatePage from './pages/PetCreatePage'
-import PetEditPage from './pages/PetEditPage'
 
 function App() {
    return (
@@ -34,7 +33,7 @@ function App() {
             {/* 로그인 페이지 */}
             <Route path="/login" element={<LoginPage />} />
             {/* 구글로그인 이동 */}
-            <Route path="/google-success" element={<GoogleSuccessPage />} />
+            <Route path="/google-success" element={<GoogleSuccessPage />} /> {/* ✅ 추가 */}
             {/* 회원가입 페이지 */}
             <Route path="/join" element={<RegisterPage />} />
             {/* 토큰 발급 페이지 */}
@@ -49,16 +48,16 @@ function App() {
             <Route path="/cart" element={<ItemCartForm />} />
             {/* 주문/결제 페이지 */}
             <Route path="/order" element={<OrderPage />} />
+            {/* 사용자의 전체 주문 조회 */}
+            <Route path="myorderlist" element={<MyOrderList />} />
             {/* 리뷰 등록 */}
             <Route path="/review/create" element={<ReviewCreatePage />} />
-            {/* 리뷰 수정  */}
+            {/* 리뷰 수정 */}
             <Route path="/review/edit/:id" element={<ReviewEditPage />} />
+            {/* 사용자가 쓴 리뷰 조회 */}
+            <Route path="/myreviewlist" element={<MyReviewList />} />
             {/* 마이페이지 */}
             <Route path="/mypage" element={<MyPage />} />
-            {/* 회원 주문내역 페이지 */}
-            <Route path="/myorderlist" element={<MyOrderList />} />
-            {/* 회원 리뷰 조회 페이지 */}
-            <Route path="/myreviewlist" element={<MyReviewList />} />
             {/* 관리자 전용 페이지 */}
             <Route path="/admin" element={<AdminPage />} />
             {/* 상품 등록 */}
@@ -67,8 +66,6 @@ function App() {
             <Route path="/items/edit/:id" element={<ItemEditPage />} />
             {/* 펫 등록 */}
             <Route path="/pets" element={<PetCreatePage />} />
-            {/* 펫 수정 */}
-            <Route path="/pets/:id/edit" element={<PetEditPage />} />
          </Routes>
          <Footer />
       </>

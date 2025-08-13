@@ -49,7 +49,9 @@ function ItemPanel({ searchTerm, sellCategory }) {
                      <CardContent>
                         <Typography variant="h6">{item.itemNm}</Typography>
                         {item.Categories.map((ic) => (
-                           <Typography variant="caption">{'#' + ic.categoryName}</Typography>
+                           <Typography variant="caption" key={ic.id}>
+                              {'#' + ic.categoryName}
+                           </Typography>
                         ))}
                      </CardContent>
                      <Box>
