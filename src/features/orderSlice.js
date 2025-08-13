@@ -1,6 +1,6 @@
 // src/features/orderSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createOrder, getOrders, getOrderById, cancelOrder, updateOrderStatus, fetchAllOrders } from '../api/orderApi'
+import { createOrder, getOrders, getOrderById, cancelOrder, updateOrderStatus, fetchAllOrders, fetchSortData } from '../api/orderApi'
 
 // 주문 생성 Thunk
 export const createOrderThunk = createAsyncThunk('order/createOrder', async (orderData, { rejectWithValue }) => {
@@ -54,13 +54,24 @@ export const updateOrderStatusThunk = createAsyncThunk('order/updateOrderStatus'
 })
 
 //관리자용 전체 주문 조회 Thunk
-export const fetchAllOrdersThunk = createAsyncThunk('order/fetchAllOrders', async (_, { rejectWithValue }) => {
+export const fetchAllOrdersThunk = createAsyncThunk('order/fetchAllOrders', async (sort, { rejectWithValue }) => {
    try {
-      const response = await fetchAllOrders()
+      const response = await fetchAllOrders(sort)
       console.log('🎈response.data:', response.data)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '주문 조회 실패')
+   }
+})
+
+// 회원용 조건부 조회 Thunk
+export const fetchSortDataThunk = createAsyncThunk('order/fetchSortData', async (sort, { rejectWithValue }) => {
+   try {
+      const response = await fetchSortData(sort)
+      console.log('🎈response.data:', response.data)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '데이터 조회 실패')
    }
 })
 
@@ -162,6 +173,19 @@ const orderSlice = createSlice({
             state.orders = action.payload.orders
          })
          .addCase(fetchAllOrdersThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 회원용 데이터 조회
+         .addCase(fetchSortDataThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(fetchSortDataThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.orders = action.payload.orders
+         })
+         .addCase(fetchSortDataThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

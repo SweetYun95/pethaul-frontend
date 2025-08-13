@@ -57,9 +57,20 @@ export const updateOrderStatus = async (orderId, status) => {
 }
 
 //전체 주문 조회(관리자용)
-export const fetchAllOrders = async () => {
+export const fetchAllOrders = async (sort) => {
    try {
-      const response = await shopmaxApi.get('/order/all')
+      const response = await shopmaxApi.get(`/order/all/admin?sort=${sort}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error}`)
+      throw error
+   }
+}
+
+// 조건별 데이터 조회 (회원용)
+export const fetchSortData = async (sort) => {
+   try {
+      const response = await shopmaxApi.get(`/order/all/main?sort=${sort}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)

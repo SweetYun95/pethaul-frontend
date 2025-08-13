@@ -1,21 +1,56 @@
+// =============================
+// File: src/features/authSlice.js
+// =============================
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser, googleCheckStatus } from '../api/authApi'
 
-// ✅ 구글 로그인(DB 저장 전용)
+// -----------------------------
+// helpers
+// -----------------------------
+const normalizeAuthPayload = (raw) => {
+   // 허용 형태: axios res, res.data, 혹은 이미 얕은 객체
+   const p = raw?.data ?? raw ?? {}
+   const hasLocal = typeof p.isAuthenticated === 'boolean'
+   const hasGoogle = typeof p.googleAuthenticated === 'boolean'
+
+   let user = p.user ?? null
+   let isAuthenticated = false
+   let googleAuthenticated = false
+
+   if (hasLocal) {
+      isAuthenticated = !!p.isAuthenticated
+   }
+   if (hasGoogle) {
+      googleAuthenticated = !!p.googleAuthenticated
+      // 구글 응답이 사용자 정보를 동봉할 수도 있음
+      if (!user && p.user) user = p.user
+   }
+
+   return {
+      user,
+      isAuthenticated: isAuthenticated || googleAuthenticated,
+      googleAuthenticated,
+   }
+}
+
+// -----------------------------
+// Thunks: 기존 유지 (API 래퍼)
+// -----------------------------
+// 구글 로그인(DB 저장 전용)
 export const googleLoginUserThunk = createAsyncThunk('auth/googleLoginUser', async (googleData, { rejectWithValue }) => {
    try {
       const response = await googleLoginUser(googleData)
-      return response.data.user // 구글 로그인 후 사용자 정보를 반환
+      return response.data.user
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '구글 로그인 실패')
    }
 })
 
-// ✅ 구글 로그인 상태 확인
+// 구글 로그인 상태 확인
 export const googleCheckStatusThunk = createAsyncThunk('auth/googleCheckStatus', async (_, { rejectWithValue }) => {
    try {
       const response = await googleCheckStatus()
-      return response
+      return response // 백엔드가 data를 감싸든 말든 normalize에서 처리
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '구글 로그인 상태 확인 실패')
    }
@@ -57,16 +92,43 @@ export const checkAuthStatusThunk = createAsyncThunk('auth/checkAuthStatus', asy
       const response = await checkAuthStatus()
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '로그인 상태 확인 실패')
    }
 })
 
+// -----------------------------
+// ✅ 통합 상태 점검(레이스 방지)
+// -----------------------------
+export const checkUnifiedAuthThunk = createAsyncThunk('auth/checkUnified', async (_, { dispatch }) => {
+   const [localRes, googleRes] = await Promise.allSettled([dispatch(checkAuthStatusThunk()).unwrap(), dispatch(googleCheckStatusThunk()).unwrap()])
+
+   const localOk = localRes.status === 'fulfilled' ? normalizeAuthPayload(localRes.value) : null
+   const googleOk = googleRes.status === 'fulfilled' ? normalizeAuthPayload(googleRes.value) : null
+
+   // 우선순위: 인증 true인 결과들 중 사용자 정보가 있는 쪽 우선
+   const candidates = [localOk, googleOk].filter(Boolean)
+   const authed = candidates.filter((c) => c.isAuthenticated)
+
+   if (authed.length > 0) {
+      authed.sort((a, b) => (b.user ? 1 : 0) - (a.user ? 1 : 0))
+      return { ...authed[0], uncertain: false }
+   }
+
+   // 둘 다 실패 혹은 둘 다 비로그인
+   // 네트워크 불안정 같은 경우를 위해 불확실 플래그 제공
+   const anyRejected = localRes.status === 'rejected' || googleRes.status === 'rejected'
+   return { user: null, isAuthenticated: false, googleAuthenticated: false, uncertain: anyRejected }
+})
+
+// -----------------------------
+// Slice
+// -----------------------------
 const authSlice = createSlice({
    name: 'auth',
    initialState: {
       user: null,
       isAuthenticated: false,
-      googleAuthenticated: false, // 구글 로그인 상태 추가
+      googleAuthenticated: false,
       loading: false,
       error: null,
    },
@@ -118,7 +180,7 @@ const authSlice = createSlice({
             state.error = action.payload
          })
 
-         // 로그아웃
+         // 로그아웃 — 명시적일 때만 비인증 처리
          .addCase(logoutUserThunk.pending, (state) => {
             state.loading = true
             state.error = null
@@ -127,30 +189,61 @@ const authSlice = createSlice({
             state.loading = false
             state.isAuthenticated = false
             state.user = null
-            state.googleAuthenticated = false // 구글 로그인 상태 초기화
+            state.googleAuthenticated = false
          })
          .addCase(logoutUserThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
 
-         // 구글 로그인 상태 확인
+         // ⚠️ 개별 체크(rejected)에서 즉시 false로 돌리지 않음 — 통합 썽크가 최종판단
          .addCase(googleCheckStatusThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
          .addCase(googleCheckStatusThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.isAuthenticated = action.payload.googleAuthenticated
-            state.user = action.payload.user || null
-            state.googleAuthenticated = action.payload.googleAuthenticated // 구글 인증 상태 업데이트
+            const norm = normalizeAuthPayload(action.payload)
+            // 통합 체크가 없다면 단독으로도 합리적으로 동작
+            state.isAuthenticated = norm.isAuthenticated
+            state.user = norm.user
+            state.googleAuthenticated = norm.googleAuthenticated
          })
          .addCase(googleCheckStatusThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
-            state.isAuthenticated = false
-            state.user = null
-            state.googleAuthenticated = false
+            // 여기서 상태를 강제로 false로 만들지 않는다
+         })
+
+         .addCase(checkAuthStatusThunk.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(checkAuthStatusThunk.fulfilled, (state, action) => {
+            state.loading = false
+            const norm = normalizeAuthPayload(action.payload)
+            state.isAuthenticated = norm.isAuthenticated
+            state.user = norm.user
+         })
+         .addCase(checkAuthStatusThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+            // 여기서도 강제 false 처리 금지
+         })
+
+         // ✅ 통합 체크 — 최종 판단자
+         .addCase(checkUnifiedAuthThunk.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(checkUnifiedAuthThunk.fulfilled, (state, action) => {
+            state.loading = false
+            const { user, isAuthenticated, googleAuthenticated, uncertain } = action.payload
+            if (uncertain && state.isAuthenticated) {
+               // 네트워크 등 불확실 상황에서는 기존 true 상태를 보존
+               return
+            }
+            state.isAuthenticated = isAuthenticated
+            state.user = user
+            state.googleAuthenticated = !!googleAuthenticated
          })
    },
 })

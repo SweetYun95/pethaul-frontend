@@ -6,6 +6,7 @@ import { addToCartThunk } from '../../features/cartSlice'
 
 import ItemReviewList from '../review/ItemReviewList'
 import { Link } from 'react-router-dom'
+import '../css/item/ItemDetailForm.css'
 
 function ItemDetailForm({ item }) {
    const dispatch = useDispatch()
@@ -97,30 +98,33 @@ function ItemDetailForm({ item }) {
                <TextField label="수량" type="number" value={quantity} onChange={handleQuantityChange} InputProps={{ inputProps: { min: 1 } }} size="small" sx={{ width: '100px' }} />
                <Typography>총 {(item.price * quantity).toLocaleString()} 원</Typography>
             </Stack>
-
             {/* 버튼 영역 */}
-            <Stack direction="row" spacing={2}>
-               <Button variant="outlined" onClick={handleAddToCart} fullWidth>
-                  장바구니
-               </Button>
-               <Button
-                  variant="outlined"
-                  component={Link}
-                  to="/order"
-                  state={{
-                     item: [
-                        {
-                           itemId: item.id,
-                           price: item.price,
-                           quantity: quantity,
-                        },
-                     ],
-                  }}
-                  fullWidth
-               >
-                  구매하기
-               </Button>
-            </Stack>
+            {item.itemSellStatus === 'SELL' ? (
+               <Stack direction="row" spacing={2}>
+                  <Button variant="outlined" onClick={handleAddToCart} fullWidth>
+                     장바구니
+                  </Button>
+                  <Button
+                     variant="outlined"
+                     component={Link}
+                     to="/order"
+                     state={{
+                        item: [
+                           {
+                              itemId: item.id,
+                              price: item.price,
+                              quantity: quantity,
+                           },
+                        ],
+                     }}
+                     fullWidth
+                  >
+                     구매하기
+                  </Button>
+               </Stack>
+            ) : (
+               <Typography color="error">품절된 상품입니다.</Typography>
+            )}
 
             {/* 상품에 대한 리뷰 리스트 출력 */}
             <ItemReviewList item={item} avgRating={avgRating} reviewCount={reviewCount} />

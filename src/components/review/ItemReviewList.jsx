@@ -17,9 +17,12 @@ function ItemReviewList({ item, avgRating, reviewCount }) {
                      <Box>
                         <Typography>REVIEW({reviewCount > 1 ? `${reviewCount}` : '0'}) </Typography>
                      </Box>
-                     <Box>
-                        <Typography>{avgRating} / 5.0</Typography>
-                     </Box>
+                     {/* 리뷰가 존재할 때만 평균 평점 출력 */}
+                     {Reviews.length > 0 && (
+                        <Box>
+                           <Typography>{avgRating} / 5.0</Typography>
+                        </Box>
+                     )}
                   </AccordionSummary>
                   <AccordionDetails>
                      {Reviews.length > 0 ? (

@@ -1,4 +1,7 @@
-import { Route, Routes } from 'react-router-dom'
+// src/App.jsx
+import { Route, Routes, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
 import Navbar from './components/shared/Navbar'
 import MainPage from './pages/MainPage'
@@ -12,9 +15,7 @@ import OrderPage from './pages/OrderPage'
 import ReviewCreatePage from './pages/ReviewCreatePage'
 import AdminPage from './pages/AdminPage'
 import Footer from './components/shared/Footer'
-import GoogleSuccessPage from './pages/GoogleSuccessPage' // ✅ 추가
-
-import './App.css'
+import GoogleSuccessPage from './pages/GoogleSuccessPage'
 import ItemEditPage from './pages/ItemEditPage'
 import MyPage from './pages/MyPage'
 import ItemLikePage from './pages/ItemLikePage'
@@ -22,8 +23,21 @@ import ItemCartForm from './components/item/ItemCartForm'
 import MyReviewList from './pages/MyReviewList'
 import MyOrderList from './pages/MyOrderList'
 import ReviewEditPage from './pages/ReviewEditPage'
+import Test from './pages/Test'
+
+import { checkUnifiedAuthThunk } from './features/authSlice'
+
+import './App.css'
 
 function App() {
+   const location = useLocation()
+   const dispatch = useDispatch()
+
+   useEffect(() => {
+      // 라우트 변화마다 단 한 번의 통합 체크만
+      dispatch(checkUnifiedAuthThunk())
+   }, [location, dispatch])
+
    return (
       <>
          <Navbar />
@@ -63,6 +77,8 @@ function App() {
             <Route path="/items/create" element={<ItemCreatePage />} />
             {/* 상품 수정 */}
             <Route path="/items/edit/:id" element={<ItemEditPage />} />
+            {/* 기능 테스트용 페이지 */}
+            <Route path="/test" element={<Test />} />
          </Routes>
          <Footer />
       </>
