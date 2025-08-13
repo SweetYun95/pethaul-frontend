@@ -86,7 +86,7 @@ function RegisterForm() {
             password: form.password,
             name: form.name,
             address: form.address,
-            phone: form.phone,
+            phoneNumber: form.phone, // 여기에 phoneNumber를 서버로 전달
             email: form.email,
             gender: form.gender || null,
          }
@@ -162,3 +162,9 @@ function RegisterForm() {
 }
 
 export default RegisterForm
+
+
+
+
+
+

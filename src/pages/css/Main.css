@@ -308,7 +308,7 @@ main::before {
    border-radius: 20px;
    background-color: rgba(255, 255, 255, 0.6);
    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
-   aspect-ratio: 0.7/1;
+   aspect-ratio: 0.9 / 1;
    transition: all 0.3s ease;
 }
 
@@ -316,7 +316,7 @@ main::before {
    transform: translateY(-5px);
 }
 .card > img {
-   aspect-ratio: 0.7/1;
+   aspect-ratio: 0.9 / 1;
    overflow: hidden;
    object-fit: cover;
 }

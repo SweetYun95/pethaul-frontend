@@ -4,12 +4,10 @@ import OrderPanel from '../components/admin/OrderPanel'
 
 function AdminPage() {
    return (
-      <>
-         <Container>
+      <div style={{ backgroundImage: 'url(/images/ribbon.jpeg)', backgroundRepeat:'repeat',backgroundSize:'20%', paddingTop:'74px', overflowY: 'hidden' }}>
             <OrderPanel />
-            {/* <ItemPanel /> */}
-         </Container>
-      </>
+            <ItemPanel />
+         </div>
    )
 }
 
