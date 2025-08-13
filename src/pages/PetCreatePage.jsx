@@ -87,7 +87,6 @@ const PetCreatePage = () => {
                </Alert>
 
                <Card sx={{ display: 'flex', p: 2, gap: 2, alignItems: 'center' }}>
-                  <CardMedia component="img" image={getRepImg(successPet)} alt={successPet.petName} sx={{ width: 160, height: 160, objectFit: 'cover', borderRadius: 2 }} />
                   <Box flex={1}>
                      <Typography variant="h6" mb={1}>
                         {successPet.petName}

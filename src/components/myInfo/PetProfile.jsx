@@ -1,3 +1,4 @@
+// src/components/myInfo/PetProfile.jsx
 import { useMemo } from 'react'
 import { Box, Card, CardMedia, CardContent, Typography, Chip, Button, Stack } from '@mui/material'
 

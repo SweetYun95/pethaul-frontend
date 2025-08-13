@@ -2,31 +2,25 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserPetsThunk } from '../../features/petSlice'
+import { useNavigate } from 'react-router-dom'
 import PetProfile from '../myInfo/PetProfile'
 import '../css/myInfo/PetProfileSlider.css'
 
 function PetProfileSlider({ pets }) {
    const dispatch = useDispatch()
-   // const { user } = useSelector((s) => s.auth)
-   // console.log('user', user)
+   const navigate = useNavigate()
 
    const [idx, setIdx] = useState(0)
    const total = pets?.length ?? 0
-
-   // const authLoading = useSelector((s) => s.auth.loading)
-   // useEffect(() => {
-   //    // 새로고침 시 user가 준비된 뒤 호출되도록 가드
-   //    if (!authLoading && user?.id) dispatch(getUserPetsThunk())
-   // }, [dispatch, authLoading, user?.id])
-   //로그인 에러 해결되면 수정
 
    console.log('🐶 현재 pets 데이터:', pets)
 
    const prev = () => setIdx((i) => (i === 0 ? total - 1 : i - 1))
    const next = () => setIdx((i) => (i === total - 1 ? 0 : i + 1))
 
-   // if (loading) return <p>반려동물 불러오는 중…</p>
-   // if (error) return <p style={{ color: 'red' }}>에러: {String(error)}</p>
+   const goEdit = (pet) => {
+      navigate('/peteditpage', { state: { petid: pet.id, pet } })
+   }
 
    if (!total) {
       return (
@@ -53,6 +47,24 @@ function PetProfileSlider({ pets }) {
                {pets.map((pet) => (
                   <div className="pet-slide" key={pet.id}>
                      <PetProfile pet={pet} />
+                     <button
+                        className="edit-btn"
+                        onClick={() => goEdit(pet)}
+                        aria-label="edit"
+                        style={{
+                           position: 'absolute',
+                           right: 12,
+                           bottom: 12,
+                           padding: '8px 12px',
+                           borderRadius: 8,
+                           border: '1px solid #ddd',
+                           background: '#fff',
+                           cursor: 'pointer',
+                           boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                        }}
+                     >
+                        편집하기
+                     </button>
                   </div>
                ))}
             </div>
