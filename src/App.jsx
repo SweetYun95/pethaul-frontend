@@ -22,6 +22,7 @@ import ItemCartForm from './components/item/ItemCartForm'
 import MyReviewList from './pages/MyReviewList'
 import MyOrderList from './pages/MyOrderList'
 import ReviewEditPage from './pages/ReviewEditPage'
+import Test from './pages/Test'
 
 function App() {
    return (
@@ -63,6 +64,8 @@ function App() {
             <Route path="/items/create" element={<ItemCreatePage />} />
             {/* 상품 수정 */}
             <Route path="/items/edit/:id" element={<ItemEditPage />} />
+            {/* 기능 테스트용 페이지 */}
+            <Route path="/test" element={<Test />} />
          </Routes>
          <Footer />
       </>
