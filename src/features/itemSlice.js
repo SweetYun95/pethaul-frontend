@@ -1,6 +1,12 @@
 // src/features/itemSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createItem, updateItem, deleteItem, getItems, getItemById } from '../api/itemApi'
+import {
+   createItem,
+   updateItem,
+   // deleteItem,
+   getItems,
+   getItemById,
+} from '../api/itemApi'
 
 // 상품 등록
 export const createItemThunk = createAsyncThunk('items/createItem', async (formData, { rejectWithValue }) => {
@@ -27,14 +33,14 @@ export const updateItemThunk = createAsyncThunk('items/updateItem', async ({ id,
 })
 
 // 상품 삭제
-export const deleteItemThunk = createAsyncThunk('items/deleteItem', async (id, { rejectWithValue }) => {
-   try {
-      await deleteItem(id)
-      return id
-   } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
-   }
-})
+// export const deleteItemThunk = createAsyncThunk('items/deleteItem', async (id, { rejectWithValue }) => {
+//    try {
+//       await deleteItem(id)
+//       return id
+//    } catch (error) {
+//       return rejectWithValue(error.response?.data?.message)
+//    }
+// })
 
 // 전체 상품 리스트 가져오기
 export const fetchItemsThunk = createAsyncThunk('items/getItems', async (data, { rejectWithValue }) => {
@@ -96,17 +102,17 @@ const itemSlice = createSlice({
          })
 
          // 상품 삭제
-         .addCase(deleteItemThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(deleteItemThunk.fulfilled, (state) => {
-            state.loading = false
-         })
-         .addCase(deleteItemThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
+         // .addCase(deleteItemThunk.pending, (state) => {
+         //    state.loading = true
+         //    state.error = null
+         // })
+         // .addCase(deleteItemThunk.fulfilled, (state) => {
+         //    state.loading = false
+         // })
+         // .addCase(deleteItemThunk.rejected, (state, action) => {
+         //    state.loading = false
+         //    state.error = action.payload
+         // })
 
          // 전체 상품 리스트 가져오기
          .addCase(fetchItemsThunk.pending, (state) => {

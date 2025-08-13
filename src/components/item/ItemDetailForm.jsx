@@ -6,6 +6,7 @@ import { addToCartThunk } from '../../features/cartSlice'
 
 import ItemReviewList from '../review/ItemReviewList'
 import { Link } from 'react-router-dom'
+import '../css/item/ItemDetailForm.css'
 
 function ItemDetailForm({ item }) {
    const dispatch = useDispatch()

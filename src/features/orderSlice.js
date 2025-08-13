@@ -54,9 +54,9 @@ export const updateOrderStatusThunk = createAsyncThunk('order/updateOrderStatus'
 })
 
 //관리자용 전체 주문 조회 Thunk
-export const fetchAllOrdersThunk = createAsyncThunk('order/fetchAllOrders', async (_, { rejectWithValue }) => {
+export const fetchAllOrdersThunk = createAsyncThunk('order/fetchAllOrders', async (sort, { rejectWithValue }) => {
    try {
-      const response = await fetchAllOrders()
+      const response = await fetchAllOrders(sort)
       console.log('🎈response.data:', response.data)
       return response.data
    } catch (error) {

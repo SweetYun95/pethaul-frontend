@@ -85,9 +85,9 @@ function OrderPanel() {
 
                      <Box sx={{ backgroundColor: 'gray' }}>
                         <Typography>주문일자: {order.orderDate.slice(0, 10)}</Typography>
-                        <Typography>주문자: {order.User.name}</Typography>
-                        <Typography>주문자 id: {order.User.userId}</Typography>
-                        <Typography>주소: {order.User.address}</Typography>
+                        <Typography>주문자: {order.User?.name}</Typography>
+                        <Typography>주문자 id: {order.User?.userId}</Typography>
+                        <Typography>주소: {order.User?.address}</Typography>
                      </Box>
                      <Box sx={{ backgroundColor: 'skyblue' }}>
                         <Typography>주문상품: {order.itemNm}</Typography>
