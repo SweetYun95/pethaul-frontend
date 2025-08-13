@@ -14,6 +14,7 @@ function ItemCreatePage() {
       dispatch(createItemThunk(itemData))
          .unwrap()
          .then(() => {
+            alert('상품을 등록했습니다.')
             navigate('/admin')
          })
          .catch((error) => {
@@ -22,7 +23,7 @@ function ItemCreatePage() {
          })
    }
    return (
-      <div style={{backgroundColor: '#F2FAFF', paddingTop: '74px'}}>
+      <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
          <ItemCreateForm onCreateSubmit={onCreateSubmit} />
       </div>
    )

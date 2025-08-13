@@ -3,8 +3,10 @@ import '../css/item/ItemCreateForm.css'
 
 import { useState } from 'react'
 import { formatWithComma, stripComma } from '../../utils/priceSet'
+import { useNavigate } from 'react-router-dom'
 
 function ItemCreateForm({ onCreateSubmit }) {
+   const navigate = useNavigate()
    const [imgUrls, setImgUrls] = useState([]) // 이미지 경로(여러개 저장)
    const [imgFiles, setImgFiles] = useState([]) // 이미지 파일 객체(여러개 저장)
    const [itemNm, setItemNm] = useState('') // 상품명
@@ -129,7 +131,7 @@ function ItemCreateForm({ onCreateSubmit }) {
             <div className="item-create-form-group">
                <form encType="multipart/form-data">
                   {/* 이미지 업로드 필드 */}
-                  <button className="img-up-btn" component="label">
+                  <label htmlFor="img-upload" className="img-up-btn">
                      이미지 업로드 (최대 5개)
                      <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 32 32">
                         <path fill="#000" d="M27.425 6.09h-1.52V4.57h-1.52V3.04h-1.53V1.52h-1.52V0H3.045v32h25.91V7.62h-1.53Zm0 24.38H4.575V1.52h15.23v7.62h7.62Z" strokeWidth={0.1} stroke="#000"></path>
@@ -141,8 +143,8 @@ function ItemCreateForm({ onCreateSubmit }) {
                            stroke="#000"
                         ></path>
                      </svg>
-                     <input type="file" name="img" accept="image/*" hidden multiple onChange={handleImageChange} />
-                  </button>
+                  </label>
+                  <input id="img-upload" type="file" name="img" accept="image/*" hidden multiple onChange={handleImageChange} />
 
                   {/* 업로드된 이미지 미리보기 */}
                   <Box
@@ -228,7 +230,7 @@ function ItemCreateForm({ onCreateSubmit }) {
                   </div>
 
                   {/* 등록 버튼 */}
-                  <button className="submit-btn" type="submit">
+                  <button className="submit-btn" type="submit" onClick={handleSubmit}>
                      등록하기
                   </button>
                </form>
