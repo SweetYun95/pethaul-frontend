@@ -12,6 +12,9 @@ function ItemDetailForm({ item }) {
    const dispatch = useDispatch()
    const [quantity, setQuantity] = useState(1)
 
+   // 썸네일 이미지 초기값
+   const [selectedImage, setSelectedImage] = useState(`${import.meta.env.VITE_APP_API_URL}${item.ItemImages.find((img) => img.repImgYn === 'Y')?.imgUrl}`)
+
    //해당 상품 평균 평점 계산
    const { avgRating, reviewCount } = useMemo(() => {
       const list = Array.isArray(item?.Reviews) ? item.Reviews : []
@@ -50,27 +53,15 @@ function ItemDetailForm({ item }) {
             }}
          >
             {/* 서브 이미지 */}
-            <Box
-               sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: '90px',
-                  height: '104px',
-               }}
-            >
-               {item.ItemImages.filter((data) => data.repImgYn === 'N').map((img, index) => (
-                  <img src={`${import.meta.env.VITE_APP_API_URL}${img.imgUrl}`} key={index} />
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: '90px' }}>
+               {item.ItemImages.map((img, index) => (
+                  <img key={index} src={`${import.meta.env.VITE_APP_API_URL}${img.imgUrl}`} style={{ cursor: 'pointer', marginBottom: '8px' }} onClick={() => setSelectedImage(`${import.meta.env.VITE_APP_API_URL}${img.imgUrl}`)} />
                ))}
             </Box>
+
             {/* 대표 이미지 */}
             <Box>
-               <img
-                  src={`${import.meta.env.VITE_APP_API_URL}${item.ItemImages.filter((img) => img.repImgYn === 'Y')[0].imgUrl}`}
-                  sx={{
-                     width: '540px',
-                     height: '622px',
-                  }}
-               />
+               <img src={selectedImage} style={{ width: '540px', height: '622px' }} />
             </Box>
          </Box>
 
