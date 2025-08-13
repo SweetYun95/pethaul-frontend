@@ -7,12 +7,19 @@ import '../css/item/ItemCartForm.css'
 
 const ItemCartForm = () => {
    const dispatch = useDispatch()
-   const { items: cartItems, loading } = useSelector((state) => state.cart)
+   const { items: cartItems = [], loading } = useSelector((state) => state.cart)
    const { id } = useParams()
+
+   console.log(
+      'item:',
+      cartItems.map((item) => {
+         return item
+      })
+   )
 
    useEffect(() => {
       dispatch(fetchCartItemsThunk(id))
-   }, [dispatch])
+   }, [dispatch, id])
 
    const buildImgUrl = (url) => {
       if (!url) return '/images/no-image.jpg'

@@ -4,8 +4,10 @@ import { getUserPets, createPet, updatePet, deletePet } from '../api/petApi'
 // 펫 등록
 export const createPetThunk = createAsyncThunk('pet/create', async (formData, { rejectWithValue }) => {
    try {
-      const res = await createPet(formData)
-      return res.data
+      console.log('formData:', formData)
+      const response = await createPet(formData)
+      console.log(response)
+      return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message)
    }
@@ -14,18 +16,20 @@ export const createPetThunk = createAsyncThunk('pet/create', async (formData, { 
 // 펫 수정
 export const updatePetThunk = createAsyncThunk('pet/update', async ({ id, formData }, { rejectWithValue }) => {
    try {
-      const res = await updatePet(id, formData)
-      return res.data
+      const response = await updatePet(id, formData)
+      return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message)
    }
 })
 
 // 유저의 펫 목록 조회
-export const getUserPetsThunk = createAsyncThunk('pet/getUserPets', async (userId, { rejectWithValue }) => {
+export const getUserPetsThunk = createAsyncThunk('pet/getUserPets', async (_, { rejectWithValue }) => {
    try {
-      const res = await getUserPets(userId)
-      return res.data
+      const response = await getUserPets()
+      console.log('[petApi.js]response', response)
+
+      return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message)
    }

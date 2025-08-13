@@ -5,23 +5,28 @@ import { getUserPetsThunk } from '../../features/petSlice'
 import PetProfile from '../myInfo/PetProfile'
 import '../css/myInfo/PetProfileSlider.css'
 
-function PetProfileSlider() {
+function PetProfileSlider({ pets }) {
    const dispatch = useDispatch()
-   const { user } = useSelector((s) => s.auth)
-   const { pets, loading, error } = useSelector((s) => s.pet)
+   // const { user } = useSelector((s) => s.auth)
+   // console.log('user', user)
 
    const [idx, setIdx] = useState(0)
    const total = pets?.length ?? 0
 
-   useEffect(() => {
-      if (user?.id) dispatch(getUserPetsThunk(user.id))
-   }, [dispatch, user?.id])
+   // const authLoading = useSelector((s) => s.auth.loading)
+   // useEffect(() => {
+   //    // 새로고침 시 user가 준비된 뒤 호출되도록 가드
+   //    if (!authLoading && user?.id) dispatch(getUserPetsThunk())
+   // }, [dispatch, authLoading, user?.id])
+   //로그인 에러 해결되면 수정
+
+   console.log('🐶 현재 pets 데이터:', pets)
 
    const prev = () => setIdx((i) => (i === 0 ? total - 1 : i - 1))
    const next = () => setIdx((i) => (i === total - 1 ? 0 : i + 1))
 
-   if (loading) return <p>반려동물 불러오는 중…</p>
-   if (error) return <p style={{ color: 'red' }}>에러: {String(error)}</p>
+   // if (loading) return <p>반려동물 불러오는 중…</p>
+   // if (error) return <p style={{ color: 'red' }}>에러: {String(error)}</p>
 
    if (!total) {
       return (

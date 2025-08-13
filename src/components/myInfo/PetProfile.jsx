@@ -10,7 +10,6 @@ const PetProfile = ({ pet }) => {
          : `${base}${img}` // 서버 이미지
    })()
    const genderLabel = (g) => (g === 'M' ? '남' : g === 'F' ? '여' : '-')
-
    return (
       <Card>
          <CardMedia component="img" height="180" image={repImg} alt={pet.petName} />
