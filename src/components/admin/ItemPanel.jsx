@@ -21,7 +21,10 @@ function ItemPanel({ searchTerm, sellCategory }) {
       if (res) {
          dispatch(deleteItemThunk(e.target.id))
             .unwrap()
-            .then(() => alert('상품이 삭제되었습니다!'))
+            .then(() => {
+               alert('상품이 삭제되었습니다!')
+               dispatch(fetchItemsThunk({ searchTerm, sellCategory }))
+            })
             .catch(() => alert('상품 삭제 중 오류 발생'))
       }
    }
