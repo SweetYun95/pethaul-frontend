@@ -3,7 +3,11 @@ import { Box, Button, Typography, Stack, TextField, Card, CardMedia, CardContent
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { deleteItemThunk, fetchItemsThunk } from '../../features/itemSlice'
+import {
+   // deleteItemThunk,
+   fetchItemsThunk,
+} from '../../features/itemSlice'
+
 import { Link } from 'react-router-dom'
 
 function ItemPanel({ searchTerm, sellCategory }) {
@@ -16,18 +20,18 @@ function ItemPanel({ searchTerm, sellCategory }) {
 
    console.log('items:', items)
 
-   const onClickDelete = (e) => {
-      const res = confirm('정말 삭제하시겠습니까?')
-      if (res) {
-         dispatch(deleteItemThunk(e.target.id))
-            .unwrap()
-            .then(() => {
-               alert('상품이 삭제되었습니다!')
-               dispatch(fetchItemsThunk({ searchTerm, sellCategory }))
-            })
-            .catch(() => alert('상품 삭제 중 오류 발생'))
-      }
-   }
+   // const onClickDelete = (e) => {
+   //    const res = confirm('정말 삭제하시겠습니까?')
+   //    if (res) {
+   //       dispatch(deleteItemThunk(e.target.id))
+   //          .unwrap()
+   //          .then(() => {
+   //             alert('상품이 삭제되었습니다!')
+   //             dispatch(fetchItemsThunk({ searchTerm, sellCategory }))
+   //          })
+   //          .catch(() => alert('상품 삭제 중 오류 발생'))
+   //    }
+   // }
    if (loading) <p>로딩 중...</p>
    if (error) <p>에러가 발생했습니다.: {error}</p>
    return (
@@ -61,9 +65,9 @@ function ItemPanel({ searchTerm, sellCategory }) {
                         <Link to={`/items/edit/${item.id}`}>
                            <Button>수정</Button>
                         </Link>
-                        <Button onClick={onClickDelete} id={item.id}>
+                        {/* <Button onClick={onClickDelete} id={item.id}>
                            삭제
-                        </Button>
+                        </Button> */}
                      </Box>
                   </Card>
                ))}

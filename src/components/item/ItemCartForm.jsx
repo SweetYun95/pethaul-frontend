@@ -29,14 +29,14 @@ const ItemCartForm = () => {
       return `${base}/${path}`
    }
 
-   const handleUpdate = (cartItemId, count) => {
+   const handleUpdate = (itemId, count) => {
       const n = Number(count)
       if (!Number.isFinite(n) || n < 1) return
-      dispatch(updateCartItemThunk({ cartItemId, count: n }))
+      dispatch(updateCartItemThunk({ itemId, count: n }))
    }
 
-   const handleDelete = (cartItemId) => {
-      dispatch(deleteCartItemThunk(cartItemId))
+   const handleDelete = (itemId) => {
+      dispatch(deleteCartItemThunk(itemId))
    }
 
    const totalPrice = useMemo(() => cartItems.reduce((acc, item) => acc + (item.count || 0) * (item.Item?.price || 0), 0), [cartItems])
@@ -71,6 +71,7 @@ const ItemCartForm = () => {
                      const price = item.Item?.price || 0
                      const name = item.Item?.itemNm || '상품명'
                      const qty = item.count ?? 1
+                     const itemId = item.Item?.id
                      return (
                         <div className="cart-card" key={`${item.id}-${item.Item?.id || 'na'}`}>
                            <div className="thumb">
@@ -80,18 +81,18 @@ const ItemCartForm = () => {
                               <p className="name" title={name}>
                                  {name}
                               </p>
-                              <p className="price">가격: {price.toLocaleString()}원</p>
+                              <p className="price">{price.toLocaleString()}원</p>
 
                               <div className="qty-row">
-                                 <button type="button" className="qty-btn" onClick={() => handleUpdate(item.id, qty - 1)} aria-label="수량 감소">
+                                 <button type="button" className="qty-btn" onClick={() => handleUpdate(itemId, qty - 1)} aria-label="수량 감소">
                                     −
                                  </button>
-                                 <input type="number" min={1} className="qty-input" value={qty} onChange={(e) => handleUpdate(item.id, e.target.value)} />
-                                 <button type="button" className="qty-btn" onClick={() => handleUpdate(item.id, qty + 1)} aria-label="수량 증가">
+                                 <input type="number" min={1} className="qty-input" value={qty} onChange={(e) => handleUpdate(itemId, e.target.value)} />
+                                 <button type="button" className="qty-btn" onClick={() => handleUpdate(itemId, qty + 1)} aria-label="수량 증가">
                                     +
                                  </button>
 
-                                 <button type="button" className="del-btn" onClick={() => handleDelete(item.id)} aria-label="삭제" title="삭제">
+                                 <button type="button" className="del-btn" onClick={() => handleDelete(itemId)} aria-label="삭제" title="삭제">
                                     {/* 간단한 휴지통 아이콘 (SVG) */}
                                     <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 24 24">
                                        <path fill="#000" d="M22 3v2H2V3h6V2h1V1h6v1h1v1zM4 7v15h1v1h14v-2h1V7zm12 12h-2V9h2zm-6 0H8V9h2z" strokeWidth={0.5} stroke="#000"></path>
