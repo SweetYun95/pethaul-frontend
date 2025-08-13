@@ -10,43 +10,37 @@ import OrderState from '../components/myInfo/OrderState'
 import MenuBar from '../components/myInfo/MenuBar'
 import PetProfileSlider from '../components/slider/PetProfileSlider'
 
+import { getUserPetsThunk } from '../features/petSlice'
 function MyPage() {
-   const { user, loading, error } = useSelector((state) => state.auth)
+   const { user, loading: userLoading, error: userError } = useSelector((state) => state.auth)
+   const { pets, loading: petsLoading, error: petsError } = useSelector((state) => state.pet)
+
    const dispatch = useDispatch()
 
    useEffect(() => {
       dispatch(checkAuthStatusThunk())
+
+      dispatch(getUserPetsThunk())
    }, [dispatch])
 
-   if (error) return <p>에러 발생: {String(error)}</p>
+   //  if (loading) return <p>로딩 중...</p>
+   //  if (error) return <p>에러 발생:{String(error)}</p>
+
 
    const userId = user?.id ?? user?._id ?? user?.userId
    const isGuest = !userId
 
    return (
-      <div
-         style={{
-            backgroundImage: 'url(/images/dots.jpeg)',
-            backgroundRepeat: 'repeat',
-            backgroundSize: '20%',
-            paddingTop: '74px',
-            overflowY: 'hidden',
-         }}
-      >
+
+      <div style={{ backgroundImage: 'url(/images/dots.jpeg)', backgroundRepeat: 'repeat', backgroundSize: '20%', paddingTop: '74px', overflowY: 'hidden' }}>
+
          <div style={{ maxWidth: '1200px', margin: '0 auto', maxHeight: '1500px' }}>
             <h1 className="section-title" style={{ margin: '20px' }}>
                마이페이지
             </h1>
 
-            <div
-               style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 2fr',
-                  margin: '20px',
-                  gap: '20px',
-                  height: '300px',
-               }}
-            >
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', margin: '20px', gap: '20px', height: '300px' }}>
+
                {/* ✅ Profile에 loading 전달하여 스켈레톤/가드 동작 */}
                <Profile user={user} loading={loading} />
                <OrderState />
@@ -57,7 +51,9 @@ function MyPage() {
                <MenuBar id={userId} isGuest={isGuest} />
             </div>
 
-            <PetProfileSlider />
+
+            <PetProfileSlider pets={pets} />
+
          </div>
       </div>
    )

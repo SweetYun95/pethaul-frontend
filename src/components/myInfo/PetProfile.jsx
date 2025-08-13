@@ -1,30 +1,28 @@
-import '../css/myInfo/PetProfile.css'
+// src/components/myInfo/PetProfile.jsx
+import { useMemo } from 'react'
+import { Box, Card, CardMedia, CardContent, Typography, Chip, Button, Stack } from '@mui/material'
 
-function PetProfile({ pet }) {
+const PetProfile = ({ pet }) => {
+   const base = useMemo(() => import.meta.env.VITE_APP_API_URL || '', [])
+   const repImg = (() => {
+      const img = pet.images?.find((i) => i.isPrimary)?.imgUrl || pet.images?.[0]?.imgUrl || '/images/no-image.jpg'
+      return img.startsWith('/images/')
+         ? img // 앱의 정적 no-image
+         : `${base}${img}` // 서버 이미지
+   })()
+   const genderLabel = (g) => (g === 'M' ? '남' : g === 'F' ? '여' : '-')
    return (
-    <div className='my-pet-card'>
-     <div className='petprofile-change'>
-      <img src="/images/petprofile.jpeg" alt="profile" />
-      <a>프로필편집</a>
-      {/* 펫정보수정링크 */}
-     </div>
-     <div className='petprofile-info'>
-      <h1>{pet?.name}</h1>
-      <div>
-        <p>동물종류/품종</p>
-        <p>{pet?.type}</p>
-      </div>
-      <div>
-        <p>나이</p>
-        <p>{pet?.age}</p>
-      </div>
-      <div>
-         <p>성별</p>
-         <p>{pet?.gender}</p>
-      </div>
-     </div>
-   </div>
+      <Card>
+         <CardMedia component="img" height="180" image={repImg} alt={pet.petName} />
+         <CardContent>
+            <Typography variant="h6">{pet.petName}</Typography>
+            <Stack direction="row" spacing={1} mt={1}>
+               <Chip size="small" label={`${pet.petType} / ${pet.breed}`} />
+               <Chip size="small" label={`나이 ${pet.age}`} />
+               <Chip size="small" label={`성별 ${genderLabel(pet.gender)}`} />
+            </Stack>
+         </CardContent>
+      </Card>
    )
 }
-
 export default PetProfile
