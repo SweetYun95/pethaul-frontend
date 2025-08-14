@@ -48,7 +48,7 @@ function MenuBar({ id }) {
                </div>
                <span className="card-title">취소</span>
             </div>
-            <div className="menubar-card">{orders.filter((o) => o.orderStatus === 'CANCEL').length}</div>
+            <div className="menubar-card">{orders?.filter((o) => o.orderStatus === 'CANCEL').length}</div>
          </div>
 
          <div className="contents-card">
