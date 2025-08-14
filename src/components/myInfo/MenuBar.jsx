@@ -19,8 +19,8 @@ function MenuBar({ id }) {
    }, [dispatch, id])
    // console.log('🎈id:', id)
 
-   // console.log('🎈리뷰 데이터:', reviews)
-   // console.log('🎈주문 데이터:', orders)
+   console.log('🎈리뷰 데이터:', reviews)
+   console.log('🎈주문 데이터:', orders)
 
    if (reviewLoading || orderLoading) return <p>로딩 중...</p>
    if (reviewError || orderError) return <p>에러 발생:{reviewError}</p>
@@ -36,7 +36,7 @@ function MenuBar({ id }) {
                </div>
                <span className="card-title">주문</span>
             </div>
-            <div className="menubar-card">{orders.length}</div>
+            <div className="menubar-card">{orders?.length}</div>
          </div>
 
          <div className="contents-card">
@@ -60,7 +60,7 @@ function MenuBar({ id }) {
                </div>
                <span className="card-title">리뷰</span>
             </div>
-            <div className="menubar-card">{reviews.length}</div>
+            <div className="menubar-card">{reviews?.length}</div>
          </div>
 
          <div className="contents-card">
@@ -72,7 +72,7 @@ function MenuBar({ id }) {
                </div>
                <span className="card-title">1:1 문의</span>
             </div>
-            <div className="menubar-card">{orders.length}</div>
+            <div className="menubar-card">{orders?.length}</div>
          </div>
       </section>
    )

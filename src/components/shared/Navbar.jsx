@@ -105,7 +105,7 @@ function Navbar() {
                   </div>
 
                   <div className="icon">
-                     <IconButton>
+                     <IconButton onClick={() => navigate('/likes/item')}>
                         <iconify-icon icon="pixelarticons:heart" width="24" height="24"></iconify-icon>
                      </IconButton>
                      <IconButton onClick={() => navigate('/cart')}>

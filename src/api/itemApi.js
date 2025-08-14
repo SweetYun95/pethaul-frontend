@@ -68,3 +68,14 @@ export const getItemById = async (id) => {
       throw error
    }
 }
+
+// 조건별 데이터 조회 (회원용)
+export const fetchSortData = async (limit) => {
+   try {
+      const response = await shopmaxApi.get(`/item/all/main?limit=${limit}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error}`)
+      throw error
+   }
+}
