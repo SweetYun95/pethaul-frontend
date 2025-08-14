@@ -13,8 +13,7 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 import Grow from '@mui/material/Grow'
 import Popper from '@mui/material/Popper'
 import Stack from '@mui/material/Stack'
-
-import { logoutUserThunk } from '../../features/authSlice'
+import { logoutUserThunk, checkAuthStatusThunk, googleCheckStatusThunk } from '../../features/authSlice'
 
 import '../css/shared/Navbar_v-ysy.css'
 
@@ -24,6 +23,11 @@ function Navbar() {
 
    const { isAuthenticated, user } = useSelector((state) => state.auth)
 
+   // ✅ 여기서는 더 이상 상태 체크 디스패치 하지 않음(중복 방지)
+   useEffect(() => {
+      console.log('🎈 isAuthenticated:', isAuthenticated)
+      console.log('🎈 user:', user)
+   }, [isAuthenticated, user])
 
    // useEffect를 사용하여 컴포넌트가 마운트될 때마다 로그인 상태 확인
    useEffect(() => {
@@ -41,7 +45,6 @@ function Navbar() {
    //    console.log('🎈 isAuthenticated:', isAuthenticated)
    //    console.log('🎈 user:', user)
    // }, [isAuthenticated, user])
-
 
    const [anchorEl, setAnchorEl] = useState(null)
    const open = Boolean(anchorEl)

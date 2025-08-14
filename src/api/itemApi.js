@@ -28,15 +28,15 @@ export const updateItem = async (id, formData) => {
 }
 
 // 상품 삭제
-// export const deleteItem = async (id) => {
-//    try {
-//       const response = await shopmaxApi.delete(`/item/${id}`)
-//       return response
-//    } catch (error) {
-//       console.error(`API Request 오류:${error}`)
-//       throw error
-//    }
-// }
+export const deleteItem = async (id) => {
+   try {
+      const response = await shopmaxApi.delete(`/item/${id}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류:${error}`)
+      throw error
+   }
+}
 
 // 전체 상품 리스트 가져오기
 export const getItems = async (data) => {
