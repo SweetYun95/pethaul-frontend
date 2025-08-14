@@ -36,7 +36,12 @@ export const createPet = async (formData) => {
 // 펫 수정
 export const updatePet = async (id, formData) => {
    try {
-      const response = await shopmaxApi.put(`/pets/edit/${id}`, formData)
+      const config = {
+         headers: {
+            'Content-Type': 'multipart/form-data',
+         },
+      }
+      const response = await shopmaxApi.put(`/pets/edit/${id}`, formData, config)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)

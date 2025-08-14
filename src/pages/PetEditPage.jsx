@@ -1,3 +1,4 @@
+// src/pages/PetEditPage.jsx
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -26,7 +27,7 @@ const PetEditPage = () => {
       gender: initial?.gender || '',
       age: initial?.age ?? '',
    })
-   const [files, setFiles] = useState([])
+   const [file, setFile] = useState(null) // ✅ 단일 파일
 
    useEffect(() => {
       if (initial) {
@@ -41,16 +42,19 @@ const PetEditPage = () => {
    }, [initial])
 
    const baseUrl = useMemo(() => import.meta.env.VITE_APP_API_URL || '', [])
+
+   // 기존 대표 이미지
    const currentImg = initial?.images?.[0]?.imgUrl ? (initial.images[0].imgUrl.startsWith('/images/') ? initial.images[0].imgUrl : `${baseUrl}${initial.images[0].imgUrl}`) : '/images/no-image.jpg'
+
+   // 파일 선택 (한 장만)
+   const handleFiles = (e) => {
+      const list = Array.from(e.target.files || [])
+      setFile(list[0] || null)
+   }
 
    const handleChange = (e) => {
       const { name, value } = e.target
       setForm((prev) => ({ ...prev, [name]: value }))
-   }
-
-   const handleFiles = (e) => {
-      const list = Array.from(e.target.files || [])
-      setFiles(list.slice(0, 10))
    }
 
    const handleSubmit = async (e) => {
@@ -63,7 +67,12 @@ const PetEditPage = () => {
       fd.append('breed', form.breed)
       fd.append('gender', form.gender)
       fd.append('age', form.age)
-      files.forEach((f) => fd.append('img', f))
+
+      // ✅ 단일 파일 교체 시에도 동일 처리
+      if (file) {
+         const safe = new File([file], encodeURIComponent(file.name), { type: file.type }) // ★
+         fd.append('img', safe) // ★ 세 번째 인자(파일명) 쓰지 마세요
+      }
 
       await dispatch(updatePetThunk({ id: petId, formData: fd })).unwrap()
       await dispatch(getUserPetsThunk()) // 목록 갱신
@@ -71,21 +80,26 @@ const PetEditPage = () => {
       navigate('/mypage')
    }
 
+   // 미리보기: 새 파일 선택 시 그걸, 아니면 기존 대표 이미지
+   const previewUrl = file ? URL.createObjectURL(file) : currentImg
+
    return (
       <Box maxWidth={720} mx="auto" p={3} component="form" onSubmit={handleSubmit}>
          <Typography variant="h5" mb={2}>
             반려동물 프로필 편집
          </Typography>
 
-         {/* 현재 대표 이미지 미리보기 */}
-         <Card sx={{ width: 180, height: 180, mb: 2, overflow: 'hidden' }}>
-            <CardMedia component="img" height={180} image={currentImg} />
+         {/* 대표 이미지 미리보기 (단일) */}
+         <Card sx={{ width: 200, height: 200, mb: 1.5, overflow: 'hidden' }}>
+            <CardMedia component="img" height={200} image={previewUrl} onLoad={() => file && URL.revokeObjectURL(previewUrl)} />
          </Card>
+         <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}></Typography>
 
          <Stack spacing={3}>
             <TextField label="이름" name="petName" value={form.petName} onChange={handleChange} required fullWidth />
             <TextField label="동물 종류" name="petType" value={form.petType} onChange={handleChange} fullWidth />
             <TextField label="품종" name="breed" value={form.breed} onChange={handleChange} fullWidth />
+
             <TextField
                select
                label="성별"
@@ -102,25 +116,16 @@ const PetEditPage = () => {
                <MenuItem value="M">남</MenuItem>
                <MenuItem value="F">여</MenuItem>
             </TextField>
+
             <TextField label="나이" name="age" type="number" inputProps={{ min: 0 }} value={form.age} onChange={handleChange} fullWidth />
 
+            {/* ✅ 단일 파일 입력 */}
             <Stack direction="row" spacing={2} alignItems="center">
                <Button variant="outlined" component="label">
-                  이미지 교체(여러 장)
-                  <input type="file" hidden multiple accept="image/*" onChange={handleFiles} />
+                  이미지 교체(1장)
+                  <input type="file" hidden accept="image/*" onChange={handleFiles} />
                </Button>
-               <Typography variant="body2">{files.length ? `${files.length}장 선택됨` : ''}</Typography>
-            </Stack>
-
-            <Stack direction="row" spacing={2} flexWrap="wrap">
-               {files.map((file, idx) => {
-                  const url = URL.createObjectURL(file)
-                  return (
-                     <Card key={idx} sx={{ width: 120, height: 120, overflow: 'hidden' }}>
-                        <CardMedia component="img" height={120} image={url} onLoad={() => URL.revokeObjectURL(url)} />
-                     </Card>
-                  )
-               })}
+               <Typography variant="body2">{file ? `선택됨: ${file.name}` : '선택된 파일 없음'}</Typography>
             </Stack>
 
             <Box>

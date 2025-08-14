@@ -45,7 +45,11 @@ const PetCreatePage = () => {
       fd.append('breed', form.breed)
       fd.append('gender', form.gender)
       fd.append('age', form.age)
-      files.forEach((f) => fd.append('img', f))
+      // ✅ 파일명 안전 처리: encodeURIComponent로 감싼 새 File로 전송
+      files.forEach((f) => {
+         const safe = new File([f], encodeURIComponent(f.name), { type: f.type }) // ★
+         fd.append('img', safe) // ★ 세 번째 인자(파일명) 쓰지 마세요
+      })
 
       // ✅ 생성 결과 받아서 successPet으로 저장
       const created = await dispatch(createPetThunk(fd)).unwrap() // { success, message, pet }
