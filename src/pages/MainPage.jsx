@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchSortDataThunk } from '../features/orderSlice'
 function MainPage() {
    const dispatch = useDispatch()
-   const { orders, loading, error } = useSelector((state) => state.order)
+   const { orders: mainData, loading, error } = useSelector((state) => state.order)
 
    useEffect(() => {
-      dispatch(fetchSortDataThunk())
+      dispatch(fetchSortDataThunk(5))
    }, [dispatch])
 
-   console.log('🎈orders:', orders)
+   console.log('🎈mainData:', mainData)
+   if (loading) return <p>로딩 중...</p>
+   if (error) return <p>에러 발생:{error}</p>
    const products = [1, 2, 3]
    return (
       <main>
@@ -51,12 +53,13 @@ function MainPage() {
                   </button>
                </div>
                <div className="card-list" style={{ marginTop: '10px' }}>
-                  {[1, 2, 3, 4, 5].map((num) => (
-                     <div key={num} className="card">
-                        <img height="160" src={`/images/sample${num}.jpg`} alt={`상품 ${num}`} />
+                  {/* 오늘 주문 건수가 가장 많은 데이터 */}
+                  {mainData?.topToday?.map((item, index) => (
+                     <div key={index} className="card">
+                        <img height="160" src={`${import.meta.env.VITE_APP_API_URL}${item.itemImgUrl}`} alt={`${item.itemNm}`} />
                         <div className="card-text">
-                           <p>상품 {num}</p>
-                           <p>₩가격</p>
+                           <p>{item.itemNm}</p>
+                           <p>{item.price}원</p>
                         </div>
                      </div>
                   ))}
@@ -181,12 +184,12 @@ function MainPage() {
                   </button>
                </div>
                <div className="card-list" style={{ marginTop: '10px' }}>
-                  {[1, 2, 3, 4, 5].map((num) => (
-                     <div key={num} className="card">
-                        <img height="160" src={`/images/sample${num}.jpg`} alt={`상품 ${num}`} />
+                  {mainData?.newItems?.map((item, index) => (
+                     <div key={index} className="card">
+                        <img height="160" src={`${import.meta.env.VITE_APP_API_URL}${item.itemImgUrl}`} alt={`${item.itemNm}`} />
                         <div className="card-text">
-                           <p>상품 {num}</p>
-                           <p>₩가격</p>
+                           <p>{item.itemNm}</p>
+                           <p>{item.price}원</p>
                         </div>
                      </div>
                   ))}

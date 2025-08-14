@@ -68,9 +68,9 @@ export const fetchAllOrders = async (sort) => {
 }
 
 // 조건별 데이터 조회 (회원용)
-export const fetchSortData = async () => {
+export const fetchSortData = async (limit) => {
    try {
-      const response = await shopmaxApi.get(`/order/all/main`)
+      const response = await shopmaxApi.get(`/order/all/main?limit=${limit}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)

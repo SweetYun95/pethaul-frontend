@@ -65,9 +65,9 @@ export const fetchAllOrdersThunk = createAsyncThunk('order/fetchAllOrders', asyn
 })
 
 // 회원용 조건부 조회 Thunk
-export const fetchSortDataThunk = createAsyncThunk('order/fetchSortData', async (_, { rejectWithValue }) => {
+export const fetchSortDataThunk = createAsyncThunk('order/fetchSortData', async (limit, { rejectWithValue }) => {
    try {
-      const response = await fetchSortData()
+      const response = await fetchSortData(limit)
       console.log('🎈response.data:', response.data)
       return response.data
    } catch (error) {
