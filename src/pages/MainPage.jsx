@@ -1,6 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './css/Main.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchSortDataThunk } from '../features/orderSlice'
 function MainPage() {
+   const dispatch = useDispatch()
+   const { orders, loading, error } = useSelector((state) => state.order)
+
+   useEffect(() => {
+      dispatch(fetchSortDataThunk())
+   }, [dispatch])
+
+   console.log('🎈orders:', orders)
    const products = [1, 2, 3]
    return (
       <main>

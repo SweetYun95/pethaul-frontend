@@ -1,7 +1,9 @@
-import ItemSearchTap from '../components/item/ItemSearchTap'
+import { useSelector } from 'react-redux'
 
+import ItemSearchTap from '../components/item/itemSearchTap'
 function Test() {
-   return <ItemSearchTap />
+   const { items, loading, error } = useSelector((state) => state.item)
+   return <ItemSearchTap items={items} />
 }
 
 export default Test

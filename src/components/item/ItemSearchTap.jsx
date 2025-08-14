@@ -1,11 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useMemo, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { Box } from '@mui/system'
 import { Button, Typography } from '@mui/material'
-function ItemSearchTap() {
+function ItemSearchTap({ items }) {
    const dispatch = useDispatch()
-   const { items, loading, error } = useSelector((state) => state.item)
 
    const [sellCategory, setSellCategory] = useState([]) // 검색 필터 설정 (배열)
 
@@ -27,8 +26,6 @@ function ItemSearchTap() {
    // 데이터 확인용 로그(배포 전 주석포함 삭제)
    console.log('🎀items:', items)
    console.log('🎀sellCategory:', sellCategory)
-
-   if (error) return <p>에러 발생:{error}</p>
 
    return (
       <>
