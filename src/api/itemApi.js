@@ -41,9 +41,16 @@ export const deleteItem = async (id) => {
 // 전체 상품 리스트 가져오기
 export const getItems = async (data) => {
    try {
-      const { categoryId = '', sellCategory = '' } = data
-      const response = await shopmaxApi.get(`item?&categoryId=${categoryId}&sellCategory=${sellCategory}`)
-
+      const { searchTerm = '', sellCategory = [] } = data
+      const activeCategories = Array.isArray(sellCategory) ? sellCategory.filter(Boolean) : sellCategory ? [sellCategory] : []
+      const response = await shopmaxApi.get('item', {
+         params: {
+            searchTerm,
+            sellCategory: activeCategories,
+         },
+      })
+      console.log('🎀activeCategories:', activeCategories)
+      // console.log('🎀response:', response)
       return response
    } catch (error) {
       console.error(`API Request 오류:${error}`)

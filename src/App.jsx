@@ -25,6 +25,7 @@ import MyOrderList from './pages/MyOrderList'
 import ReviewEditPage from './pages/ReviewEditPage'
 import PetCreatePage from './pages/PetCreatePage'
 import PetEditPage from './pages/PetEditPage'
+import Test from './pages/Test'
 
 import { checkUnifiedAuthThunk } from './features/authSlice'
 
@@ -82,6 +83,14 @@ function App() {
             <Route path="/pets" element={<PetCreatePage />} />
             {/* 펫 수정 */}
             <Route path="/peteditpage" element={<PetEditPage />} />
+            {/* 
+            
+            
+            테스트 페이지 
+            
+            
+            */}
+            <Route path="/test" element={<Test />} />
          </Routes>
          <Footer />
       </>

@@ -14,7 +14,7 @@ import Grow from '@mui/material/Grow'
 import Popper from '@mui/material/Popper'
 import Stack from '@mui/material/Stack'
 
-import { logoutUserThunk } from '../../features/authSlice'
+import { logoutUserThunk, checkAuthStatusThunk, googleCheckStatusThunk } from '../../features/authSlice'
 
 import '../css/shared/Navbar_v-ysy.css'
 
@@ -23,7 +23,6 @@ function Navbar() {
    const navigate = useNavigate()
 
    const { isAuthenticated, user } = useSelector((state) => state.auth)
-
 
    // useEffect를 사용하여 컴포넌트가 마운트될 때마다 로그인 상태 확인
    useEffect(() => {
@@ -37,11 +36,10 @@ function Navbar() {
    }, [dispatch])
 
    // // 로그인 상태가 변경되면 콘솔로그로 확인
-   // useEffect(() => {
-   //    console.log('🎈 isAuthenticated:', isAuthenticated)
-   //    console.log('🎈 user:', user)
-   // }, [isAuthenticated, user])
-
+   useEffect(() => {
+      console.log('🎈 isAuthenticated:', isAuthenticated)
+      console.log('🎈 user:', user)
+   }, [isAuthenticated, user])
 
    const [anchorEl, setAnchorEl] = useState(null)
    const open = Boolean(anchorEl)
