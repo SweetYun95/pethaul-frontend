@@ -1,5 +1,5 @@
 // src/components/shared/Navbar.jsx
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -13,38 +13,21 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 import Grow from '@mui/material/Grow'
 import Popper from '@mui/material/Popper'
 import Stack from '@mui/material/Stack'
-import { logoutUserThunk, checkAuthStatusThunk, googleCheckStatusThunk } from '../../features/authSlice'
+
+import { logoutUserThunk } from '../../features/authSlice'
 
 import '../css/shared/Navbar_v-ysy.css'
 
+/**
+ * ✅ useLocation 기반 인증 체크 단일화 전략
+ * - 인증 상태 체크는 App(AuthGate) 한 곳에서만 수행
+ * - Navbar는 전역 상태를 소비만 한다 (중복 디스패치 금지)
+ */
 function Navbar() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
 
    const { isAuthenticated, user } = useSelector((state) => state.auth)
-
-   // ✅ 여기서는 더 이상 상태 체크 디스패치 하지 않음(중복 방지)
-   useEffect(() => {
-      console.log('🎈 isAuthenticated:', isAuthenticated)
-      console.log('🎈 user:', user)
-   }, [isAuthenticated, user])
-
-   // useEffect를 사용하여 컴포넌트가 마운트될 때마다 로그인 상태 확인
-   useEffect(() => {
-      const checkLoginStatus = async () => {
-         // 로그인 상태 확인
-         await dispatch(checkAuthStatusThunk()) // 일반 로그인 상태 확인
-         await dispatch(googleCheckStatusThunk()) // 구글 로그인 상태 확인
-      }
-
-      checkLoginStatus()
-   }, [dispatch])
-
-   // // 로그인 상태가 변경되면 콘솔로그로 확인
-   // useEffect(() => {
-   //    console.log('🎈 isAuthenticated:', isAuthenticated)
-   //    console.log('🎈 user:', user)
-   // }, [isAuthenticated, user])
 
    const [anchorEl, setAnchorEl] = useState(null)
    const open = Boolean(anchorEl)
@@ -79,12 +62,14 @@ function Navbar() {
                   </li>
                   <li>
                      <NavLink>
-                        SEASON<iconify-icon icon="fluent-emoji-flat:watermelon" width="16" height="16" style={{ marginLeft: '5px' }}></iconify-icon>
+                        SEASON
+                        <iconify-icon icon="fluent-emoji-flat:watermelon" width="16" height="16" style={{ marginLeft: '5px' }}></iconify-icon>
                      </NavLink>
                   </li>
                   <li>
                      <NavLink>
-                        이벤트/기획전<iconify-icon icon="fluent-emoji:star" width="16" height="16" style={{ marginLeft: '5px' }}></iconify-icon>
+                        이벤트/기획전
+                        <iconify-icon icon="fluent-emoji:star" width="16" height="16" style={{ marginLeft: '5px' }}></iconify-icon>
                      </NavLink>
                   </li>
                   <li>
