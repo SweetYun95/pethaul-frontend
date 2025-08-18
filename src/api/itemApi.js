@@ -41,9 +41,16 @@ export const deleteItem = async (id) => {
 // 전체 상품 리스트 가져오기
 export const getItems = async (data) => {
    try {
-      const { categoryId = '', sellCategory = '' } = data
-      const response = await shopmaxApi.get(`item?&categoryId=${categoryId}&sellCategory=${sellCategory}`)
-
+      const { searchTerm = '', sellCategory = [] } = data
+      const activeCategories = Array.isArray(sellCategory) ? sellCategory.filter(Boolean) : sellCategory ? [sellCategory] : []
+      const response = await shopmaxApi.get('item', {
+         params: {
+            searchTerm,
+            sellCategory: activeCategories,
+         },
+      })
+      console.log('🎀activeCategories:', activeCategories)
+      // console.log('🎀response:', response)
       return response
    } catch (error) {
       console.error(`API Request 오류:${error}`)
@@ -58,6 +65,17 @@ export const getItemById = async (id) => {
       return response
    } catch (error) {
       console.error(`API Request 오류:${error}`)
+      throw error
+   }
+}
+
+// 조건별 데이터 조회 (회원용)
+export const fetchSortData = async (limit) => {
+   try {
+      const response = await shopmaxApi.get(`/item/all/main?limit=${limit}`)
+      return response
+   } catch (error) {
+      console.error(`API Request 오류: ${error}`)
       throw error
    }
 }

@@ -1,6 +1,6 @@
 // src/features/itemSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createItem, updateItem, deleteItem, getItems, getItemById } from '../api/itemApi'
+import { createItem, updateItem, deleteItem, getItems, getItemById, fetchSortData } from '../api/itemApi'
 
 // 상품 등록
 export const createItemThunk = createAsyncThunk('items/createItem', async (formData, { rejectWithValue }) => {
@@ -54,6 +54,17 @@ export const fetchItemByIdThunk = createAsyncThunk('items/fetchItemById', async 
       return response.data.item
    } catch (error) {
       return rejectWithValue(error.response?.data?.message)
+   }
+})
+
+// 회원용 조건부 조회 Thunk
+export const fetchSortDataThunk = createAsyncThunk('order/fetchSortData', async (limit, { rejectWithValue }) => {
+   try {
+      const response = await fetchSortData(limit)
+      console.log('🎈response.data:', response.data)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '데이터 조회 실패')
    }
 })
 
@@ -132,6 +143,19 @@ const itemSlice = createSlice({
             state.item = action.payload
          })
          .addCase(fetchItemByIdThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 회원용 데이터 조회
+         .addCase(fetchSortDataThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(fetchSortDataThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.items = action.payload
+         })
+         .addCase(fetchSortDataThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

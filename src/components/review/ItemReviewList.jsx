@@ -1,7 +1,5 @@
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
 
-import { useDispatch, useSelector } from 'react-redux'
-
 function ItemReviewList({ item, avgRating, reviewCount }) {
    console.log('🎁[ItemReviewList.jsx] 아이템 데이터 확인:', item)
    const Reviews = item.Reviews
