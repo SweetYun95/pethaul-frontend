@@ -57,9 +57,13 @@ function Navbar() {
       handleMenuClose()
    }
    const handleLogout = () => {
-      dispatch(logoutUserThunk())
-      handleMenuClose()
-      alert('성공적으로 로그아웃했습니다.')
+      const res = confirm('로그아웃하시겠습니까?')
+      if (res) {
+         dispatch(logoutUserThunk())
+         handleMenuClose()
+         alert('성공적으로 로그아웃했습니다.')
+         navigate('/')
+      }
    }
 
    const isGoogleUser = user?.provider === 'google'
