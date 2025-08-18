@@ -14,12 +14,18 @@ import { getUserPetsThunk } from '../features/petSlice'
 function MyPage() {
    const { user, loading: userLoading, error: userError } = useSelector((state) => state.auth)
    const { pets, loading: petsLoading, error: petsError } = useSelector((state) => state.pet)
+   const { orders, loading: orderLoading, error: orderError } = useSelector((state) => state.order)
+   console.log('🎈orders: ', orders)
+   console.log('🎈user: ', user)
+
+   // 가장 최신 주문건
+   const latestOrder = [...orders].sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))[0]
+   console.log('🎈latestOrder: ', latestOrder)
 
    const dispatch = useDispatch()
 
    useEffect(() => {
       dispatch(checkAuthStatusThunk())
-
       dispatch(getUserPetsThunk())
    }, [dispatch])
 
@@ -39,7 +45,7 @@ function MyPage() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', margin: '20px', gap: '20px', height: '300px' }}>
                {/* ✅ Profile에 loading 전달하여 스켈레톤/가드 동작 */}
                <Profile user={user} loading={userLoading} />
-               <OrderState />
+               <OrderState order={latestOrder} />
             </div>
 
             {/* ✅ 항상 렌더, 게스트 여부만 전달 */}
