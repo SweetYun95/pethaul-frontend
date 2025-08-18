@@ -301,7 +301,7 @@ function ItemPanel({ searchTerm, sellCategory }) {
         <div className="item-panel-card-list">
           {filteredList.map((item, idx) => (
             <div className="item-panel-card" key={item?.id ?? idx}>
-              <div className='item-panel-img'>
+              <div className='item-img'>
                <button className="item-panel-delete-btn"  style={{ all: 'unset',padding:'10px',  position: 'absolute',top: '0',  right: '0'}} onClick={() => onClickDelete(item?.id)} title="삭제">
                   x
                 </button>
