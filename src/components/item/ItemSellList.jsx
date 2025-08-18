@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchItemsThunk } from '../../features/itemSlice'
-import { toggleLike } from '../../features/likeSlice'
+import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
 import { Box } from '@mui/material'
 import '../css/item/ItemSellList.css'
 
 export default function ItemSellList() {
    const dispatch = useDispatch()
    const { items = [], loading, error } = useSelector((s) => s.item)
-   const likes = useSelector((s) => s.like.likes) || {}
+   const idsMap = useSelector((s) => s.like.idsMap) || {}
    const [selectedCategory, setSelectedCategory] = useState('')
 
    const categories = useMemo(
@@ -29,6 +29,9 @@ export default function ItemSellList() {
       const path = String(url).replace(/^\/+/, '')
       return `${base}/${path}`
    }
+   useEffect(() => {
+      dispatch(fetchMyLikeIdsThunk())
+   }, [dispatch])
 
    useEffect(() => {
       const categoryId = selectedCategory || undefined
@@ -38,7 +41,7 @@ export default function ItemSellList() {
    const handleLike = (e, id) => {
       e.preventDefault()
       e.stopPropagation()
-      dispatch(toggleLike(id))
+      dispatch(toggleLikeThunk(id))
    }
 
    if (loading) {
@@ -93,7 +96,7 @@ export default function ItemSellList() {
                {items.map((item) => {
                   const repImage = item.ItemImages?.find((img) => img.repImgYn === 'Y')?.imgUrl
                   const imgSrc = buildImgUrl(repImage)
-                  const liked = !!likes[item.id]
+                  const liked = !!idsMap[item.id]
                   return (
                      <Link key={item.id} to={`/items/detail/${item.id}`} className="card">
                         <div className="media">

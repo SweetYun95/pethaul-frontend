@@ -2,23 +2,32 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Box, Typography, Card, CardMedia, CardContent } from '@mui/material'
 import { Link } from 'react-router-dom'
-import { fetchItemsThunk } from '../features/itemSlice'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import IconButton from '@mui/material/IconButton'
-import { toggleLike } from '../features/likeSlice'
+
+// ✅ likeSlice에서 Thunk 가져오기
+import { fetchMyLikedItemsThunk, toggleLikeThunk, fetchMyLikeIdsThunk } from '../features/likeSlice'
 
 const ItemLikePage = () => {
    const dispatch = useDispatch()
 
+   // ✅ 마운트 시 좋아요한 상품 상세 불러오기
    useEffect(() => {
-      dispatch(fetchItemsThunk({ categoryId: '' }))
+      dispatch(fetchMyLikedItemsThunk())
+      dispatch(fetchMyLikeIdsThunk())
    }, [dispatch])
 
-   const { items } = useSelector((state) => state.item)
-   const likes = useSelector((state) => state.like.likes)
+   // ✅ likeSlice에서 직접 가져오기
+   const { items: likedItems, idsMap, loadItemsLoading, error } = useSelector((state) => state.like)
 
-   const likedItems = items.filter((item) => likes[item.id])
+   if (loadItemsLoading) {
+      return <Typography>좋아요 상품을 불러오는 중입니다...</Typography>
+   }
+
+   if (error) {
+      return <Typography color="error">에러 발생: {error}</Typography>
+   }
 
    return (
       <Box sx={{ padding: '20px' }}>
@@ -52,13 +61,15 @@ const ItemLikePage = () => {
                               <Typography variant="body2" color="text.secondary">
                                  {item.price?.toLocaleString()}원
                               </Typography>
+
+                              {/* ✅ toggleLikeThunk 사용 */}
                               <IconButton
                                  onClick={(e) => {
                                     e.preventDefault()
-                                    dispatch(toggleLike(item.id))
+                                    dispatch(toggleLikeThunk(item.id))
                                  }}
                               >
-                                 {likes[item.id] ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
+                                 {idsMap[item.id] ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
                               </IconButton>
                            </CardContent>
                         </Card>
