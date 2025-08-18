@@ -22,6 +22,7 @@ import '../css/shared/Navbar_v-ysy.css'
  * ✅ useLocation 기반 인증 체크 단일화 전략
  * - 인증 상태 체크는 App(AuthGate) 한 곳에서만 수행
  * - Navbar는 전역 상태를 소비만 한다 (중복 디스패치 금지)
+ * - 팀원 변경사항 반영: 로그아웃 시 확인창 + 홈으로 navigate('/').
  */
 function Navbar() {
    const dispatch = useDispatch()
@@ -39,10 +40,15 @@ function Navbar() {
       navigate('/login')
       handleMenuClose()
    }
+
+   // ✅ 팀원 코드 병합: confirm → logout → alert → 홈으로 이동
    const handleLogout = () => {
+      const res = confirm('로그아웃하시겠습니까?')
+      if (!res) return
       dispatch(logoutUserThunk())
       handleMenuClose()
       alert('성공적으로 로그아웃했습니다.')
+      navigate('/')
    }
 
    const isGoogleUser = user?.provider === 'google'
