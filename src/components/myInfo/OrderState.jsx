@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 
 function OrderState({ order }) {
    console.log('🎀order: ', order)
+   console.log('🎀item: ', order?.Items[0].ItemImages[0].imgurl)
    const orderStatus = order?.orderStatus
 
    return (
@@ -15,6 +16,14 @@ function OrderState({ order }) {
                   <span className="blue"></span>
                </div>
                <span className="card-title">주문현황</span>
+            </div>
+            <div style={{ display: 'flex' }}>
+               <img src={`${import.meta.env.VITE_APP_API_URL}${order?.Items[0]?.ItemImages[0]?.imgUrl}`} width={'100px'} />
+               <div>
+                  <p>상품명: {order.Items[0].itemNm}</p>
+                  <p> 가격: {order.Items[0].price}원</p>
+                  <p> 주문일자: {order.orderDate.slice(0, 10)}</p>
+               </div>
             </div>
             {orderStatus === 'CANCEL' ? (
                <p>취소된 주문입니다.</p>
