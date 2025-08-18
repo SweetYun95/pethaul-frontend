@@ -1,20 +1,24 @@
 // src/components/order/OrderForm.jsx
 import React, { useState } from 'react'
 import '../css/order/OrderForm.css'
+import { useSelector } from 'react-redux'
 
 function OrderForm({ item, cartItems }) {
    console.log('🎈item:', item, '🎈cartItems:', cartItems)
+   const { user } = useSelector((state) => state.auth)
+   console.log('🎈user:', user)
+
    let orderPrice = 0
    if (cartItems) {
       orderPrice = cartItems.reduce((sum, cart) => {
          return sum + cart.Item.price * (cart.count || 1)
       }, 0)
    } else {
-      orderPrice = item[0].price * item[0].quantity
+      orderPrice = item[0]?.price * item[0]?.quantity
    }
-   console.log('🎈orderPrice:', orderPrice)
+   // console.log('🎈orderPrice:', orderPrice)
    const [formData, setFormData] = useState({
-      name: '',
+      name: user?.name,
       phone1: '',
       phone2: '',
       phone3: '',
