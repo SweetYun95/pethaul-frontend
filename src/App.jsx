@@ -1,32 +1,33 @@
 // src/App.jsx
 import { Route, Routes, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import Navbar from './components/shared/Navbar'
 import MainPage from './pages/MainPage'
-import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import LoginPage from './pages/LoginPage'
+import GoogleSuccessPage from './pages/GoogleSuccessPage'
 import TokenPage from './pages/TokenPage'
 import ItemSellListPage from './pages/ItemSellListPage'
 import ItemDetailPage from './pages/ItemDetailPage'
 import ItemCreatePage from './pages/ItemCreatePage'
-import OrderPage from './pages/OrderPage'
-import ReviewCreatePage from './pages/ReviewCreatePage'
-import AdminPage from './pages/AdminPage'
-import Footer from './components/shared/Footer'
-import GoogleSuccessPage from './pages/GoogleSuccessPage'
 import ItemEditPage from './pages/ItemEditPage'
-import MyPage from './pages/MyPage'
 import ItemLikePage from './pages/ItemLikePage'
 import ItemCartForm from './components/item/ItemCartForm'
-import MyReviewList from './pages/MyReviewList'
+import OrderPage from './pages/OrderPage'
 import MyOrderList from './pages/MyOrderList'
+import ReviewCreatePage from './pages/ReviewCreatePage'
 import ReviewEditPage from './pages/ReviewEditPage'
+import MyReviewList from './pages/MyReviewList'
+import MyPage from './pages/MyPage'
+import AdminPage from './pages/AdminPage'
 import PetCreatePage from './pages/PetCreatePage'
 import PetEditPage from './pages/PetEditPage'
 import Test from './pages/Test'
+import Footer from './components/shared/Footer'
 
+// ✅ 통합 인증 체크 Thunk (일반 + 구글 통합)
 import { checkUnifiedAuthThunk } from './features/authSlice'
 
 import './App.css'
@@ -35,63 +36,74 @@ function App() {
    const location = useLocation()
    const dispatch = useDispatch()
 
+   // ⛑️ 중복 호출 가드:
+   // - Same location에 대해 아주 짧은 시간(100ms) 내 중복 실행을 막아 레이스/불필요 요청을 줄임
+   // - 개발 모드(StrictMode)에서 이중 호출되는 상황도 일부 완화
+   const lastKeyRef = useRef('')
+   const lastTsRef = useRef(0)
+
    useEffect(() => {
-      // 라우트 변화마다 단 한 번의 통합 체크만
+      // location 객체 전체를 deps로 걸면 해시/기타 변화에도 반응하므로, pathname & search만 수신
+      const sig = `${location.pathname}?${location.search || ''}`
+      const now = Date.now()
+
+      // 100ms 쿨다운 (필요 없으면 이 블록 제거 가능)
+      if (sig === lastKeyRef.current && now - lastTsRef.current < 100) {
+         return
+      }
+      lastKeyRef.current = sig
+      lastTsRef.current = now
+
+      // ✅ 라우트 변경 시점에 단 한 번의 통합 체크만 수행
       dispatch(checkUnifiedAuthThunk())
-   }, [location, dispatch])
+   }, [location.pathname, location.search, dispatch])
 
    return (
       <>
+         {/* ✅ Navbar는 전역 상태만 소비. 인증 체크는 절대 하지 않음 */}
          <Navbar />
+
          <Routes>
+            {/* 메인 */}
             <Route path="/" element={<MainPage />} />
-            {/* 로그인 페이지 */}
-            <Route path="/login" element={<LoginPage />} />
-            {/* 구글로그인 이동 */}
-            <Route path="/google-success" element={<GoogleSuccessPage />} /> {/* ✅ 추가 */}
-            {/* 회원가입 페이지 */}
+
+            {/* 인증 */}
             <Route path="/join" element={<RegisterPage />} />
-            {/* 토큰 발급 페이지 */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/google-success" element={<GoogleSuccessPage />} />
             <Route path="/token" element={<TokenPage />} />
-            {/* 상품리스트 */}
+
+            {/* 상품 */}
             <Route path="/item" element={<ItemSellListPage />} />
-            {/* 상품 상세 페이지 */}
             <Route path="/items/detail/:id" element={<ItemDetailPage />} />
-            {/* 좋아요한 상품 페이지 */}
-            <Route path="/likes/item" element={<ItemLikePage />} />
-            {/* 장바구니 페이지 */}
-            <Route path="/cart" element={<ItemCartForm />} />
-            {/* 주문/결제 페이지 */}
-            <Route path="/order" element={<OrderPage />} />
-            {/* 사용자의 전체 주문 조회 */}
-            <Route path="myorderlist" element={<MyOrderList />} />
-            {/* 리뷰 등록 */}
-            <Route path="/review/create" element={<ReviewCreatePage />} />
-            {/* 리뷰 수정 */}
-            <Route path="/review/edit/:id" element={<ReviewEditPage />} />
-            {/* 사용자가 쓴 리뷰 조회 */}
-            <Route path="/myreviewlist" element={<MyReviewList />} />
-            {/* 마이페이지 */}
-            <Route path="/mypage" element={<MyPage />} />
-            {/* 관리자 전용 페이지 */}
-            <Route path="/admin" element={<AdminPage />} />
-            {/* 상품 등록 */}
             <Route path="/items/create" element={<ItemCreatePage />} />
-            {/* 상품 수정 */}
             <Route path="/items/edit/:id" element={<ItemEditPage />} />
-            {/* 펫 등록 */}
+
+            {/* 좋아요/장바구니 */}
+            <Route path="/likes/item" element={<ItemLikePage />} />
+            <Route path="/cart" element={<ItemCartForm />} />
+
+            {/* 주문/결제 */}
+            <Route path="/order" element={<OrderPage />} />
+            <Route path="/myorderlist" element={<MyOrderList />} />
+
+            {/* 리뷰 */}
+            <Route path="/review/create" element={<ReviewCreatePage />} />
+            <Route path="/review/edit/:id" element={<ReviewEditPage />} />
+            <Route path="/myreviewlist" element={<MyReviewList />} />
+
+            {/* 마이페이지/관리자 */}
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+
+            {/* 펫 */}
             <Route path="/pets" element={<PetCreatePage />} />
-            {/* 펫 수정 */}
             <Route path="/peteditpage" element={<PetEditPage />} />
-            {/* 
-            
-            
-            테스트 페이지 
-            
-            
-            */}
+
+            {/* 기타 */}
             <Route path="/test" element={<Test />} />
          </Routes>
+
          <Footer />
       </>
    )
