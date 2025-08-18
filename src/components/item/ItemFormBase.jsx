@@ -70,6 +70,7 @@ export default function ItemFormBase({
   // 상태 (초기부터 norm 기반)
   const [imgUrls, setImgUrls] = useState(initialServerImgUrls)
   const [imgFiles, setImgFiles] = useState([])
+  const [imgError, setImgError] = useState("")
   const [itemNm, setItemNm] = useState(norm?.itemNm ?? '')
   const [price, setPrice] = useState(String(norm?.price ?? ''))
   const [stockNumber, setStockNumber] = useState(String(norm?.stockNumber ?? ''))
@@ -103,21 +104,50 @@ export default function ItemFormBase({
     return numeric
   }
 
-  // 핸들러
-  const handleImageChange = (e) => {
-    const files = e.target.files
-    if (!files || !files.length) return
-    const newFiles = Array.from(files).slice(0, 5)
-    setImgFiles(newFiles)
-    prevUrlsRef.current.forEach((u) => URL.revokeObjectURL(u))
-    prevUrlsRef.current = []
-    const newUrls = newFiles.map((f) => {
-      const u = URL.createObjectURL(f)
-      prevUrlsRef.current.push(u)
-      return u
-    })
-    setImgUrls(newUrls)
+  // 기존 handleImageChange 교체
+const handleImageChange = (e) => {
+  setImgError("");
+  const files = Array.from(e.target.files || []);
+  if (!files.length) return;
+
+  const MAX = 5;
+  const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/jpg"];
+
+  // 형식 필터
+  const valid = files.filter((f) => ALLOWED.includes(f.type));
+  if (valid.length !== files.length) {
+    setImgError("이미지 파일만 업로드할 수 있어요 (jpg/png/webp/gif).");
   }
+
+  // 중복 방지(같은 파일 다시 고른 경우 제외)
+  const key = (f) => `${f.name}_${f.size}_${f.lastModified}`;
+  const existingKeys = new Set(imgFiles.map(key));
+  const unique = valid.filter((f) => !existingKeys.has(key(f)));
+
+  // 남은 슬롯: 현재 미리보기 개수(imgUrls: 서버+로컬URL 포함)를 기준으로 계산
+  const remain = MAX - imgUrls.length;
+  if (remain <= 0) {
+    setImgError(`최대 ${MAX}장까지 업로드할 수 있어요.`);
+    e.target.value = ""; // 동일 파일 다시 선택 가능하도록 리셋
+    return;
+  }
+
+  const toAdd = unique.slice(0, remain);
+
+  // 새 objectURL 생성 (서버 URL은 건들지 않음)
+  const newUrls = toAdd.map((f) => {
+    const u = URL.createObjectURL(f);
+    prevUrlsRef.current.push(u);
+    return u;
+  });
+
+  // 상태 누적
+  setImgFiles((prev) => [...prev, ...toAdd]);
+  setImgUrls((prev) => [...prev, ...newUrls]);
+
+  // 같은 파일 다시 선택 가능하도록
+  e.target.value = "";
+};
 
   const handlePriceChange = (e) => {
     const n = handleNumeric(e.target.value)
@@ -207,12 +237,16 @@ const handleSubmit = async (e) => {
             </label>
 
             <Box display="flex" flexWrap="wrap" gap={2} mt={2} sx={{ justifyContent: 'flex-start' }}>
-              {imgUrls.map((url, index) => (
-                <Box key={index} sx={{ width: '120px', height: '120px', border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                {imgUrls.map((url, index) => (
+              <Box key={url} sx={{ width: '120px', height: '120px', border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   <img src={url} alt={`업로드 이미지 ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </Box>
-              ))}
-            </Box>
+              </Box>
+               ))}
+             </Box>
+            <div style={{marginTop: 8}}>
+                <small>{imgUrls.length}/5</small>
+                {imgError && <small style={{color:'#d00', marginLeft: 8}}>{imgError}</small>}
+             </div>
 
             <div className="input-group">
               <div className="item-input-section item-name">
