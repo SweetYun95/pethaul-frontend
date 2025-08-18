@@ -10,7 +10,7 @@ function MainPage() {
       dispatch(fetchSortDataThunk(5))
    }, [dispatch])
 
-   console.log('🎈mainData:', mainData)
+   // console.log('🎈mainData:', mainData)
    if (loading) return <p>로딩 중...</p>
    if (error) return <p>에러 발생:{error}</p>
    const products = [1, 2, 3]

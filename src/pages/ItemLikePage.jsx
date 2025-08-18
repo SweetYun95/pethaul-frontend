@@ -7,7 +7,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import IconButton from '@mui/material/IconButton'
 
 // ✅ likeSlice에서 Thunk 가져오기
-import { fetchMyLikedItemsThunk, toggleLikeThunk, fetchMyLikeIdsThunk } from '../features/likeSlice'
+import { fetchMyLikedItemsThunk, toggleLikeThunk } from '../features/likeSlice'
 
 const ItemLikePage = () => {
    const dispatch = useDispatch()
@@ -15,7 +15,6 @@ const ItemLikePage = () => {
    // ✅ 마운트 시 좋아요한 상품 상세 불러오기
    useEffect(() => {
       dispatch(fetchMyLikedItemsThunk())
-      dispatch(fetchMyLikeIdsThunk())
    }, [dispatch])
 
    // ✅ likeSlice에서 직접 가져오기

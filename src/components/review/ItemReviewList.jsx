@@ -1,9 +1,9 @@
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
 
 function ItemReviewList({ item, avgRating, reviewCount }) {
-   console.log('🎁[ItemReviewList.jsx] 아이템 데이터 확인:', item)
+   // console.log('🎁[ItemReviewList.jsx] 아이템 데이터 확인:', item)
    const Reviews = item.Reviews
-   console.log('🎁[ItemReviewList.jsx] 리뷰 데이터 확인:', Reviews)
+   // console.log('🎁[ItemReviewList.jsx] 리뷰 데이터 확인:', Reviews)
    console.log(Reviews.length)
 
    return (

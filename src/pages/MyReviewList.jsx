@@ -11,7 +11,7 @@ function MyReviewList() {
    useEffect(() => {
       dispatch(getUserReviewThunk())
    }, [dispatch])
-   console.log('🎈reviews:', reviews)
+   // console.log('🎈reviews:', reviews)
 
    const handleReviewDelete = (id) => {
       dispatch(deleteReviewThunk(id))

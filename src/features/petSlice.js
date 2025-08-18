@@ -6,7 +6,7 @@ export const createPetThunk = createAsyncThunk('pet/create', async (formData, { 
    try {
       console.log('formData:', formData)
       const response = await createPet(formData)
-      console.log(response)
+      // console.log(response)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message)
@@ -27,7 +27,7 @@ export const updatePetThunk = createAsyncThunk('pet/update', async ({ id, formDa
 export const getUserPetsThunk = createAsyncThunk('pet/getUserPets', async (_, { rejectWithValue }) => {
    try {
       const response = await getUserPets()
-      console.log('[petApi.js]response', response)
+      // console.log('[petApi.js]response', response)
 
       return response.data
    } catch (error) {
