@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 
 import { fetchCartItemsThunk, updateCartItemThunk, deleteCartItemThunk } from '../../features/cartSlice'
 import '../css/item/ItemCartForm.css'
@@ -42,6 +42,10 @@ const ItemCartForm = () => {
    const totalPrice = useMemo(() => cartItems.reduce((acc, item) => acc + (item.count || 0) * (item.Item?.price || 0), 0), [cartItems])
    const discount = 3000 // 예시 쿠폰 할인
    const finalPrice = Math.max(0, totalPrice - discount)
+
+   const orderData = {
+      price: finalPrice,
+   }
 
    return (
       <section id="itemCart-section">
@@ -132,9 +136,11 @@ const ItemCartForm = () => {
                         <p>총 결제 금액</p>
                         <p>{finalPrice.toLocaleString()}원</p>
                      </div>
-                     <button className="submit-btn" disabled={cartItems.length === 0}>
-                        주문하기
-                     </button>
+                     <Link to="/order" state={{ cartItems }}>
+                        <button className="submit-btn" disabled={cartItems.length === 0}>
+                           주문하기
+                        </button>
+                     </Link>
                   </div>
                </div>
             </div>
