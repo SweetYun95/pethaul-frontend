@@ -9,7 +9,7 @@ export const createPetThunk = createAsyncThunk('pet/create', async (formData, { 
       console.log(response)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '펫 등록 실패')
    }
 })
 
@@ -19,7 +19,7 @@ export const updatePetThunk = createAsyncThunk('pet/update', async ({ id, formDa
       const response = await updatePet(id, formData)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '펫 수정 실패')
    }
 })
 
@@ -31,7 +31,7 @@ export const getUserPetsThunk = createAsyncThunk('pet/getUserPets', async (_, { 
 
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '펫 목록 조회 실패')
    }
 })
 
@@ -41,7 +41,7 @@ export const deletePetThunk = createAsyncThunk('pet/delete', async (id, { reject
       await deletePet(id)
       return id
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '펫 삭제 실패')
    }
 })
 
