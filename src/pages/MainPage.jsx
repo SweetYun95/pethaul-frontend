@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import './css/Main.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchSortDataThunk } from '../features/itemSlice'
+import { Link } from 'react-router-dom'
 function MainPage() {
    const dispatch = useDispatch()
    const { items: mainData, loading, error } = useSelector((state) => state.item)
@@ -56,11 +57,13 @@ function MainPage() {
                   {/* 오늘 주문 건수가 가장 많은 데이터 */}
                   {mainData?.topToday?.map((item, index) => (
                      <div key={index} className="card">
-                        <img height="160" src={`${import.meta.env.VITE_APP_API_URL}${item.itemImgUrl}`} alt={`${item.itemNm}`} />
-                        <div className="card-text">
-                           <p>{item.itemNm}</p>
-                           <p>{item.price}원</p>
-                        </div>
+                        <Link to={`/items/detail/${item.itemId}`}>
+                           <img height="160" src={`${import.meta.env.VITE_APP_API_URL}${item.itemImgUrl}`} alt={`${item.itemNm}`} />
+                           <div className="card-text">
+                              <p>{item.itemNm}</p>
+                              <p>{item.price}원</p>
+                           </div>
+                        </Link>
                      </div>
                   ))}
                </div>
@@ -186,11 +189,13 @@ function MainPage() {
                <div className="card-list" style={{ marginTop: '10px' }}>
                   {mainData?.newItems?.map((item, index) => (
                      <div key={index} className="card">
-                        <img height="160" src={`${import.meta.env.VITE_APP_API_URL}${item.itemImgUrl}`} alt={`${item.itemNm}`} />
-                        <div className="card-text">
-                           <p>{item.itemNm}</p>
-                           <p>{item.price}원</p>
-                        </div>
+                        <Link to={`/items/detail/${item.id}`}>
+                           <img height="160" src={`${import.meta.env.VITE_APP_API_URL}${item.itemImgUrl}`} alt={`${item.itemNm}`} />
+                           <div className="card-text">
+                              <p>{item.itemNm}</p>
+                              <p>{item.price}원</p>
+                           </div>
+                        </Link>
                      </div>
                   ))}
                </div>
