@@ -21,6 +21,8 @@ const ItemLikePage = () => {
    // ✅ likeSlice에서 직접 가져오기
    const { items: likedItems, idsMap, loadItemsLoading, error } = useSelector((state) => state.like)
 
+   console.log('likedItems:', likedItems)
+   console.log('idsMap:', idsMap)
    if (loadItemsLoading) {
       return <Typography>좋아요 상품을 불러오는 중입니다...</Typography>
    }
@@ -67,6 +69,13 @@ const ItemLikePage = () => {
                                  onClick={(e) => {
                                     e.preventDefault()
                                     dispatch(toggleLikeThunk(item.id))
+                                       .unwrap()
+                                       .then(() => {
+                                          dispatch(fetchMyLikeIdsThunk())
+                                       })
+                                       .catch((error) => {
+                                          console.log('에러가 발생했습니다.:', error)
+                                       })
                                  }}
                               >
                                  {idsMap[item.id] ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
