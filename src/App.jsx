@@ -23,6 +23,7 @@ import ReviewCreatePage from './pages/ReviewCreatePage'
 import ReviewEditPage from './pages/ReviewEditPage'
 import MyReviewList from './pages/MyReviewList'
 import MyPage from './pages/MyPage'
+import EditMyInfoPage from './pages/EditMyInfoPage'
 import AdminPage from './pages/AdminPage'
 import PetCreatePage from './pages/PetCreatePage'
 import PetEditPage from './pages/PetEditPage'
@@ -98,6 +99,7 @@ function App() {
 
             {/* 마이페이지/관리자 */}
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/edit" element={<EditMyInfoPage />} />
             <Route path="/admin" element={<AdminPage />} />
 
             {/* 펫 */}
