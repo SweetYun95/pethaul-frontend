@@ -62,7 +62,7 @@ export const registerUserThunk = createAsyncThunk('auth/registerUser', async (us
       const response = await registerUser(userData)
       return response.data.user
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '회원가입 실패')
    }
 })
 
@@ -72,7 +72,7 @@ export const loginUserThunk = createAsyncThunk('auth/loginUser', async (credenti
       const response = await loginUser(credentials)
       return response.data.user
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '로그인 실패')
    }
 })
 
@@ -82,7 +82,7 @@ export const logoutUserThunk = createAsyncThunk('auth/logoutUser', async (_, { r
       const response = await logoutUser()
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '로그아웃 실패')
    }
 })
 
