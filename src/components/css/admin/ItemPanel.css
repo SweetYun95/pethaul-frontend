@@ -196,7 +196,7 @@ input:checked + .slider:before { transform:translateX(20px); }
     
 }
 
-.item-panel-img > img {
+.item-img > img {
     width: 100%;
     border-radius: 20px 20px 0 0;
     overflow: hidden;
@@ -226,7 +226,8 @@ input:checked + .slider:before { transform:translateX(20px); }
 
 
 @media (max-width: 767px) {
-  .card-sub-title {
+  .card-sub-title,
+  .muted {
     font-size: 13px;
     padding: 0 5px;
    }

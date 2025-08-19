@@ -284,49 +284,62 @@ function ItemPanel({ searchTerm, sellCategory }) {
                </div>
             </div>
 
-            {/* 카드 리스트 */}
-            <div className="item-panel-card-list">
-               {filteredList.map((item, idx) => (
-                  <div className="item-panel-card" key={item?.id ?? idx}>
-                     <div className="item-panel-img">
-                        <button className="item-panel-delete-btn" style={{ all: 'unset', padding: '10px', position: 'absolute', top: '0', right: '0' }} onClick={() => onClickDelete(item?.id)} title="삭제">
-                           x
-                        </button>
-                        <img src={resolveImage(item)} alt={item?.itemNm ?? '상품 이미지'} />
-                     </div>
-                     <div className="item-panel-info">
-                        <div className="item-panel-info-title">
-                           <p className="name">{item?.itemNm ?? '이름없음'}</p>
-                           <Link to={`/items/edit/${item?.id}`}>
-                              <svg xmlns="http://www.w3.org/2000/svg" width={13} height={13} viewBox="0 0 32 32">
-                                 <path
-                                    fill="#000"
-                                    d="M30.48 12.19H32v16.76h-1.52Zm0-9.14H32v4.57h-1.52Zm-1.53 25.9h1.53v1.53h-1.53Zm0-21.33h1.53v1.52h-1.53Zm0-6.1h1.53v1.53h-1.53Zm-1.52 7.62h1.52v1.53h-1.52Zm0-3.04h1.52v1.52h-1.52ZM3.05 30.48h25.9V32H3.05Zm22.86-19.81h1.52v1.52h-1.52Zm0-6.1h1.52V6.1h-1.52ZM24.38 0h4.57v1.52h-4.57Zm0 12.19h1.53v1.52h-1.53Zm0-6.09h1.53v1.52h-1.53Zm0-3.05h1.53v1.52h-1.53Zm-1.52 10.66h1.52v1.53h-1.52Zm0-6.09h1.52v1.52h-1.52Zm0-6.1h1.52v1.53h-1.52Zm-1.53 13.72h1.53v1.52h-1.53Zm0-6.1h1.53v1.53h-1.53Zm0-6.09h1.53v1.52h-1.53Zm-1.52 13.71h1.52v1.53h-1.52Zm0-6.09h1.52v1.52h-1.52Zm0-6.1h1.52V6.1h-1.52Zm-1.52 10.67h1.52v1.52h-1.52Zm0-3.05h1.52v1.52h-1.52Zm0-6.09h1.52v1.52h-1.52Z"
-                                    strokeWidth={1}
-                                    stroke="#000"
-                                 ></path>
-                                 <path
-                                    fill="#000"
-                                    d="M16.76 16.76h-1.52v-1.52h-1.53v-3.05h-1.52v7.62h7.62v-1.52h-3.05zm0-3.05h1.53v1.53h-1.53Zm0-6.09h1.53v1.52h-1.53Zm-1.52 4.57h1.52v1.52h-1.52Zm0-3.05h1.52v1.53h-1.52Zm-1.53 1.53h1.53v1.52h-1.53ZM3.05 1.52h15.24v1.53H3.05ZM1.52 28.95h1.53v1.53H1.52Zm0-25.9h1.53v1.52H1.52ZM0 4.57h1.52v24.38H0Z"
-                                    strokeWidth={1}
-                                    stroke="#000"
-                                 ></path>
-                              </svg>
-                           </Link>
-                        </div>
-                        {(item?.Categories ?? []).map((ic) => (
-                           <p className="category" key={ic?.id ?? `${item?.id}-cat`}>
-                              #{ic?.categoryName ?? ic?.name ?? ''}
-                           </p>
-                        ))}
-                        {(() => {
-                           const raw = item?.price ?? item?.Price?.amount ?? item?.amount
-                           const pretty = formatPrice(raw)
-                           return <p className="price">{pretty ? `₩${pretty}` : '가격 정보 없음'}</p>
-                        })()}
-                     </div>
-                  </div>
-               ))}
+        {/* 🔹 활성 칩 */}
+          <div className="active-chips">
+            {activeFilterChips.length > 0 ? (
+              activeFilterChips.map((chip) => (
+                <button className="chip-removable" key={chip.key} onClick={chip.onRemove}>
+                  <span>{chip.label}</span>
+                  <span className="chip-x" aria-label="remove">×</span>
+                </button>
+              ))
+            ) : (<span className="muted"></span>
+            )}
+          </div>
+
+   {/* 🔹 Subbar: 재고 스위치 + 결과 개수 */}
+      <div className="subbar">
+       <div className="result-count">상품 {filteredList.length}개</div>
+              <div className="stock-toggle">
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={inStockOnly}
+                onChange={(e) => setInStockOnly(e.target.checked)}
+              />
+              <span className="slider"></span>
+            </label>
+            <span className="switch-label">재고만 보기</span>
+             </div>
+        </div>
+
+        {/* 카드 리스트 */}
+        <div className="item-panel-card-list">
+          {filteredList.map((item, idx) => (
+            <div className="item-panel-card" key={item?.id ?? idx}>
+              <div className='item-img'>
+               <button className="item-panel-delete-btn"  style={{ all: 'unset',padding:'10px',  position: 'absolute',top: '0',  right: '0'}} onClick={() => onClickDelete(item?.id)} title="삭제">
+                  x
+                </button>
+              <img src={resolveImage(item)} alt={item?.itemNm ?? '상품 이미지'} />
+              </div>
+              <div className="item-panel-info">
+                 <div className="item-panel-info-title">
+                  <p className="name">{item?.itemNm ?? '이름없음'}</p>
+                  <Link to={`/items/edit/${item?.id}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width={13} height={13} viewBox="0 0 32 32"><path fill="#000" d="M30.48 12.19H32v16.76h-1.52Zm0-9.14H32v4.57h-1.52Zm-1.53 25.9h1.53v1.53h-1.53Zm0-21.33h1.53v1.52h-1.53Zm0-6.1h1.53v1.53h-1.53Zm-1.52 7.62h1.52v1.53h-1.52Zm0-3.04h1.52v1.52h-1.52ZM3.05 30.48h25.9V32H3.05Zm22.86-19.81h1.52v1.52h-1.52Zm0-6.1h1.52V6.1h-1.52ZM24.38 0h4.57v1.52h-4.57Zm0 12.19h1.53v1.52h-1.53Zm0-6.09h1.53v1.52h-1.53Zm0-3.05h1.53v1.52h-1.53Zm-1.52 10.66h1.52v1.53h-1.52Zm0-6.09h1.52v1.52h-1.52Zm0-6.1h1.52v1.53h-1.52Zm-1.53 13.72h1.53v1.52h-1.53Zm0-6.1h1.53v1.53h-1.53Zm0-6.09h1.53v1.52h-1.53Zm-1.52 13.71h1.52v1.53h-1.52Zm0-6.09h1.52v1.52h-1.52Zm0-6.1h1.52V6.1h-1.52Zm-1.52 10.67h1.52v1.52h-1.52Zm0-3.05h1.52v1.52h-1.52Zm0-6.09h1.52v1.52h-1.52Z" strokeWidth={1} stroke="#000"></path><path fill="#000" d="M16.76 16.76h-1.52v-1.52h-1.53v-3.05h-1.52v7.62h7.62v-1.52h-3.05zm0-3.05h1.53v1.53h-1.53Zm0-6.09h1.53v1.52h-1.53Zm-1.52 4.57h1.52v1.52h-1.52Zm0-3.05h1.52v1.53h-1.52Zm-1.53 1.53h1.53v1.52h-1.53ZM3.05 1.52h15.24v1.53H3.05ZM1.52 28.95h1.53v1.53H1.52Zm0-25.9h1.53v1.52H1.52ZM0 4.57h1.52v24.38H0Z" strokeWidth={1} stroke="#000"></path></svg>
+                  </Link>
+                </div>
+                {(item?.Categories ?? []).map((ic) => (
+                  <p className="category" key={ic?.id ?? `${item?.id}-cat`}>#{ic?.categoryName ?? ic?.name ?? ''}</p>
+                ))}
+                {(() => {
+                  const raw = item?.price ?? item?.Price?.amount ?? item?.amount
+                  const pretty = formatPrice(raw)
+                  return <p className="price">{pretty ? `₩${pretty}` : '가격 정보 없음'}</p>
+                })()}
+                
+              </div>
             </div>
          </div>
       </section>
