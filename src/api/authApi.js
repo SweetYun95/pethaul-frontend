@@ -86,3 +86,36 @@ export const googleCheckStatus = async () => {
       throw error
    }
 }
+
+// 핸드폰 번호로 id 찾기 (로컬 회원)
+export const findId = async (phoneNumber) => {
+   try {
+      const response = await shopmaxApi.post('/auth/findid', { phoneNumber })
+      return response
+   } catch (error) {
+      console.error(`ID 조회 중 오류: ${error}`)
+      throw error
+   }
+}
+
+// 임시 비밀번호 발급 (로컬 회원)
+export const updatePassword = async ({ userId, phoneNumber }) => {
+   try {
+      const response = await shopmaxApi.post('/auth/updatepw', { userId, phoneNumber })
+      return response
+   } catch (error) {
+      console.error(`임시 비밀번호 발급 중 오류: ${error}`)
+      throw error
+   }
+}
+
+// 회원 정보 수정
+export const updateMyInfo = async (data) => {
+   try {
+      const response = await shopmaxApi.put('/auth', data)
+      return response
+   } catch (error) {
+      console.error(`회원 정보 수정 중 오류: ${error}`)
+      throw error
+   }
+}

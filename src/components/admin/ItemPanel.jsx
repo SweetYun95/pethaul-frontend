@@ -330,6 +330,7 @@ function ItemPanel({ searchTerm, sellCategory }) {
                   return <p className="price">{pretty ? `₩${pretty}` : '가격 정보 없음'}</p>
                 })()}
               </div>
+
             </div>
           ))}
         </div>

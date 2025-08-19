@@ -366,4 +366,5 @@ export default function ItemSellList() {
       )}
     </section>
   )
+
 }

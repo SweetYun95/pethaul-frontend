@@ -228,8 +228,10 @@ export default function ItemLikePage() {
                         d="M10 8.5h11m-18 0a2 2 0 1 0 4 0a2 2 0 0 0-4 0m0 7h11m3 0a2 2 0 1 0 4 0a2 2 0 0 0-4 0" />
                 </svg>
               </button>
+
             </div>
           </div>
+
 
           {/* 필터 패널 */}
           {isFilterOpen && (
@@ -383,4 +385,5 @@ export default function ItemLikePage() {
       </div>
     </section>
   )
+
 }
