@@ -65,7 +65,7 @@ function FindFormBase({ mode }) {
 
                      <div>
                         <p>핸드폰 번호</p>
-                        <input label="ID" name="id" placeholder="핸드폰 번호를 입력하세요" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                        <input label="phone" name="phone" placeholder="핸드폰 번호를 입력하세요" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
                      </div>
                   </div>
                   {/* {error && <Alert severity="error">{error}</Alert>}

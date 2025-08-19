@@ -24,7 +24,8 @@ function OrderState({ order }) {
                   <p> 주문일자: {order.orderDate.slice(0, 10)}</p>
                </div>
             </div>
-            {orderStatus === 'CANCEL' ? (
+            {order.length === 0 && <p>주문 내역이 없습니다.</p>}
+            {order.length > 1 && orderStatus === 'CANCEL' ? (
                <p>취소된 주문입니다.</p>
             ) : (
                <div className="order-state-details">
