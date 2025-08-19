@@ -10,19 +10,36 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 30px;
 }
 
-.profile-info > img {
+.profile-info > div > img {
     border-radius: 50%;
     width: 100px;
 }
 
-.profile-info > div {
+.profile-info > div  {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     text-align: center;
     font-size: 13px;
 }
 .profile-info > a {
     text-decoration: underline;
     font-size: 13px;
+}
+
+@media (max-width: 768px) {
+   .profile-info {
+    flex-direction: row;
+    gap: 40px;
+}
+}
+
+@media (max-width: 430px) {
+   .profile-info {
+    flex-direction: column;
+    gap: 10px;
+}
 }
