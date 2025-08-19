@@ -1,6 +1,7 @@
 // src/components/order/OrderForm.jsx
 import React, { useState } from 'react'
 import '../css/order/OrderForm.css'
+import { useSelector } from 'react-redux'
 
 function OrderForm({ item, cartItems }) {
   // ===== 공통 유틸 =====

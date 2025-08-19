@@ -1,8 +1,9 @@
 // src/components/item/ItemCartForm.jsx
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams, Link } from 'react-router-dom'
+
 import { fetchCartItemsThunk, updateCartItemThunk, deleteCartItemThunk } from '../../features/cartSlice'
-import { useParams } from 'react-router-dom'
 import '../css/item/ItemCartForm.css'
 
 /* ===== detail 수량 카운터 이식 ===== */
@@ -170,6 +171,7 @@ const ItemCartForm = () => {
                     {/* 소계를 보고 싶다면 아래로 교체:
                     <p className="cartitem-price">{(price * qty).toLocaleString()}원</p>
                     */}
+
                   </div>
                 </div>
               </div>

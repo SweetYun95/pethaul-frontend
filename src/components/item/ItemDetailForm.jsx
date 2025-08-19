@@ -126,7 +126,7 @@ function ItemDetailForm({ item }) {
               <input id="quantity" type="number" value={quantity} onChange={handleQuantityChange} min="1" />
               <p>총 {((Number(item.price) || 0) * quantity).toLocaleString()} 원</p>
             </div>
-
+            
             {item.itemSellStatus === 'SELL' ? (
               <div className="button-row">
                 <button className="btn-outline cart" type="button" onClick={handleAddToCart}>

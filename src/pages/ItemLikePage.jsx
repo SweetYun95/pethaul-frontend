@@ -1,14 +1,30 @@
-// src/pages/ItemLikePage.jsx  (혹은 현재 파일 경로 유지)
+// src/pages/ItemLikePage.jsx (merge-resolved)
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { fetchItemsThunk } from '../features/itemSlice'
-import { toggleLike } from '../features/likeSlice'
-import '../components/css/item/ItemSellList.css' 
+
+// ✅ likeSlice 쪽 Thunk들만 사용 (develop 기준)
+import { fetchMyLikedItemsThunk, fetchMyLikeIdsThunk, toggleLikeThunk } from '../features/likeSlice'
+
+// ✅ 스타일 (jse 기준)
+import '../components/css/item/ItemSellList.css'
+
 export default function ItemLikePage() {
   const dispatch = useDispatch()
-  const { items = [], loading, error } = useSelector((s) => s.item)
-  const likes = useSelector((s) => s.like.likes) || {}
+
+  // ====== 초기 로드: 내 좋아요 상품 + 좋아요 ID맵 ======
+  useEffect(() => {
+    dispatch(fetchMyLikedItemsThunk())
+    dispatch(fetchMyLikeIdsThunk())
+  }, [dispatch])
+
+  // likeSlice에서 상태 수급 (develop 기준 키 이름 가정)
+  const {
+    items: likedItems = [], // 좋아요한 상품 상세 배열
+    idsMap: likes = {},     // { [itemId]: true }
+    loadItemsLoading: loading,
+    error,
+  } = useSelector((s) => s.like || {})
 
   // ====== 필터 상태 ======
   const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -17,11 +33,6 @@ export default function ItemLikePage() {
   const [priceMax, setPriceMax] = useState('')
   const [sellStatus, setSellStatus] = useState('') // '', 'SELL', 'SOLD_OUT'
   const [inStockOnly, setInStockOnly] = useState(false)
-
-  // ====== 초기 아이템 로드 ======
-  useEffect(() => {
-    dispatch(fetchItemsThunk({}))
-  }, [dispatch])
 
   // ====== 유틸 ======
   const buildImgUrl = (url) => {
@@ -48,11 +59,11 @@ export default function ItemLikePage() {
 
   // ====== 목록/카테고리 파생 ======
   const list = useMemo(
-    () => (Array.isArray(items) ? items.filter(Boolean) : []),
-    [items]
+    () => (Array.isArray(likedItems) ? likedItems.filter(Boolean) : []),
+    [likedItems]
   )
 
-  // 좋아요한 상품만
+  // 좋아요한 상품만 (이미 likedItems가 그것이지만 방어적으로 유지)
   const likedList = useMemo(
     () => list.filter((it) => !!likes[it.id]),
     [list, likes]
@@ -141,18 +152,10 @@ export default function ItemLikePage() {
   }, [selectedCatNames, sellStatus, priceMin, priceMax])
 
   // ====== 이벤트 ======
-  const toggleCat = (name) => {
-    setSelectedCats((prev) => {
-      const next = new Set(prev)
-      next.has(name) ? next.delete(name) : next.add(name)
-      return next
-    })
-  }
-
   const handleLike = (e, id) => {
     e.preventDefault()
     e.stopPropagation()
-    dispatch(toggleLike(id))
+    dispatch(toggleLikeThunk(id)) // develop 기준 Thunk 사용
   }
 
   // ====== 로딩/에러 ======
@@ -178,7 +181,7 @@ export default function ItemLikePage() {
     return (
       <section style={{backgroundImage: 'url(../../public/images/ribbon.jpeg)',backgroundRepeat: 'repeat',backgroundSize: '20%', paddingTop: '74px'}} id="itemlike-list" className="wrap center">
         <p className="error">에러 발생: {String(error)}</p>
-        <button className="btn" onClick={() => dispatch(fetchItemsThunk({}))}>다시 시도</button>
+        <button className="btn" onClick={() => { dispatch(fetchMyLikedItemsThunk()); dispatch(fetchMyLikeIdsThunk()) }}>다시 시도</button>
       </section>
     )
   }
@@ -344,10 +347,10 @@ export default function ItemLikePage() {
                   >
                     {liked ? (
                       <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 24 24" aria-hidden="true">
-                        <path fill="#f70000" stroke="#000" strokeWidth={1} d="M23 6v5h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1H9v-1H8v-1H7v-1H6v-1H5v-1H4v-1H3v-1H2v-1H1V6h1V5h1V4h1V3h6v1h1v1h2V4h1V3h6v1h1v1h1v1z"/>
+                        <path fill="#f70000" stroke="#000" strokeWidth={1} d="M23 6v5h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1H9v-1H8v-1H7v-1H6v-1H5v-1H4v-1H3v-1H2v-1H1V6h1V5h1V4h1V3h6v1h1v1h2V4h1V3h6v1h1v1h1v1z"/>
                       </svg>
                     ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 24 24"><path fill="#000" d="M22 6V5h-1V4h-1V3h-6v1h-1v1h-2V4h-1V3H4v1H3v1H2v1H1v5h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1V6zm-2 4v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1H9v-1H8v-1H7v-1H6v-1H5v-1H4v-1H3V7h1V6h1V5h4v1h1v1h1v1h2V7h1V6h1V5h4v1h1v1h1v3z"></path></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 24 24"><path fill="#000" d="M22 6V5h-1V4h-1V3h-6v1h-1v1h-2V4h-1V3H4v1H3v1H2v1H1v5h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1V6zm-2 4v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1H9v-1H8v-1H7v-1H6v-1H5v-1H4v-1H3V7h1V6h1V5h4v1h1v1h1v1h2V7h1V6h1V5h4v1h1v1h1v3z"></path></svg>
                     )}
                   </button>
                   {isSoldOut && <span className="badge badge-soldout">SOLD OUT</span>}

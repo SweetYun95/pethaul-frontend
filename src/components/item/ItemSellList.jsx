@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchItemsThunk } from '../../features/itemSlice'
-import { toggleLike } from '../../features/likeSlice'
+import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
 import { Box } from '@mui/material'
 import '../css/item/ItemSellList.css'
 

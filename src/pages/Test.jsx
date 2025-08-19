@@ -1,14 +1,9 @@
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchSortDataThunk } from '../features/orderSlice'
+import { useSelector } from 'react-redux'
 
+import ItemSearchTap from '../components/item/itemSearchTap'
 function Test() {
-   const dispatch = useDispatch()
-   const { orders, loading, error } = useSelector((state) => state.order)
-   useEffect(() => {
-      dispatch(fetchSortDataThunk('salesCount'))
-   }, [dispatch])
-   return <></>
+   const { items, loading, error } = useSelector((state) => state.item)
+   return <ItemSearchTap items={items} />
 }
 
 export default Test
