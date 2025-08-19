@@ -254,7 +254,7 @@ function ItemPanel({ searchTerm, sellCategory }) {
                      </div>
                   </div>
                )}
-            </div>
+            </div> </div>
 
             {/* 🔹 활성 칩 */}
             <div className="active-chips">
