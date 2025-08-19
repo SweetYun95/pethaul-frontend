@@ -84,6 +84,7 @@ export default function ItemSellList() {
       if (inStockOnly) {
          const getStock = (it) => it?.stockNumber ?? it?.stock ?? it?.quantity
          arr = arr.filter((it) => Number(getStock(it)) > 0)
+         arr = arr.filter((it) => it.itemSellStatus === 'SELL')
       }
 
       // 가격
@@ -144,10 +145,15 @@ export default function ItemSellList() {
       })
    }
 
-   const handleLike = (e, id) => {
+   const handleLike = async (e, id) => {
       e.preventDefault()
       e.stopPropagation()
-      dispatch(toggleLikeThunk(id))
+      try {
+         await dispatch(toggleLikeThunk(id)).unwrap()
+         await dispatch(fetchMyLikeIdsThunk()).unwrap()
+      } catch (err) {
+         console.error('좋아요 토글 실패:', err)
+      }
    }
 
    // ====== 로딩/에러 ======
@@ -327,7 +333,7 @@ export default function ItemSellList() {
                   return (
                      <Link key={item.id} to={`/items/detail/${item.id}`} className="card">
                         <div className="item-img like-btn">
-                           <img src={imgSrc} alt={item.itemNm} />
+                           {isSoldOut ? <img src={imgSrc} alt={item.itemNm} style={{ filter: 'grayscale(100%)' }} /> : <img src={imgSrc} alt={item.itemNm} />}
                            <button className={`like ${liked ? 'on' : ''}`} aria-label={liked ? '좋아요 취소' : '좋아요'} onClick={(e) => handleLike(e, item.id)} type="button" title={liked ? '좋아요 취소' : '좋아요'}>
                               {liked ? (
                                  <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 24 24" aria-hidden="true">
@@ -354,12 +360,16 @@ export default function ItemSellList() {
                            <p className="title" title={item.itemNm}>
                               {item.itemNm}
                            </p>
-                           <p className="price">
-                              {(() => {
-                                 const pretty = formatPrice(item.price ?? item?.Price?.amount ?? item?.amount)
-                                 return pretty ? `${pretty}원` : '가격 정보 없음'
-                              })()}
-                           </p>
+                           {isSoldOut ? (
+                              <p style={{ color: 'red' }}>품절된 상품입니다.</p>
+                           ) : (
+                              <p className="price">
+                                 {(() => {
+                                    const pretty = formatPrice(item.price ?? item?.Price?.amount ?? item?.amount)
+                                    return pretty ? `${pretty}원` : '가격 정보 없음'
+                                 })()}
+                              </p>
+                           )}
                         </div>
                      </Link>
                   )
