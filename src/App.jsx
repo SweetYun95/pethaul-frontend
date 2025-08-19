@@ -89,7 +89,7 @@ function App() {
             <Route path="/cart" element={<ItemCartForm />} />
 
             {/* 주문/결제 */}
-            <Route path="/order" element={<OrderPage />} />
+            <Route path="/order/:id" element={<OrderPage />} />
             <Route path="/myorderlist" element={<MyOrderList />} />
 
             {/* 리뷰 */}

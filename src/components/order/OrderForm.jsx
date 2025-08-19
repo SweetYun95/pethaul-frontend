@@ -1,75 +1,91 @@
 // src/components/order/OrderForm.jsx
-import React, { useState } from 'react'
-import '../css/order/OrderForm.css'
+import React, { useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import axios from 'axios'
+import '../css/order/OrderForm.css'
 
-function OrderForm({ item, cartItems }) {
+const API_BASE = import.meta.env.VITE_APP_API_URL || ''
+
+function OrderForm({ item, cartItems, order }) {
+  const navigate = useNavigate()
+  const location = useLocation()
+
   // ===== 공통 유틸 =====
   const toNumber = (n, d = 0) => {
     const v = Number(n)
     return Number.isFinite(v) ? v : d
   }
 
-  // ===== 입력 정규화 =====
-  const cartArr = Array.isArray(cartItems) ? cartItems : []
-  const itemArr = Array.isArray(item) ? item : (item ? [item] : [])
-  const items = cartArr.length ? cartArr : itemArr
+  // ===== 입력 소스 정규화 =====
+  const reduxCartItems = useSelector((s) => s.cart?.items || [])
+  const cartArr  = Array.isArray(cartItems) ? cartItems : []
+  const itemArr  = Array.isArray(item) ? item : (item ? [item] : [])
+  const orderArr = Array.isArray(order?.items) ? order.items : []
+  const stateArr =
+    Array.isArray(location.state?.items) ? location.state.items
+    : Array.isArray(location.state?.cartItems) ? location.state.cartItems
+    : location.state?.item ? [location.state.item]
+    : []
 
-  // 합계/수량
-  const orderPrice = items.reduce((sum, it) => {
-    if (it?.Item) {
-      const price = toNumber(it.Item?.price)
-      const qty = toNumber(it.count ?? 1, 1)
-      return sum + price * qty
-    }
-    const price = toNumber(it?.price)
-    const qty = toNumber(it?.quantity ?? it?.count ?? 1, 1)
-    return sum + price * qty
-  }, 0)
+  // 우선순위: cartItems → item → order.items → router state → reduxCart
+  const rawItems = useMemo(() => {
+    return cartArr.length ? cartArr
+      : itemArr.length ? itemArr
+      : orderArr.length ? orderArr
+      : stateArr.length ? stateArr
+      : Array.isArray(reduxCartItems) ? reduxCartItems
+      : []
+  }, [cartArr, itemArr, orderArr, stateArr, reduxCartItems])
 
-  const totalCount = items.reduce((sum, it) => {
-    if (it?.Item) return sum + toNumber(it.count ?? 1, 1)
-    return sum + toNumber(it?.quantity ?? it?.count ?? 1, 1)
-  }, 0)
+  // ===== 가격/수량/아이템ID 추출 (여러 키 지원) =====
+  const pickPrice = (it) =>
+    toNumber(
+      it?.price ?? it?.Item?.price ?? it?.unitPrice ?? it?.salePrice ?? it?.originPrice,
+      0
+    )
+
+  const pickQty = (it) =>
+    toNumber(
+      it?.quantity ?? it?.count ?? it?.qty ?? it?.amount ?? 1,
+      1
+    )
+
+  const pickItemId = (it) =>
+    it?.itemId ?? it?.ItemId ?? it?.id ?? it?.Item?.id
+
+  // ===== 합계/수량 =====
+  const orderPrice = useMemo(
+    () => rawItems.reduce((sum, it) => sum + pickPrice(it) * pickQty(it), 0),
+    [rawItems]
+  )
+
+  const totalCount = useMemo(
+    () => rawItems.reduce((sum, it) => sum + pickQty(it), 0),
+    [rawItems]
+  )
 
   // ===== 쿠폰/배송 =====
-  // allowStack=false: 한 번에 1개만 적용
   const allowStack = false
-
   const COUPONS = [
     { code: 'WELCOME20', name: '신규가입 20% 쿠폰', type: 'percent', value: 20 },
     { code: 'SAVE5000',  name: '5,000원 즉시할인',  type: 'fixed',   value: 5000 },
-    // 필요 시 배송비 무료 쿠폰도 가능 (shippingFree 타입):
-    // { code: 'FREESHIP',  name: '배송비 무료 쿠폰', type: 'shippingFree' }
+    // { code: 'FREESHIP',  name: '배송비 무료 쿠폰', type: 'shippingFree' },
   ]
 
-  // 모달
   const [couponModalOpen, setCouponModalOpen] = useState(false)
-
-  // 선택된 쿠폰 (단일)
   const [selectedCoupon, setSelectedCoupon] = useState(null)
-
-  // 다중 쿠폰도 지원하고 싶다면 selectedCoupons 배열을 쓰면 됨:
-  // const [selectedCoupons, setSelectedCoupons] = useState([]);
 
   const calcDiscountByCoupon = (subtotal, coupon) => {
     if (!coupon) return 0
-    if (coupon.type === 'percent') {
-      return Math.floor(subtotal * (coupon.value / 100))
-    }
-    if (coupon.type === 'fixed') {
-      return Math.min(subtotal, coupon.value)
-    }
-    // shippingFree는 할인금액이 아니라 배송비 계산에서 반영
+    if (coupon.type === 'percent') return Math.floor(subtotal * (coupon.value / 100))
+    if (coupon.type === 'fixed')   return Math.min(subtotal, coupon.value)
     return 0
   }
 
-  // 단일 쿠폰 적용일 때
   const discount = calcDiscountByCoupon(orderPrice, selectedCoupon)
   const afterDiscount = Math.max(0, orderPrice - discount)
 
-  // 배송비: “할인 후 금액” 기준 3만원 이상 무료
-  // shippingFree 쿠폰이 있다면 배송비 0으로 처리
   const hasShippingFree = selectedCoupon?.type === 'shippingFree'
   const shippingFee =
     hasShippingFree ? 0 : afterDiscount >= 30000 ? 0 : afterDiscount > 0 ? 3000 : 0
@@ -111,51 +127,121 @@ function OrderForm({ item, cartItems }) {
     setExpiry((prev) => ({ ...prev, [name]: value }))
   }
 
-  // ===== 모달 내부 UI =====
-const CouponModal = ({ open, onClose, onSelect, coupons, selected }) => {
-  if (!open) return null
-  return (
-    <div role="dialog" aria-modal="true" className="coupon-modal-backdrop" onClick={onClose}>
-      <div className="coupon-modal" onClick={(e) => e.stopPropagation()}>
-        <div>
-          <span>쿠폰 선택</span>
-          <button onClick={onClose} style={{ all: 'unset', fontSize: 18, lineHeight: 1 }}>✕</button>
-        </div>
+  // ===== 구매하기 (주문 생성) =====
+  const handleSubmitOrder = async () => {
+    // 1) 기본 검증
+    if (rawItems.length === 0) {
+      alert('주문할 상품이 없습니다.')
+      return
+    }
+    if (!formData.name?.trim())    return alert('이름/배송지명을 입력하세요.')
+    if (!formData.address?.trim()) return alert('주소를 입력하세요.')
+    const phone = `${formData.phone1}-${formData.phone2}-${formData.phone3}`
+    if (!/^\d{2,3}-\d{3,4}-\d{4}$/.test(phone)) {
+      return alert('전화번호를 정확히 입력하세요.')
+    }
 
-        <div className="coupon-list">
-          {coupons.map((c) => {
-            const active = selected?.code === c.code
-            return (
-              <button
-                key={c.code}
-                onClick={() => onSelect(c)}
-                className={`coupon-btn ${active ? 'active' : ''}`}
-              >
-                <div className="coupon-info">
-                  <div>{c.name}</div>
-                  <div>코드: {c.code}</div>
-                </div>
-                {active ? (
-                  <span style={{ color: '#4f46e5', fontWeight: 700 }}>선택됨</span>
-                ) : (
-                  <span>선택</span>
-                )}
+    // 2) 서버 페이로드 구성 (백엔드 요구: { items: [{ itemId, price, quantity }] })
+    const payloadItems = rawItems
+      .map((it) => ({
+        itemId:   pickItemId(it),
+        price:    pickPrice(it),
+        quantity: pickQty(it),
+      }))
+      .filter((r) => Number.isFinite(r.price) && r.price >= 0 && Number.isFinite(r.quantity) && r.quantity > 0 && r.itemId)
+
+    if (payloadItems.length === 0) {
+      alert('상품 데이터가 올바르지 않습니다.')
+      return
+    }
+
+    const payload = {
+      items: payloadItems,
+      delivery: {
+        name: formData.name,
+        phone,
+        address: formData.address,
+        request: formData.request || '',
+      },
+      coupon: selectedCoupon ? { code: selectedCoupon.code } : null,
+      pricing: {
+        orderPrice,
+        discount,
+        shippingFee,
+        payable,
+      },
+      payment: {
+        method: paymentMethod,
+        simplePay: simplePay || null,
+      },
+    }
+
+    try {
+      const res = await axios.post(`${API_BASE}/orders`, payload, { withCredentials: true })
+      const orderId = res?.data?.id ?? res?.data?.orderId
+      if (orderId) {
+        // 주문상세 라우트가 있을 때:
+        // navigate(`/orders/${orderId}`)
+        alert(`주문이 완료되었습니다. 주문번호: ${orderId}`)
+      } else {
+        alert('주문이 완료되었습니다.')
+      }
+      console.log('[OrderForm] order created:', res?.data)
+    } catch (err) {
+      console.error('[OrderForm] order create error:', err)
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        '주문 처리 중 오류가 발생했습니다.'
+      alert(msg)
+    }
+  }
+
+  // ===== 쿠폰 모달 =====
+  const CouponModal = ({ open, onClose, onSelect, coupons, selected }) => {
+    if (!open) return null
+    return (
+      <div role="dialog" aria-modal="true" className="coupon-modal-backdrop" onClick={onClose}>
+        <div className="coupon-modal" onClick={(e) => e.stopPropagation()}>
+          <div>
+            <span>쿠폰 선택</span>
+            <button onClick={onClose} style={{ all: 'unset', fontSize: 18, lineHeight: 1 }}>✕</button>
+          </div>
+
+          <div className="coupon-list">
+            {coupons.map((c) => {
+              const active = selected?.code === c.code
+              return (
+                <button
+                  key={c.code}
+                  onClick={() => onSelect(c)}
+                  className={`coupon-btn ${active ? 'active' : ''}`}
+                >
+                  <div className="coupon-info">
+                    <div>{c.name}</div>
+                    <div>코드: {c.code}</div>
+                  </div>
+                  {active ? (
+                    <span style={{ fontWeight: 700 }}>선택됨</span>
+                  ) : (
+                    <span>선택</span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+
+          <div className="coupon-modal-footer">
+            {selected && (
+              <button className="btn-cancel" onClick={() => onSelect(null)}>
+                선택 해제
               </button>
-            )
-          })}
-        </div>
-
-        <div className="coupon-modal-footer">
-          {selected && (
-            <button className="btn-cancel" onClick={() => onSelect(null)}>
-              선택 해제
-            </button>
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
 
   return (
     <section id="order-section">
@@ -163,6 +249,22 @@ const CouponModal = ({ open, onClose, onSelect, coupons, selected }) => {
       <div className="section-contents">
         {/* 좌측 */}
         <div className="order-left">
+          {/* 주문 상품 없을 때 안내 */}
+          {rawItems.length === 0 && (
+            <div className="contents-card" style={{ marginBottom: 16 }}>
+              <div className="card-header">
+                <div className="window-btn">
+                  <span className="red"></span><span className="green"></span><span className="blue"></span>
+                </div>
+                <span className="card-title">안내</span>
+              </div>
+              <div style={{ padding: 16 }}>
+                현재 페이지로 전달된 주문 상품이 없습니다.
+                장바구니 또는 상품상세에서 다시 시도해 주세요.
+              </div>
+            </div>
+          )}
+
           {/* 배송지 입력 */}
           <div className="contents-card">
             <div className="card-header">
@@ -256,7 +358,11 @@ const CouponModal = ({ open, onClose, onSelect, coupons, selected }) => {
                   <div className="card-payment-input card-number-wrapper">
                     {['card0', 'card1', 'card2', 'card3'].map((field, index) => (
                       <React.Fragment key={field}>
-                        <input type="text" maxLength={4} name={field} placeholder="0000" value={cardNumber[field]} onChange={handleCardNumberChange} className="card-input" />
+                        <input
+                          type="text" maxLength={4} name={field} placeholder="0000"
+                          value={cardNumber[field]} onChange={handleCardNumberChange}
+                          className="card-input"
+                        />
                         {index < 3 && <span className="hyphen">-</span>}
                       </React.Fragment>
                     ))}
@@ -264,18 +370,26 @@ const CouponModal = ({ open, onClose, onSelect, coupons, selected }) => {
                   <div className="card-payment-input expiry-date">
                     <p>만료일</p>
                     <div>
-                      <input type="text" maxLength={2} name="expiryMonth" placeholder="MM" value={expiry.expiryMonth} onChange={handleExpiryChange} className="expiry-input" />
+                      <input
+                        type="text" maxLength={2} name="expiryMonth" placeholder="MM"
+                        value={expiry.expiryMonth} onChange={handleExpiryChange}
+                        className="expiry-input"
+                      />
                       <span>/</span>
-                      <input type="text" maxLength={2} name="expiryYear" placeholder="YY" value={expiry.expiryYear} onChange={handleExpiryChange} className="expiry-input" />
+                      <input
+                        type="text" maxLength={2} name="expiryYear" placeholder="YY"
+                        value={expiry.expiryYear} onChange={handleExpiryChange}
+                        className="expiry-input"
+                      />
                     </div>
                   </div>
                   <div className="card-payment-input cvc">
                     <p>CVC</p>
-                    <input label="CVC" placeholder="123" />
+                    <input placeholder="123" />
                   </div>
                   <div className="card-payment-input card-password ">
                     <p>비밀번호</p>
-                    <input label="비밀번호" placeholder="앞 2자리" />
+                    <input placeholder="앞 2자리" />
                   </div>
                 </div>
               )}
@@ -322,17 +436,17 @@ const CouponModal = ({ open, onClose, onSelect, coupons, selected }) => {
                 <p>{orderPrice.toLocaleString()}원</p>
               </div>
 
-              {/* 쿠폰 영역: 모달 트리거 */}
+              {/* 쿠폰 영역 */}
               <div className='coupon-discount'>
                 <p>쿠폰할인:</p>
-                <div >
+                <div>
                   <button onClick={() => setCouponModalOpen(true)}>쿠폰선택</button>
                   {selectedCoupon && (
                     <div>
                       <p className='coupon'>
-                        {selectedCoupon.name} 적용 (-{(discount).toLocaleString()}원)
+                        {selectedCoupon.name} 적용 (-{discount.toLocaleString()}원)
                       </p>
-                      <button className='coupon-delete' onClick={() => setSelectedCoupon(null)} >
+                      <button className='coupon-delete' onClick={() => setSelectedCoupon(null)}>
                         해제
                       </button>
                     </div>
@@ -351,7 +465,7 @@ const CouponModal = ({ open, onClose, onSelect, coupons, selected }) => {
               <p>{payable.toLocaleString()}원</p>
             </div>
 
-            <button className="order-btn" type="button" onClick={() => alert('결제 처리 로직 연결 예정')}>
+            <button className="order-btn" type="button" onClick={handleSubmitOrder}>
               구매하기
             </button>
           </div>
@@ -363,13 +477,12 @@ const CouponModal = ({ open, onClose, onSelect, coupons, selected }) => {
         open={couponModalOpen}
         onClose={() => setCouponModalOpen(false)}
         onSelect={(c) => {
-          // 단일 선택 모드: 바로 저장 후 닫기
           if (!allowStack) {
             setSelectedCoupon(c)
             setCouponModalOpen(false)
             return
           }
-          // 다중 중복적용 모드로 확장 시 여기서 배열 업데이트
+          // 다중 적용 모드 확장 시 여기에 배열 업데이트
         }}
         coupons={COUPONS}
         selected={selectedCoupon}
