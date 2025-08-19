@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchItemsThunk } from '../../features/itemSlice'
-import { toggleLikeThunk } from '../../features/likeSlice'
+import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
+import { Box } from '@mui/material'
 import '../css/item/ItemSellList.css'
 
 export default function ItemSellList() {
@@ -83,6 +84,7 @@ export default function ItemSellList() {
       if (inStockOnly) {
          const getStock = (it) => it?.stockNumber ?? it?.stock ?? it?.quantity
          arr = arr.filter((it) => Number(getStock(it)) > 0)
+         arr = arr.filter((it) => it.itemSellStatus === 'SELL')
       }
 
       // 가격
@@ -143,10 +145,15 @@ export default function ItemSellList() {
       })
    }
 
-   const handleLike = (e, id) => {
+   const handleLike = async (e, id) => {
       e.preventDefault()
       e.stopPropagation()
-      dispatch(toggleLikeThunk(id))
+      try {
+         await dispatch(toggleLikeThunk(id)).unwrap()
+         await dispatch(fetchMyLikeIdsThunk()).unwrap()
+      } catch (err) {
+         console.error('좋아요 토글 실패:', err)
+      }
    }
 
    // ====== 로딩/에러 ======
@@ -225,7 +232,12 @@ export default function ItemSellList() {
                            <span className="muted">카테고리 데이터 없음</span>
                         ) : (
                            allCategories.map((c) => (
-                              <button type="button" key={c.name} className={`chip ${selectedCats.has(c.name) ? 'active' : ''}`} onClick={() => toggleCat(c.name)}>
+                              <button
+                                 type="button"
+                                 key={c.name}
+                                 className={`chip ${selectedCats.has(c.name) ? 'active' : ''}`} // active 클래스
+                                 onClick={() => toggleCat(c.name)}
+                              >
                                  #{c.name}
                               </button>
                            ))
@@ -247,7 +259,14 @@ export default function ItemSellList() {
                            <span className="dash">~</span>
                            <input inputMode="numeric" placeholder="최고가" value={priceMax} onChange={(e) => setPriceMax(e.target.value.replace(/[^\d]/g, ''))} />
                         </div>
-                        <button type="button" className="btn-subtle" onClick={clearPrice}>
+                        <button
+                           type="button"
+                           className="btn-subtle"
+                           onClick={() => {
+                              setPriceMin('')
+                              setPriceMax('')
+                           }}
+                        >
                            초기화
                         </button>
                      </div>
@@ -309,12 +328,12 @@ export default function ItemSellList() {
                   const repImage = item.ItemImages?.find((img) => img.repImgYn === 'Y')?.imgUrl || item.ItemImages?.[0]?.imgUrl
                   const imgSrc = buildImgUrl(repImage)
                   const liked = !!likes[item.id]
-                  // isSoldOut 변수는 사용하지 않아 경고 유발 → 제거
+                  const isSoldOut = (item.itemSellStatus ?? item.sellStatus) === 'SOLD_OUT'
 
                   return (
                      <Link key={item.id} to={`/items/detail/${item.id}`} className="card">
                         <div className="item-img like-btn">
-                           <img src={imgSrc} alt={item.itemNm} />
+                           {isSoldOut ? <img src={imgSrc} alt={item.itemNm} style={{ filter: 'grayscale(100%)' }} /> : <img src={imgSrc} alt={item.itemNm} />}
                            <button className={`like ${liked ? 'on' : ''}`} aria-label={liked ? '좋아요 취소' : '좋아요'} onClick={(e) => handleLike(e, item.id)} type="button" title={liked ? '좋아요 취소' : '좋아요'}>
                               {liked ? (
                                  <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 24 24" aria-hidden="true">
@@ -324,7 +343,7 @@ export default function ItemSellList() {
                                  <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 24 24">
                                     <path
                                        fill="#000"
-                                       d="M22 6V5h-1V4h-1V3h-6v1h-1v1h-2V4h-1V3H4v1H3v1H2v1H1v5h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1V6zm-2 4v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1H9v-1H8v-1H7v-1H6v-1H5v-1H4v-1H3V7h1V6h1V5h4v1h1v1h1v1h2V7h1V6h1V5h4v1h1v1h1v3z"
+                                       d="M22 6V5h-1V4h-1V3h-6v1h-1v1h-2V4h-1V3H4v1H3v1H2v1H1v5h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h2v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1V6zm-2 4v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h-1v-1H9v-1H8v-1H7v-1H6v-1H5v-1H4v-1H3V7h1V6h1V5h4v1h1v1h1v1h2V7h1V6h1V5h4v1h1v1h1v3z"
                                     ></path>
                                  </svg>
                               )}
@@ -341,12 +360,16 @@ export default function ItemSellList() {
                            <p className="title" title={item.itemNm}>
                               {item.itemNm}
                            </p>
-                           <p className="price">
-                              {(() => {
-                                 const pretty = formatPrice(item.price ?? item?.Price?.amount ?? item?.amount)
-                                 return pretty ? `${pretty}원` : '가격 정보 없음'
-                              })()}
-                           </p>
+                           {isSoldOut ? (
+                              <p style={{ color: 'red' }}>품절된 상품입니다.</p>
+                           ) : (
+                              <p className="price">
+                                 {(() => {
+                                    const pretty = formatPrice(item.price ?? item?.Price?.amount ?? item?.amount)
+                                    return pretty ? `${pretty}원` : '가격 정보 없음'
+                                 })()}
+                              </p>
+                           )}
                         </div>
                      </Link>
                   )

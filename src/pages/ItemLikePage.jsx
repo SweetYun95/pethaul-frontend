@@ -147,6 +147,14 @@ export default function ItemLikePage() {
    }, [selectedCatNames, sellStatus, priceMin, priceMax])
 
    // ====== 이벤트 ======
+   const toggleCat = (name) => {
+      setSelectedCats((prev) => {
+         const next = new Set(prev)
+         next.has(name) ? next.delete(name) : next.add(name)
+         return next
+      })
+   }
+
    const handleLike = (e, id) => {
       e.preventDefault()
       e.stopPropagation()
