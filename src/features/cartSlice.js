@@ -83,8 +83,8 @@ const cartSlice = createSlice({
          })
          .addCase(updateCartItemThunk.fulfilled, (state, action) => {
             state.loading = false
-            const { itemId, count } = action.payload 
-            const target = state.items.find((ci) => ci.itemId === itemId) //원소(ci)는 장바구니 항목(CartItem) 객체이고, 안에 itemId라는 속성이 있다
+            const { itemId, count } = action.payload
+            const target = state.items.find((ci) => ci.itemId === itemId)
             if (target) target.count = count
          })
          .addCase(updateCartItemThunk.rejected, (state, action) => {
