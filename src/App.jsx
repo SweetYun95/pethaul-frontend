@@ -9,6 +9,8 @@ import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 import GoogleSuccessPage from './pages/GoogleSuccessPage'
 import TokenPage from './pages/TokenPage'
+import FindIdPage from './pages/FindIdPage'
+import FindPasswordPage from './pages/FindPasswordPage'
 import ItemSellListPage from './pages/ItemSellListPage'
 import ItemDetailPage from './pages/ItemDetailPage'
 import ItemCreatePage from './pages/ItemCreatePage'
@@ -72,6 +74,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/google-success" element={<GoogleSuccessPage />} />
             <Route path="/token" element={<TokenPage />} />
+            <Route path="find-id" element={<FindIdPage />} />
+            <Route path="find-password" element={<FindPasswordPage />} />
 
             {/* 상품 */}
             <Route path="/item" element={<ItemSellListPage />} />
