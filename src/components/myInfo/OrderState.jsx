@@ -50,7 +50,7 @@ function OrderState({ order }) {
                <span className="card-title">주문현황</span>
             </div>
 
-            <div style={{ display: 'flex' }}>
+            <div className='summary-state' >
                <img src={imgUrl} alt="주문 상품 이미지" width="100px" />
                <div>
                   <p>상품명: {itemName}</p>
