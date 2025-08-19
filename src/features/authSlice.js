@@ -2,7 +2,7 @@
 // File: src/features/authSlice.js
 // =============================
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser, googleCheckStatus, findId, updatePassword } from '../api/authApi'
+import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser, googleCheckStatus, findId, updatePassword, updateMyInfo } from '../api/authApi'
 
 // -----------------------------
 // helpers
@@ -113,6 +113,19 @@ export const updatePasswordThunk = createAsyncThunk('auth/updatePassword', async
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '회원 정보 확인 실패')
+   }
+})
+
+// 회원 정보 수정
+export const updateMyInfoThunk = createAsyncThunk('auth/updateMyInfo', async (data, { rejectWithValue }) => {
+   try {
+      console.log('🎀수정 데이터: ', data)
+      const response = await updateMyInfo(data)
+      console.log('🎀수정 데이터 확인: ', response.data)
+
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '회원 정보 수정 실패')
    }
 })
 
@@ -280,6 +293,19 @@ const authSlice = createSlice({
             state.ids = action.payload.ids
          })
          .addCase(findIdThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 회원 정보 수정
+         .addCase(updateMyInfoThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(updateMyInfoThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.user = action.payload.user
+         })
+         .addCase(updateMyInfoThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

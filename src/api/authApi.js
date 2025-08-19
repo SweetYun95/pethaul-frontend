@@ -108,3 +108,14 @@ export const updatePassword = async ({ userId, phoneNumber }) => {
       throw error
    }
 }
+
+// 회원 정보 수정
+export const updateMyInfo = async (data) => {
+   try {
+      const response = await shopmaxApi.put('/auth', data)
+      return response
+   } catch (error) {
+      console.error(`회원 정보 수정 중 오류: ${error}`)
+      throw error
+   }
+}
