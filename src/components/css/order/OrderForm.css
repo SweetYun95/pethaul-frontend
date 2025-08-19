@@ -12,12 +12,12 @@
     gap: 20px;
 }
 
-.left {
+.order-left {
     display: grid;
     gap: 20px;
 }
 
-.right {
+.order-right {
     max-height: 500px;
 }
 
@@ -234,13 +234,49 @@ width: 25%;
     margin-top: 29px;
 }
 
-.paying-group div {
+.paying-group > div {
     margin: 20px 0;
     display: flex;
     justify-content: space-between;
     font-size: 16px;
     gap: 10px;
 }
+
+.coupon-discount > div{
+display: flex;
+flex-direction: column;
+align-items: end;
+}
+
+.coupon-discount > div > button {
+    all: unset;
+    font-size: 13px;
+    width: 60px;
+    text-align: center;
+    background-color: #0077FF;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 10px;
+}
+
+.coupon-discount > div > div {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+.coupon-delete {
+    all: unset;
+     background-color: #ff0000;
+     padding: 5px;
+    text-align: center;
+    color: white;
+    border-radius: 10px;
+}
+
+
 
 .total-sum {
     margin: 20px 0;
@@ -251,6 +287,7 @@ width: 25%;
 .total-sum p{
     padding: 5px 0;
 }
+
 
 
 .order-btn {
@@ -270,6 +307,101 @@ width: 25%;
   color: white;
   border-color: #000;
 }
+
+/* 모달창 */
+
+/* 모달 전체 배경 */
+.coupon-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+/* 모달 컨테이너 */
+.coupon-modal {
+  width: min(520px, 100%);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* 헤더 */
+.coupon-modal > div:first-child {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+/* 쿠폰 리스트 영역 */
+.coupon-modal .coupon-list {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+/* 쿠폰 버튼 */
+.coupon-modal .coupon-btn {
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.coupon-modal .coupon-btn.active {
+  border: 2px solid #4f46e5;
+  background: rgba(79, 70, 229, 0.06);
+}
+
+.coupon-modal .coupon-btn .coupon-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.coupon-modal .coupon-btn .coupon-info div:first-child {
+  font-weight: 700;
+}
+
+.coupon-modal .coupon-btn .coupon-info div:last-child {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* 푸터 버튼 영역 */
+.coupon-modal-footer {
+  padding: 14px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.coupon-modal-footer button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.coupon-modal-footer .btn-cancel {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: #fff;
+}
+
 
 
 @media (max-width: 820px) {

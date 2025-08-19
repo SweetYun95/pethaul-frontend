@@ -107,17 +107,17 @@ const itemSlice = createSlice({
          })
 
          // 상품 삭제
-         // .addCase(deleteItemThunk.pending, (state) => {
-         //    state.loading = true
-         //    state.error = null
-         // })
-         // .addCase(deleteItemThunk.fulfilled, (state) => {
-         //    state.loading = false
-         // })
-         // .addCase(deleteItemThunk.rejected, (state, action) => {
-         //    state.loading = false
-         //    state.error = action.payload
-         // })
+         .addCase(deleteItemThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(deleteItemThunk.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(deleteItemThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
 
          // 전체 상품 리스트 가져오기
          .addCase(fetchItemsThunk.pending, (state) => {

@@ -284,11 +284,39 @@ function ItemPanel({ searchTerm, sellCategory }) {
                </div>
             </div>
 
+            {/* 🔹 활성 칩 */}
+            <div className="active-chips">
+               {activeFilterChips.length > 0 ? (
+                  activeFilterChips.map((chip) => (
+                     <button className="chip-removable" key={chip.key} onClick={chip.onRemove}>
+                        <span>{chip.label}</span>
+                        <span className="chip-x" aria-label="remove">
+                           ×
+                        </span>
+                     </button>
+                  ))
+               ) : (
+                  <span className="muted"></span>
+               )}
+            </div>
+
+            {/* 🔹 Subbar: 재고 스위치 + 결과 개수 */}
+            <div className="subbar">
+               <div className="result-count">상품 {filteredList.length}개</div>
+               <div className="stock-toggle">
+                  <label className="switch">
+                     <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
+                     <span className="slider"></span>
+                  </label>
+                  <span className="switch-label">재고만 보기</span>
+               </div>
+            </div>
+
             {/* 카드 리스트 */}
             <div className="item-panel-card-list">
                {filteredList.map((item, idx) => (
                   <div className="item-panel-card" key={item?.id ?? idx}>
-                     <div className="item-panel-img">
+                     <div className="item-img">
                         <button className="item-panel-delete-btn" style={{ all: 'unset', padding: '10px', position: 'absolute', top: '0', right: '0' }} onClick={() => onClickDelete(item?.id)} title="삭제">
                            x
                         </button>
