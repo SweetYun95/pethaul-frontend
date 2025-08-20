@@ -60,6 +60,17 @@ export const checkUsername = async (userId) => {
    }
 }
 
+// 이메일 중복 확인
+export const checkEmail = async (email) => {
+   try {
+      const response = await shopmaxApi.post('/auth/check-email', { email })
+      return response
+   } catch (error) {
+      console.error(`이메일 중복 확인 오류: ${error}`)
+      throw error
+   }
+}
+
 // 구글 로그인 리다이렉트
 export const redirectToGoogleLogin = () => {
    window.location.href = `${BASE_API_URL}/auth/google`
@@ -116,6 +127,17 @@ export const updateMyInfo = async (data) => {
       return response
    } catch (error) {
       console.error(`회원 정보 수정 중 오류: ${error}`)
+      throw error
+   }
+}
+
+// 비밀번호 확인
+export const verifyPassword = async (password) => {
+   try {
+      const response = await shopmaxApi.post('/auth/verify', { password })
+      return response
+   } catch (error) {
+      console.error(`비밀번호 확인 중 오류: ${error}`)
       throw error
    }
 }
