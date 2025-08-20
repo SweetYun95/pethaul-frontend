@@ -34,6 +34,7 @@ import Footer from './components/shared/Footer'
 import { checkUnifiedAuthThunk } from './features/authSlice'
 
 import './App.css'
+import VerifyPasswordPage from './pages/VerifyPasswordPage'
 
 function App() {
    const location = useLocation()
@@ -99,6 +100,7 @@ function App() {
 
             {/* 마이페이지/관리자 */}
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/verify" element={<VerifyPasswordPage />} />
             <Route path="/mypage/edit" element={<EditMyInfoPage />} />
             <Route path="/admin" element={<AdminPage />} />
 

@@ -80,6 +80,7 @@ export default function ItemSellList() {
       if (inStockOnly) {
          const getStock = (it) => it?.stockNumber ?? it?.stock ?? it?.quantity
          arr = arr.filter((it) => Number(getStock(it)) > 0)
+         arr = arr.filter((it) => it.itemSellStatus == 'SELL')
       }
 
       const min = priceMin === '' ? null : Number(priceMin)
@@ -312,7 +313,7 @@ export default function ItemSellList() {
                   return (
                      <Link key={item.id} to={`/items/detail/${item.id}`} className="card">
                         <div className="item-img like-btn">
-                           <img src={imgSrc} alt={item.itemNm} />
+                           <img src={imgSrc} alt={item.itemNm} style={{ filter: item.itemSellStatus == 'SOLD_OUT' ? 'grayscale(100%)' : 'none' }} />
                            {isSoldOut && <span className="badge badge-soldout">품절</span>}
 
                            <button className={`like ${liked ? 'on' : ''}`} aria-label={liked ? '좋아요 취소' : '좋아요'} onClick={(e) => handleLike(e, item.id)} type="button" title={liked ? '좋아요 취소' : '좋아요'}>
@@ -343,10 +344,12 @@ export default function ItemSellList() {
                               {item.itemNm}
                            </p>
                            <p className="price">
-                              {(() => {
-                                 const pretty = formatPrice(item.price ?? item?.Price?.amount ?? item?.amount)
-                                 return pretty ? `${pretty}원` : '가격 정보 없음'
-                              })()}
+                              {item.itemSellStatus == 'SOLD_OUT'
+                                 ? ''
+                                 : (() => {
+                                      const pretty = formatPrice(item.price ?? item?.Price?.amount ?? item?.amount)
+                                      return pretty ? `${pretty}원` : '가격 정보 없음'
+                                   })()}
                            </p>
                         </div>
                      </Link>
