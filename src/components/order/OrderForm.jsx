@@ -155,7 +155,7 @@ function OrderForm({ item, cartItems, order }) {
       }
 
       try {
-         const res = await axios.post(`${API_BASE}/orders`, payload, { withCredentials: true })
+         const res = await axios.post(`${API_BASE}/order`, payload, { withCredentials: true })
          const orderId = res?.data?.id ?? res?.data?.orderId
          if (orderId) {
             // 주문상세 라우트가 있을 때:

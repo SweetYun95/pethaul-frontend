@@ -135,7 +135,6 @@ const ItemCartForm = () => {
          setSubmitting(false)
       }
    }
-
    return (
       <section id="itemCart-section">
          <div className="cart-contents">
@@ -197,87 +196,34 @@ const ItemCartForm = () => {
                         </div>
                      )
                   })}
+            </div>
 
-               {/* 우측: 결제 요약 */}
-               <div className="contents-card">
-                  <div className="card-header">
-                     <div className="window-btn">
-                        <span className="red"></span>
-                        <span className="green"></span>
-                        <span className="blue"></span>
-                     </div>
-                     <span className="card-title">결제하기</span>
+            {/* 우측: 결제 요약 */}
+            <div className="contents-card">
+               <div className="card-header">
+                  <div className="window-btn">
+                     <span className="red"></span>
+                     <span className="green"></span>
+                     <span className="blue"></span>
                   </div>
-
-                  {!loading &&
-                     cartItems.map((item, idx) => {
-                        const product = item.Item
-                        const itemId = item.itemId ?? product?.id
-                        const name = product?.itemNm || '상품명'
-                        const repImage = product?.ItemImages?.find((img) => img.repImgYn === 'Y')?.imgUrl || '/images/no-image.jpg'
-                        const imgSrc = buildImgUrl(repImage)
-                        const price = toInt(product?.price, 0)
-                        const qty = Math.max(1, toInt(item.count, 1))
-
-                        const maxQty = (() => {
-                           const stock = Number(product?.stockNumber ?? product?.stock ?? 0)
-                           return Number.isFinite(stock) && stock > 0 ? stock : 99
-                        })()
-
-                        return (
-                           <div className="cart-card" key={`${item.id ?? itemId}-${idx}`}>
-                              <button type="button" className="del-btn" onClick={() => handleDelete(itemId)} aria-label="삭제" title="삭제">
-                                 x
-                              </button>
-
-                              <div className="thumb">
-                                 <img src={imgSrc} alt={name} />
-                              </div>
-
-                              <div className="info">
-                                 <p className="cartitem-name" title={name}>
-                                    {name}
-                                 </p>
-                                 <div>
-                                    <div className="qty-row">
-                                       <QtyCounter value={qty} min={1} max={maxQty} onChange={(next) => handleUpdate(itemId, next)} />
-                                    </div>
-                                    {/* 단가만 표기 (소계/쿠폰 제거) */}
-                                    <p className="cartitem-price">{price.toLocaleString()}원</p>
-                                 </div>
-                              </div>
-                           </div>
-                        )
-                     })}
+                  <span className="card-title">결제하기</span>
                </div>
 
-               {/* 우측: 결제 요약 */}
-               <div className="contents-card right">
-                  <div className="card-header">
-                     <div className="window-btn">
-                        <span className="red"></span>
-                        <span className="green"></span>
-                        <span className="blue"></span>
+               <div className="cart-summary">
+                  <p className="sub-title">예상 결제금액</p>
+                  <div className="paying-group">
+                     <div>
+                        <p>상품 금액</p>
+                        <p>{totalPrice.toLocaleString()}원</p>
                      </div>
-                     <span className="card-title">결제하기</span>
-                  </div>
-
-                  <div className="cart-summary">
-                     <p className="sub-title">예상 결제금액</p>
-                     <div className="paying-group">
-                        <div>
-                           <p>상품 금액</p>
-                           <p>{totalPrice.toLocaleString()}원</p>
-                        </div>
-                        <div className="divider" />
-                        <div className="total-sum">
-                           <p>총 결제 금액</p>
-                           <p>{totalPrice.toLocaleString()}원</p>
-                        </div>
-                        <button type="button" className="submit-btn" onClick={handleSubmitOrder} disabled={submitting || cartItems.length === 0}>
-                           {submitting ? '처리 중…' : '주문하기'}
-                        </button>
+                     <div className="divider" />
+                     <div className="total-sum">
+                        <p>총 결제 금액</p>
+                        <p>{totalPrice.toLocaleString()}원</p>
                      </div>
+                     <button type="button" className="submit-btn" onClick={handleSubmitOrder} disabled={submitting || cartItems.length === 0}>
+                        {submitting ? '처리 중…' : '주문하기'}
+                     </button>
                   </div>
                </div>
             </div>
@@ -285,4 +231,5 @@ const ItemCartForm = () => {
       </section>
    )
 }
+
 export default ItemCartForm
