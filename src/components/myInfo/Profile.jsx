@@ -1,18 +1,9 @@
-// =============================
-// File: src/components/myInfo/Profile.jsx
-// =============================
+// src/components/myInfo/Profile.jsx
 import { Link } from 'react-router-dom'
 import '../css/myInfo/Profile.css'
 
-/**
- * 안전가드 + 가독개선 버전
- * - user가 null인 초기 구간에서도 스켈레톤 출력
- * - provider/role 뱃지 노출
- * - 전화번호 미등록 시 안내 텍스트
- * - 아바타 우선순위: user.avatar || 구글사진(user.picture) || 기본이미지
- */
+
 function Profile({ user, loading = false }) {
-   // 스켈레톤/로딩 가드
    if (loading || !user) {
       return (
          <section id="profile-section">
@@ -63,6 +54,7 @@ function Profile({ user, loading = false }) {
             </div>
 
             <div className="profile-info">
+               <div>
                <img
                   src={avatar}
                   alt={`${displayName}의 프로필 사진`}
@@ -70,12 +62,16 @@ function Profile({ user, loading = false }) {
                      e.currentTarget.src = '/images/profile.jpeg'
                   }}
                />
-
+                   {/* 회원정보수정 페이지 라우트는 프로젝트에 맞게 변경 */}
+               <Link to="/mypage/edit" className="btn">
+                  회원정보수정
+               </Link>
+               </div>
                <div>
-                  <p className="name">이름: {displayName}</p>
-                  <p className="email">이메일: {displayEmail}</p>
-                  <p className="phone">전화번호: {displayPhone}</p>
-                  <p className="role">
+                  <p className="username">이름: {displayName}</p>
+                  <p className="useremail">이메일: {displayEmail}</p>
+                  <p className="userphone">전화번호: {displayPhone}</p>
+                  <p className="userrole">
                      권한: <span className={`role-badge role-${displayRole}`}>{displayRole}</span>
                      {provider && (
                         <span className={`provider-badge provider-${provider}`} style={{ marginLeft: 8 }}>
@@ -90,10 +86,7 @@ function Profile({ user, loading = false }) {
                   )}
                </div>
 
-               {/* 회원정보수정 페이지 라우트는 프로젝트에 맞게 변경 */}
-               <Link to="/mypage/edit" className="btn">
-                  회원정보수정
-               </Link>
+           
             </div>
          </div>
       </section>

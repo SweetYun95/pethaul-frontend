@@ -7,6 +7,23 @@
    height: 100%;
 }
 
+.summary-state {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.summary-state > img {
+   padding:20px;
+   width: 150px;
+   border-radius: 20px;
+}
+
+.summary-state > div {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+
 .order-state-details {
    height: 100%;
    display: grid;
@@ -41,4 +58,23 @@ div .order-step.active {
    font-weight: bold;
    font-size: 1.2rem;
    color: black;
+   animation: active 3s ease-in-out infinite;
+}
+
+@keyframes active {
+   0% {
+      transform: rotate(0deg);
+   }
+   25% {
+      transform: rotate(-5deg);
+   }
+   50% {
+      transform: rotate(5deg);
+   }
+   75% {
+      transform: rotate(-5deg);
+   }
+   100% {
+      transform: rotate(0deg);
+   }
 }

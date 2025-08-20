@@ -1,4 +1,4 @@
-// src/components/admin/ItemPanel.jsx (fixed closing tags & structure)
+// src/components/admin/ItemPanel.jsx
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteItemThunk, fetchItemsThunk } from '../../features/itemSlice'
@@ -118,6 +118,10 @@ function ItemPanel({ searchTerm, sellCategory }) {
       return chips
    }, [selectedCatNames, sellStatus, priceMin, priceMax])
 
+   // ---- Early return (모든 훅 이후) ----
+   if (loading) return <p>로딩 중...</p>
+   if (error) return <p>에러가 발생했습니다.: {String(error)}</p>
+
    // ---- Helpers ----
    const resolveImage = (item) => {
       const rep = item?.ItemImages?.find((img) => img?.repImgYn === 'Y') ?? item?.ItemImages?.[0]
@@ -141,7 +145,6 @@ function ItemPanel({ searchTerm, sellCategory }) {
       })
    }
    const clearCats = () => setSelectedCats(new Set())
-   const selectAllCats = () => setSelectedCats(new Set(allCategories.map((c) => c.name)))
 
    const onClickDelete = (itemId) => {
       if (!itemId) return
@@ -155,10 +158,6 @@ function ItemPanel({ searchTerm, sellCategory }) {
             .catch(() => alert('상품 삭제 중 오류 발생'))
       }
    }
-
-   // ---- Early return (모든 훅 이후) ----
-   if (loading) return <p>로딩 중...</p>
-   if (error) return <p>에러가 발생했습니다.: {String(error)}</p>
 
    // ---- Render ----
    return (
@@ -189,7 +188,7 @@ function ItemPanel({ searchTerm, sellCategory }) {
                      {/* 필터 버튼 */}
                      <button type="button" className="filter-toggle-btn" onClick={() => setIsFilterOpen((v) => !v)} aria-expanded={isFilterOpen} aria-controls="item-filter-panel" title="필터 열기/닫기">
                         <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
-                           <path fill="none" stroke="#fff" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 8.5h11m-18 0a2 2 0 1 0 4 0a2 2 0 0 0-4 0m0 7h11m3 0a2 2 0 1 0 4 0a2 2 0 0 0-4 0" />
+                           <path fill="none" stroke="#fff" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 8.5h11m-18 0a2 2 0 1 0 4 0a2 2 0 0 0-4 0m0 7h11m3 0a2 2 0 1 0 4 0a2 2 0 0 0-4 0"></path>
                         </svg>
                      </button>
                   </div>
@@ -212,14 +211,9 @@ function ItemPanel({ searchTerm, sellCategory }) {
                               ))
                            )}
                            {selectedCats.size > 0 && (
-                              <div className="filter-actions">
-                                 <button type="button" className="btn-subtle" onClick={clearCats}>
-                                    전체 해제
-                                 </button>
-                                 <button type="button" className="btn-subtle" onClick={selectAllCats}>
-                                    전체 선택
-                                 </button>
-                              </div>
+                              <button type="button" className="btn-subtle" onClick={clearCats}>
+                                 전체 해제
+                              </button>
                            )}
                         </div>
                      </div>
@@ -325,11 +319,13 @@ function ItemPanel({ searchTerm, sellCategory }) {
                               </svg>
                            </Link>
                         </div>
+
                         {(item?.Categories ?? []).map((ic) => (
                            <p className="category" key={ic?.id ?? `${item?.id}-cat`}>
                               #{ic?.categoryName ?? ic?.name ?? ''}
                            </p>
                         ))}
+
                         {(() => {
                            const raw = item?.price ?? item?.Price?.amount ?? item?.amount
                            const pretty = formatPrice(raw)

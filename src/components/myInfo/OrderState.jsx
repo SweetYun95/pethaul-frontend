@@ -1,11 +1,23 @@
+// src/components/myInfo/OrderState.jsx
 import '../css/myInfo/OrderState.css'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
 function OrderState({ order }) {
-   console.log('🎀order: ', order)
-   console.log('🎀item: ', order?.Items[0].ItemImages[0].imgurl)
-   const orderStatus = order?.orderStatus
-   return orderStatus ? (
+   const baseURL = import.meta.env.VITE_APP_API_URL || ''
+
+   // 안전 가드: 주문이 없거나 Items가 비어있는 경우
+   const items = Array.isArray(order?.Items) ? order.Items : []
+   const firstItem = items[0]
+
+   // 대표 이미지 경로
+   const imgUrl = firstItem?.ItemImages?.[0]?.imgUrl ? (/^https?:\/\//i.test(firstItem.ItemImages[0].imgUrl) ? firstItem.ItemImages[0].imgUrl : `${baseURL}${firstItem.ItemImages[0].imgUrl}`) : '/images/placeholder.png'
+
+   const itemName = firstItem?.itemNm ?? '상품 정보 없음'
+   const price = firstItem?.price != null ? `${firstItem.price}원` : '가격 정보 없음'
+   const orderDate = order?.orderDate ? order.orderDate.slice(0, 10) : '주문일자 정보 없음'
+   const orderStatus = order?.orderStatus ?? null
+
+   const EmptyState = () => (
       <section id="order-state">
          <div className="contents-card top">
             <div className="card-header">
@@ -16,16 +28,40 @@ function OrderState({ order }) {
                </div>
                <span className="card-title">주문현황</span>
             </div>
-            <div style={{ display: 'flex' }}>
-               <img src={`${import.meta.env.VITE_APP_API_URL}${order?.Items[0]?.ItemImages[0]?.imgUrl}`} width={'100px'} />
+            <div className="order-empty">
+               <p>최근 주문이 없습니다.</p>
+            </div>
+         </div>
+      </section>
+   )
+
+   // 주문 데이터가 없으면 빈 상태 반환
+   if (!order || items.length === 0) return <EmptyState />
+
+   return (
+      <section id="order-state">
+         <div className="contents-card top">
+            <div className="card-header">
+               <div className="window-btn">
+                  <span className="red"></span>
+                  <span className="green"></span>
+                  <span className="blue"></span>
+               </div>
+               <span className="card-title">주문현황</span>
+            </div>
+
+            <div className='summary-state' >
+               <img src={imgUrl} alt="주문 상품 이미지" width="100px" />
                <div>
-                  <p>상품명: {order.Items[0].itemNm}</p>
-                  <p> 가격: {order.Items[0].price}원</p>
-                  <p> 주문일자: {order.orderDate.slice(0, 10)}</p>
+                  <p>상품명: {itemName}</p>
+                  <p>가격: {price}</p>
+                  <p>주문일자: {orderDate}</p>
                </div>
             </div>
+
             {order.length === 0 && <p>주문 내역이 없습니다.</p>}
             {order.length > 1 && orderStatus === 'CANCEL' ? (
+
                <p>취소된 주문입니다.</p>
             ) : (
                <div className="order-state-details">
@@ -40,7 +76,7 @@ function OrderState({ order }) {
                         ></path>
                         <path
                            fill="#000"
-                           d="M25.145 23.615h1.52v1.53h-1.52Zm0-19.81h1.52v1.53h-1.52Zm-1.53 16.77h1.53v1.52h-1.53Zm0-4.58h1.53v3.05h-1.53Zm0-13.71h1.53v1.52h-1.53Zm-12.19 22.86V28.2h-3.04v1.52h-3.05v1.52h24.38v-1.52h-3.05V28.2h-3.05v-1.53h1.53v-1.52Zm10.67 4.57h-6.09V28.2h-3.05v-1.53H22.1Zm-3.05-7.62h4.57v1.52h-4.57Zm-1.52-1.52h1.52v1.52h-1.52Zm-1.52-4.58h1.52v3.05h-1.52Zm0-4.57h3.04v1.53h-3.04Zm-4.58 1.53h1.53v6.09h-1.53ZM9.905.765h13.71v1.52H9.905Zm0 22.85h1.52v1.53h-1.52Zm0-4.57h1.52v1.53h-1.52Zm-6.09 1.53v1.52h4.57v1.52h1.52v-3.04zm4.57-18.29h1.52v1.52h-1.52Zm-1.53 1.52h1.53v1.53h-1.53Zm-1.52 9.15h1.52v1.52h-1.52Zm-1.52 1.52h1.52v3.05h-1.52Zm-1.53 4.57h1.53v1.53h-1.53Zm0-7.62h1.53v1.53h-1.53Zm-1.52 1.53h1.52v6.09H.765Z"
+                           d="M25.145 23.615h1.52v1.53h-1.52Zm0-19.81h1.52v1.53h-1.52Zm-1.53 16.77h1.53v1.52h-1.53Zm0-4.58h1.53v3.05h-1.53Zm0-13.71h1.53v1.52h-1.53Zm-12.19 22.86V28.2h-3.04v1.52h-3.05v1.52h24.38v-1.52h-3.05V28.2h-3.05v-1.53h1.53v-1.52Zm10.67 4.57h-6.09V28.2h-3.05v-1.53H22.1Zm-3.05-7.62h4.57v1.52h-4.57Zm0-3.05h1.53v1.53h-1.53Zm0-6.09h1.53v1.52h-1.53Zm-1.52 4.57h1.52v1.52h-1.52Zm0-3.05h1.52v1.53h-1.52Zm-1.53 1.53h1.53v1.52h-1.53ZM3.05 1.52h15.24v1.53H3.05ZM1.52 28.95h1.53v1.53H1.52Zm0-25.9h1.53v1.52H1.52ZM0 4.57h1.52v24.38H0Z"
                            strokeWidth={1}
                            stroke="#000"
                         ></path>
@@ -50,6 +86,7 @@ function OrderState({ order }) {
                         <br />곧 준비해드릴게요!
                      </p>
                   </div>
+
                   <div className={`order-step ${orderStatus === 'READY' ? 'active' : ''}`}>
                      <p>상품준비중</p>
                      <svg xmlns="http://www.w3.org/2000/svg" width={32} height={32} viewBox="0 0 32 32">
@@ -67,8 +104,8 @@ function OrderState({ order }) {
                         ></path>
                      </svg>
                      <a> 운송장조회하기 </a>
-                     {/* 운송장조회 페이지링크연결 */}
                   </div>
+
                   <div className={`order-step ${orderStatus === 'SHIPPED' ? 'active' : ''}`}>
                      <p>배송중</p>
                      <svg xmlns="http://www.w3.org/2000/svg" width={32} height={32} viewBox="0 0 32 32">
@@ -86,8 +123,8 @@ function OrderState({ order }) {
                         ></path>
                      </svg>
                      <a>배송상세확인</a>
-                     {/* 배송상태확인 페이지링크연결 */}
                   </div>
+
                   <div className={`order-step ${orderStatus === 'DELIVERED' ? 'active' : ''}`}>
                      <p>배송완료</p>
                      <svg xmlns="http://www.w3.org/2000/svg" width={32} height={32} viewBox="0 0 32 32">
@@ -112,22 +149,6 @@ function OrderState({ order }) {
                   </div>
                </div>
             )}
-         </div>
-      </section>
-   ) : (
-      <section id="order-state">
-         <div className="contents-card top">
-            <div className="card-header">
-               <div className="window-btn">
-                  <span className="red"></span>
-                  <span className="green"></span>
-                  <span className="blue"></span>
-               </div>
-               <span className="card-title">주문현황</span>
-            </div>
-            <div>
-               <p>주문 내역이 존재하지 않습니다.</p>
-            </div>
          </div>
       </section>
    )
