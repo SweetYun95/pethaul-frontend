@@ -2,7 +2,7 @@
 // File: src/features/authSlice.js
 // =============================
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser, googleCheckStatus, findId, updatePassword, updateMyInfo } from '../api/authApi'
+import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser, googleCheckStatus, findId, updatePassword, updateMyInfo, verifyPassword } from '../api/authApi'
 
 // -----------------------------
 // helpers
@@ -129,6 +129,16 @@ export const updateMyInfoThunk = createAsyncThunk('auth/updateMyInfo', async (da
    }
 })
 
+//비밀번호 확인
+export const verifyPasswordThunk = createAsyncThunk('auth/verifyPassword', async (password, { rejectWithValue }) => {
+   try {
+      const response = await verifyPassword(password)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '비밀번호 확인 실패')
+   }
+})
+
 // -----------------------------
 // ✅ 통합 상태 점검(레이스 방지)
 // -----------------------------
@@ -165,6 +175,7 @@ const authSlice = createSlice({
       googleAuthenticated: false,
       loading: false,
       error: null,
+      verified: false,
    },
    reducers: {
       resetFindId(state) {
@@ -306,6 +317,19 @@ const authSlice = createSlice({
             state.user = action.payload.user
          })
          .addCase(updateMyInfoThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 비밀번호 확인
+         .addCase(verifyPasswordThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(verifyPasswordThunk.fulfilled, (state) => {
+            state.loading = false
+            state.verified = true
+         })
+         .addCase(verifyPasswordThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
