@@ -22,7 +22,7 @@ function ItemCreatePage() {
    }
 
    return (
-      <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+      <div className='blue-background'>
          <ItemCreateForm onCreateSubmit={onCreateSubmit} />
       </div>
    )

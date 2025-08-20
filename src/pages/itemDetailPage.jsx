@@ -36,7 +36,7 @@ function ItemDetailPage() {
 
    if (!item) {
       return (
-             <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+             <div className='blue-background'>
 
             <Typography>상품 정보를 불러올 수 없습니다.</Typography>
          </div>
@@ -44,7 +44,7 @@ function ItemDetailPage() {
    }
 
    return (
-          <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+          <div className='blue-background'>
          <ItemDetailForm item={item} />
       </div>
    )

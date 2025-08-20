@@ -105,7 +105,7 @@ function MainPage() {
             </section>
             {/* NEW CONTENTS, BEST REVIEW,KEYWORD */}
             <section id="contents-review">
-               <div className="contents-card large">
+               <div className="contents-card">
                   <div className="card-header">
                      <div className="window-btn">
                         <span className="red"></span>
@@ -114,8 +114,8 @@ function MainPage() {
                      </div>
                      <span className="contents-card-title">NEW CONTENTS</span>
                   </div>
-                  <div className="card-body">콘텐츠 1</div>
-                  <div className="card-footer">
+                  <div className="new-contents-card-body">콘텐츠 1</div>
+                  <div className="new-contents-card-footer">
                      <a href="#">
                         NEW CONTENT <br />
                         보러가기
@@ -123,7 +123,7 @@ function MainPage() {
                   </div>
                </div>
                <div className="right-contents">
-                  <div className="contents-card small">
+                  <div className="contents-card">
                      <div className="card-header">
                         <div className="window-btn">
                            <span className="red"></span>
@@ -140,7 +140,7 @@ function MainPage() {
                         ))}
                      </div>
                   </div>
-                  <div className="contents-card small">
+                  <div className="contents-card">
                      <div className="card-header">
                         <div className="window-btn">
                            <span className="red"></span>
