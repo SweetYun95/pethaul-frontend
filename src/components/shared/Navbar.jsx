@@ -208,6 +208,12 @@ function Navbar() {
   }
 
   const handleLogin = () => { navigate('/login'); closeUserMenu() }
+  
+     const handleJoin = () => {
+      navigate('/join')
+      closeUserMenu()
+   }
+  
   const handleLogout = () => {
     if (!confirm('로그아웃하시겠습니까?')) return
     dispatch(logoutUserThunk())
@@ -423,10 +429,16 @@ function Navbar() {
                           )}
                         </>
                       ) : (
-                        <button type="button" role="menuitem" className="user-menu__item" onClick={handleLogin}>
-                          <span className="user-menu__icon">🔑</span>
-                          로그인
-                        </button>
+                       <>
+                                       <button type="button" role="menuitem" className="user-menu__item" onClick={handleLogin}>
+                                          <span className="user-menu__icon">🔑</span>
+                                          로그인
+                                       </button>
+                                       <button type="button" role="menuitem" className="user-menu__item" onClick={handleJoin}>
+                                          <span className="user-menu__icon">📝</span>
+                                          회원가입
+                                       </button>
+                                    </>
                       )}
                     </nav>
                   </div>

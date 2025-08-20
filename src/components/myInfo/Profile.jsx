@@ -2,7 +2,6 @@
 import { Link } from 'react-router-dom'
 import '../css/myInfo/Profile.css'
 
-
 function Profile({ user, loading = false }) {
    if (loading || !user) {
       return (
@@ -55,17 +54,17 @@ function Profile({ user, loading = false }) {
 
             <div className="profile-info">
                <div>
-               <img
-                  src={avatar}
-                  alt={`${displayName}의 프로필 사진`}
-                  onError={(e) => {
-                     e.currentTarget.src = '/images/profile.jpeg'
-                  }}
-               />
-                   {/* 회원정보수정 페이지 라우트는 프로젝트에 맞게 변경 */}
-               <Link to="/mypage/edit" className="btn">
-                  회원정보수정
-               </Link>
+                  <img
+                     src={avatar}
+                     alt={`${displayName}의 프로필 사진`}
+                     onError={(e) => {
+                        e.currentTarget.src = '/images/profile.jpeg'
+                     }}
+                  />
+                  {/* 회원정보수정 페이지 라우트는 프로젝트에 맞게 변경 */}
+                  <Link to="/verify" className="btn">
+                     회원정보수정
+                  </Link>
                </div>
                <div>
                   <p className="username">이름: {displayName}</p>
@@ -85,8 +84,6 @@ function Profile({ user, loading = false }) {
                      </p>
                   )}
                </div>
-
-           
             </div>
          </div>
       </section>

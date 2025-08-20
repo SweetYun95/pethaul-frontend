@@ -25,18 +25,22 @@ import MyReviewList from './pages/MyReviewList'
 import MyPage from './pages/MyPage'
 import EditMyInfoPage from './pages/EditMyInfoPage'
 import AdminPage from './pages/AdminPage'
+import MobileTabBar from './components/shared/MobileTabBar' // ✅ 추가
+import VerifyPasswordPage from './pages/VerifyPasswordPage'
 import PetCreatePage from './pages/PetCreatePage'
 import PetEditPage from './pages/PetEditPage'
 import Test from './pages/Test'
 import Footer from './components/shared/Footer'
-import MobileTabBar from './components/shared/MobileTabBar' // ✅ 추가
+
 
 // ✅ 통합 인증 체크 Thunk (일반 + 구글 통합)
 import { checkUnifiedAuthThunk } from './features/authSlice'
 
 import './App.css'
 
+
 function App() {
+
   const location = useLocation()
   const dispatch = useDispatch()
 
@@ -94,9 +98,10 @@ function App() {
         <Route path="/myreviewlist" element={<MyReviewList />} />
 
         {/* 마이페이지/관리자 */}
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/mypage/edit" element={<EditMyInfoPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/verify" element={<VerifyPasswordPage />} />
+            <Route path="/mypage/edit" element={<EditMyInfoPage />} />
+            <Route path="/admin" element={<AdminPage />} />
 
         {/* 펫 */}
         <Route path="/pets" element={<PetCreatePage />} />
@@ -112,6 +117,7 @@ function App() {
       <Footer />
     </>
   )
+
 }
 
 export default App
