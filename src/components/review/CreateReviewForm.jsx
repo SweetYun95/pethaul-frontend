@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createReviewThunk } from '../../features/reviewSlice'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import '../css/review/CreateReviewForm.css'
 
-function CreateReviewForm({ item }) {
+function CreateReviewForm() {
+   const location = useLocation()
    const dispatch = useDispatch()
    const navigate = useNavigate()
+   const item = location.state.item
+
    console.log('🎈', item)
 
    // ⭐ 별점 상태
@@ -101,7 +104,7 @@ function CreateReviewForm({ item }) {
                <span className="card-title">리뷰를 작성해주세요.</span>
             </div>
             <div className="create-review">
-               <h1 className="review-title">{item}에 대해 얼마나 만족하시나요?</h1>
+               <h1 className="review-title">{item.itemNm}에 대해 얼마나 만족하시나요?</h1>
                <form onSubmit={handleSubmit}>
                   {/* ⭐ 별점 */}
                   <div className="rating" aria-label="별점 선택">
