@@ -97,3 +97,15 @@
  width: 100%;
 }
 }
+
+@media (max-width: 430px) {
+  .input-group {
+        gap: 0;
+    }
+
+  .item-input-section > input,
+  #item-sell-status {
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+}

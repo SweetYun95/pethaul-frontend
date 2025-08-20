@@ -2,7 +2,7 @@
 // File: src/features/authSlice.js
 // =============================
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser, googleCheckStatus } from '../api/authApi'
+import { registerUser, loginUser, logoutUser, checkAuthStatus, googleLoginUser, googleCheckStatus, findId, updatePassword, updateMyInfo } from '../api/authApi'
 
 // -----------------------------
 // helpers
@@ -62,7 +62,7 @@ export const registerUserThunk = createAsyncThunk('auth/registerUser', async (us
       const response = await registerUser(userData)
       return response.data.user
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '회원가입 실패')
    }
 })
 
@@ -72,7 +72,7 @@ export const loginUserThunk = createAsyncThunk('auth/loginUser', async (credenti
       const response = await loginUser(credentials)
       return response.data.user
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '로그인 실패')
    }
 })
 
@@ -82,7 +82,7 @@ export const logoutUserThunk = createAsyncThunk('auth/logoutUser', async (_, { r
       const response = await logoutUser()
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '로그아웃 실패')
    }
 })
 
@@ -93,6 +93,39 @@ export const checkAuthStatusThunk = createAsyncThunk('auth/checkAuthStatus', asy
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '로그인 상태 확인 실패')
+   }
+})
+
+// 아이디 찾기 (로컬 회원)
+export const findIdThunk = createAsyncThunk('auth/findId', async (phoneNumber, { rejectWithValue }) => {
+   try {
+      const response = await findId(phoneNumber)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '회원 정보 확인 실패')
+   }
+})
+
+// 임시 비밀번호 발급 (로컬 회원)
+export const updatePasswordThunk = createAsyncThunk('auth/updatePassword', async ({ userId, phoneNumber }, { rejectWithValue }) => {
+   try {
+      const response = await updatePassword({ userId, phoneNumber })
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '회원 정보 확인 실패')
+   }
+})
+
+// 회원 정보 수정
+export const updateMyInfoThunk = createAsyncThunk('auth/updateMyInfo', async (data, { rejectWithValue }) => {
+   try {
+      console.log('🎀수정 데이터: ', data)
+      const response = await updateMyInfo(data)
+      console.log('🎀수정 데이터 확인: ', response.data)
+
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '회원 정보 수정 실패')
    }
 })
 
@@ -127,12 +160,17 @@ const authSlice = createSlice({
    name: 'auth',
    initialState: {
       user: null,
+      ids: [],
       isAuthenticated: false,
       googleAuthenticated: false,
       loading: false,
       error: null,
    },
-   reducers: {},
+   reducers: {
+      resetFindId(state) {
+         state.ids = []
+      },
+   },
    extraReducers: (builder) => {
       builder
          // 회원가입
@@ -245,7 +283,33 @@ const authSlice = createSlice({
             state.user = user
             state.googleAuthenticated = !!googleAuthenticated
          })
+         // 아이디 찾기
+         .addCase(findIdThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(findIdThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.ids = action.payload.ids
+         })
+         .addCase(findIdThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 회원 정보 수정
+         .addCase(updateMyInfoThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(updateMyInfoThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.user = action.payload.user
+         })
+         .addCase(updateMyInfoThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
    },
 })
-
+export const { resetFindId } = authSlice.actions
 export default authSlice.reducer

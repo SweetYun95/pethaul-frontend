@@ -1,24 +1,75 @@
 // src/components/order/OrderForm.jsx
-import React, { useState } from 'react'
-import '../css/order/OrderForm.css'
+import React, { useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import axios from 'axios'
+import '../css/order/OrderForm.css'
 
-function OrderForm({ item, cartItems }) {
-   console.log('🎈item:', item, '🎈cartItems:', cartItems)
-   const { user } = useSelector((state) => state.auth)
-   console.log('🎈user:', user)
+const API_BASE = import.meta.env.VITE_APP_API_URL || ''
 
-   let orderPrice = 0
-   if (cartItems) {
-      orderPrice = cartItems.reduce((sum, cart) => {
-         return sum + cart.Item.price * (cart.count || 1)
-      }, 0)
-   } else {
-      orderPrice = item[0]?.price * item[0]?.quantity
+function OrderForm({ item, cartItems, order }) {
+   const navigate = useNavigate()
+   const location = useLocation()
+
+   // ===== 공통 유틸 =====
+   const toNumber = (n, d = 0) => {
+      const v = Number(n)
+      return Number.isFinite(v) ? v : d
    }
-   console.log('🎈orderPrice:', orderPrice)
+
+   // ===== 입력 소스 정규화 =====
+   const reduxCartItems = useSelector((s) => s.cart?.items || [])
+   const cartArr = Array.isArray(cartItems) ? cartItems : []
+   const itemArr = Array.isArray(item) ? item : item ? [item] : []
+   const orderArr = Array.isArray(order?.items) ? order.items : []
+   const stateArr = Array.isArray(location.state?.items) ? location.state.items : Array.isArray(location.state?.cartItems) ? location.state.cartItems : location.state?.item ? [location.state.item] : []
+
+   // 우선순위: cartItems → item → order.items → router state → reduxCart
+   const rawItems = useMemo(() => {
+      return cartArr.length ? cartArr : itemArr.length ? itemArr : orderArr.length ? orderArr : stateArr.length ? stateArr : Array.isArray(reduxCartItems) ? reduxCartItems : []
+   }, [cartArr, itemArr, orderArr, stateArr, reduxCartItems])
+
+   // ===== 가격/수량/아이템ID 추출 (여러 키 지원) =====
+   const pickPrice = (it) => toNumber(it?.price ?? it?.Item?.price ?? it?.unitPrice ?? it?.salePrice ?? it?.originPrice, 0)
+
+   const pickQty = (it) => toNumber(it?.quantity ?? it?.count ?? it?.qty ?? it?.amount ?? 1, 1)
+
+   const pickItemId = (it) => it?.itemId ?? it?.ItemId ?? it?.id ?? it?.Item?.id
+
+   // ===== 합계/수량 =====
+   const orderPrice = useMemo(() => rawItems.reduce((sum, it) => sum + pickPrice(it) * pickQty(it), 0), [rawItems])
+
+   const totalCount = useMemo(() => rawItems.reduce((sum, it) => sum + pickQty(it), 0), [rawItems])
+
+   // ===== 쿠폰/배송 =====
+   const allowStack = false
+   const COUPONS = [
+      { code: 'WELCOME20', name: '신규가입 20% 쿠폰', type: 'percent', value: 20 },
+      { code: 'SAVE5000', name: '5,000원 즉시할인', type: 'fixed', value: 5000 },
+      // { code: 'FREESHIP',  name: '배송비 무료 쿠폰', type: 'shippingFree' },
+   ]
+
+   const [couponModalOpen, setCouponModalOpen] = useState(false)
+   const [selectedCoupon, setSelectedCoupon] = useState(null)
+
+   const calcDiscountByCoupon = (subtotal, coupon) => {
+      if (!coupon) return 0
+      if (coupon.type === 'percent') return Math.floor(subtotal * (coupon.value / 100))
+      if (coupon.type === 'fixed') return Math.min(subtotal, coupon.value)
+      return 0
+   }
+
+   const discount = calcDiscountByCoupon(orderPrice, selectedCoupon)
+   const afterDiscount = Math.max(0, orderPrice - discount)
+
+   const hasShippingFree = selectedCoupon?.type === 'shippingFree'
+   const shippingFee = hasShippingFree ? 0 : afterDiscount >= 30000 ? 0 : afterDiscount > 0 ? 3000 : 0
+
+   const payable = afterDiscount + shippingFee
+
+   // ===== 폼 상태 =====
    const [formData, setFormData] = useState({
-      name: user?.name,
+      name: '',
       phone1: '',
       phone2: '',
       phone3: '',
@@ -27,53 +78,135 @@ function OrderForm({ item, cartItems }) {
    })
    const [paymentMethod, setPaymentMethod] = useState('간편결제')
    const [simplePay, setSimplePay] = useState('')
-   const [cardNumber, setCardNumber] = useState({
-      card0: '',
-      card1: '',
-      card2: '',
-      card3: '',
-   })
-   const [expiry, setExpiry] = useState({
-      expiryMonth: '',
-      expiryYear: '',
-   })
+   const [cardNumber, setCardNumber] = useState({ card0: '', card1: '', card2: '', card3: '' })
+   const [expiry, setExpiry] = useState({ expiryMonth: '', expiryYear: '' })
    const [selectedCashMethod, setSelectedCashMethod] = useState('')
 
    const handleChange = (e) => {
       const { name, value } = e.target
-      setFormData((prev) => ({
-         ...prev,
-         [name]: value,
-      }))
+      setFormData((prev) => ({ ...prev, [name]: value }))
    }
-
    const handlePaymentChange = (event, newMethod) => {
-      if (newMethod !== null) {
-         setPaymentMethod(newMethod)
-      }
+      event.preventDefault()
+      if (newMethod !== null) setPaymentMethod(newMethod)
    }
-   const handleSimplePaySelect = (method) => {
-      setSimplePay(method)
-   }
-
-   //카드결제 카드번호
+   const handleSimplePaySelect = (method) => setSimplePay(method)
    const handleCardNumberChange = (e) => {
       const { name, value } = e.target
-      if (!/^\d*$/.test(value)) return // 숫자만
-      setCardNumber((prev) => ({
-         ...prev,
-         [name]: value,
-      }))
+      if (!/^\d*$/.test(value)) return
+      setCardNumber((prev) => ({ ...prev, [name]: value }))
    }
-
-   // 카드결제 유효일
    const handleExpiryChange = (e) => {
       const { name, value } = e.target
       if (!/^\d*$/.test(value)) return
-      setExpiry((prev) => ({
-         ...prev,
-         [name]: value,
-      }))
+      setExpiry((prev) => ({ ...prev, [name]: value }))
+   }
+
+   // ===== 구매하기 (주문 생성) =====
+   const handleSubmitOrder = async () => {
+      // 1) 기본 검증
+      if (rawItems.length === 0) {
+         alert('주문할 상품이 없습니다.')
+         return
+      }
+      if (!formData.name?.trim()) return alert('이름/배송지명을 입력하세요.')
+      if (!formData.address?.trim()) return alert('주소를 입력하세요.')
+      const phone = `${formData.phone1}-${formData.phone2}-${formData.phone3}`
+      if (!/^\d{2,3}-\d{3,4}-\d{4}$/.test(phone)) {
+         return alert('전화번호를 정확히 입력하세요.')
+      }
+
+      // 2) 서버 페이로드 구성 (백엔드 요구: { items: [{ itemId, price, quantity }] })
+      const payloadItems = rawItems
+         .map((it) => ({
+            itemId: pickItemId(it),
+            price: pickPrice(it),
+            quantity: pickQty(it),
+         }))
+         .filter((r) => Number.isFinite(r.price) && r.price >= 0 && Number.isFinite(r.quantity) && r.quantity > 0 && r.itemId)
+
+      if (payloadItems.length === 0) {
+         alert('상품 데이터가 올바르지 않습니다.')
+         return
+      }
+
+      const payload = {
+         items: payloadItems,
+         delivery: {
+            name: formData.name,
+            phone,
+            address: formData.address,
+            request: formData.request || '',
+         },
+         coupon: selectedCoupon ? { code: selectedCoupon.code } : null,
+         pricing: {
+            orderPrice,
+            discount,
+            shippingFee,
+            payable,
+         },
+         payment: {
+            method: paymentMethod,
+            simplePay: simplePay || null,
+         },
+      }
+
+      try {
+         const res = await axios.post(`${API_BASE}/order`, payload, { withCredentials: true })
+         const orderId = res?.data?.id ?? res?.data?.orderId
+         if (orderId) {
+            // 주문상세 라우트가 있을 때:
+            // navigate(`/orders/${orderId}`)
+            alert(`주문이 완료되었습니다. 주문번호: ${orderId}`)
+         } else {
+            alert('주문이 완료되었습니다.')
+         }
+         console.log('[OrderForm] order created:', res?.data)
+      } catch (err) {
+         console.error('[OrderForm] order create error:', err)
+         const msg = err?.response?.data?.message || err?.message || '주문 처리 중 오류가 발생했습니다.'
+         alert(msg)
+      }
+   }
+
+   // ===== 쿠폰 모달 =====
+   const CouponModal = ({ open, onClose, onSelect, coupons, selected }) => {
+      if (!open) return null
+      return (
+         <div role="dialog" aria-modal="true" className="coupon-modal-backdrop" onClick={onClose}>
+            <div className="coupon-modal" onClick={(e) => e.stopPropagation()}>
+               <div>
+                  <span>쿠폰 선택</span>
+                  <button onClick={onClose} style={{ all: 'unset', fontSize: 18, lineHeight: 1 }}>
+                     ✕
+                  </button>
+               </div>
+
+               <div className="coupon-list">
+                  {coupons.map((c) => {
+                     const active = selected?.code === c.code
+                     return (
+                        <button key={c.code} onClick={() => onSelect(c)} className={`coupon-btn ${active ? 'active' : ''}`}>
+                           <div className="coupon-info">
+                              <div>{c.name}</div>
+                              <div>코드: {c.code}</div>
+                           </div>
+                           {active ? <span style={{ fontWeight: 700 }}>선택됨</span> : <span>선택</span>}
+                        </button>
+                     )
+                  })}
+               </div>
+
+               <div className="coupon-modal-footer">
+                  {selected && (
+                     <button className="btn-cancel" onClick={() => onSelect(null)}>
+                        선택 해제
+                     </button>
+                  )}
+               </div>
+            </div>
+         </div>
+      )
    }
 
    return (
@@ -81,7 +214,22 @@ function OrderForm({ item, cartItems }) {
          <h1 className="section-title">주문/배송</h1>
          <div className="section-contents">
             {/* 좌측 */}
-            <div className="left">
+            <div className="order-left">
+               {/* 주문 상품 없을 때 안내 */}
+               {rawItems.length === 0 && (
+                  <div className="contents-card" style={{ marginBottom: 16 }}>
+                     <div className="card-header">
+                        <div className="window-btn">
+                           <span className="red"></span>
+                           <span className="green"></span>
+                           <span className="blue"></span>
+                        </div>
+                        <span className="card-title">안내</span>
+                     </div>
+                     <div style={{ padding: 16 }}>현재 페이지로 전달된 주문 상품이 없습니다. 장바구니 또는 상품상세에서 다시 시도해 주세요.</div>
+                  </div>
+               )}
+
                {/* 배송지 입력 */}
                <div className="contents-card">
                   <div className="card-header">
@@ -97,27 +245,25 @@ function OrderForm({ item, cartItems }) {
                         <p className="sub-title"> 기존배송지 </p>
                         <button className="address-btn"> 배송지 변경하기</button>
                      </div>
-                     <form className="address-input-group">
+                     <form className="address-input-group" onSubmit={(e) => e.preventDefault()}>
                         <div className="address-input name">
                            <label>이름 / 배송지명</label>
                            <input type="text" name="name" placeholder="집" value={formData.name} onChange={handleChange} />
                         </div>
                         <div className="address-input">
-                           <label>전회번호</label>
+                           <label>전화번호</label>
                            <div className="phone-input-group">
-                              <input type="text" maxLength="3" value={formData.phone1} onChange={handleChange} />
+                              <input type="text" name="phone1" maxLength="3" value={formData.phone1} onChange={handleChange} />
                               <span className="hyphen">-</span>
-                              <input type="text" maxLength="4" value={formData.phone2} onChange={handleChange} />
+                              <input type="text" name="phone2" maxLength="4" value={formData.phone2} onChange={handleChange} />
                               <span className="hyphen">-</span>
-                              <input type="text" maxLength="4" value={formData.phone3} onChange={handleChange} />
+                              <input type="text" name="phone3" maxLength="4" value={formData.phone3} onChange={handleChange} />
                            </div>
                         </div>
-
                         <div className="address-input">
                            <label>주소</label>
                            <input type="text" name="address" value={formData.address} onChange={handleChange} />
                         </div>
-
                         <div className="address-input">
                            <label>배송시 요청사항</label>
                            <select name="request" value={formData.request} onChange={handleChange}>
@@ -157,10 +303,17 @@ function OrderForm({ item, cartItems }) {
                               { label: '네이버페이', value: '네이버페이', img: '/images/naverpay.png' },
                               { label: '애플페이', value: '애플페이', img: '/images/applepay.png' },
                               { label: '카카오페이', value: '카카오페이', img: '/images/kakaopay.png' },
-                           ].map((method) => (
-                              <button key={method.value} onClick={() => handleSimplePaySelect(method.value)} className={simplePay === method.value ? 'active' : ''}>
-                                 <img src={method.img} alt={method.label} className="pay-icon" />
-                                 {method.label}
+                           ].map((m) => (
+                              <button
+                                 key={m.value}
+                                 onClick={(e) => {
+                                    e.preventDefault()
+                                    handleSimplePaySelect(m.value)
+                                 }}
+                                 className={simplePay === m.value ? 'active' : ''}
+                              >
+                                 <img src={m.img} alt={m.label} className="pay-icon" />
+                                 {m.label}
                               </button>
                            ))}
                         </div>
@@ -188,11 +341,11 @@ function OrderForm({ item, cartItems }) {
                            </div>
                            <div className="card-payment-input cvc">
                               <p>CVC</p>
-                              <input label="CVC" placeholder="123" />
+                              <input placeholder="123" />
                            </div>
                            <div className="card-payment-input card-password ">
                               <p>비밀번호</p>
-                              <input label="비밀번호" placeholder="앞 2자리" />
+                              <input placeholder="앞 2자리" />
                            </div>
                         </div>
                      )}
@@ -201,9 +354,15 @@ function OrderForm({ item, cartItems }) {
                      {paymentMethod === '현금결제' && (
                         <div className="cash-payment">
                            {['무통장입금', '편의점결제'].map((label) => (
-                              <button key={label} onClick={() => setSelectedCashMethod(label)} className={selectedCashMethod === label ? 'active' : ''}>
-                                 {' '}
-                                 {label}{' '}
+                              <button
+                                 key={label}
+                                 onClick={(e) => {
+                                    e.preventDefault()
+                                    setSelectedCashMethod(label)
+                                 }}
+                                 className={selectedCashMethod === label ? 'active' : ''}
+                              >
+                                 {label}
                               </button>
                            ))}
                         </div>
@@ -220,7 +379,7 @@ function OrderForm({ item, cartItems }) {
             </div>
 
             {/* 우측 결제하기 */}
-            <div className="contents-card right">
+            <div className="contents-card order-right">
                <div className="card-header">
                   <div className="window-btn">
                      <span className="red"></span>
@@ -235,31 +394,60 @@ function OrderForm({ item, cartItems }) {
                   <div className="paying-group">
                      <div>
                         <p>총 상품금액: </p>
-                        <p>{orderPrice}원</p>
+                        <p>{orderPrice.toLocaleString()}원</p>
                      </div>
-                     <div>
-                        <p>상품할인: </p>
-                        <p>-00,000원</p>
-                     </div>
-                     <div>
+
+                     {/* 쿠폰 영역 */}
+                     <div className="coupon-discount">
                         <p>쿠폰할인:</p>
-                        <button>쿠폰선택</button>
+                        <div>
+                           <button onClick={() => setCouponModalOpen(true)}>쿠폰선택</button>
+                           {selectedCoupon && (
+                              <div>
+                                 <p className="coupon">
+                                    {selectedCoupon.name} 적용 (-{discount.toLocaleString()}원)
+                                 </p>
+                                 <button className="coupon-delete" onClick={() => setSelectedCoupon(null)}>
+                                    해제
+                                 </button>
+                              </div>
+                           )}
+                        </div>
                      </div>
+
                      <div>
                         <p>배송비: </p>
-                        <p>0,000원</p>
+                        <p>{shippingFee.toLocaleString()}원</p>
                      </div>
                   </div>
+
                   <div className="total-sum">
-                     <p>총 0개 주문금액</p>
-                     <p>00,000원</p>
+                     <p>총 {totalCount}개 주문금액</p>
+                     <p>{payable.toLocaleString()}원</p>
                   </div>
-                  <button className="order-btn" type="submit">
+
+                  <button className="order-btn" type="button" onClick={handleSubmitOrder}>
                      구매하기
                   </button>
                </div>
             </div>
          </div>
+
+         {/* 쿠폰 선택 모달 */}
+         <CouponModal
+            open={couponModalOpen}
+            onClose={() => setCouponModalOpen(false)}
+            onSelect={(c) => {
+               if (!allowStack) {
+                  setSelectedCoupon(c)
+                  setCouponModalOpen(false)
+                  return
+               }
+               // 다중 적용 모드 확장 시 여기에 배열 업데이트
+            }}
+            coupons={COUPONS}
+            selected={selectedCoupon}
+         />
       </section>
    )
 }

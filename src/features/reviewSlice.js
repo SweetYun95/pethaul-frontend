@@ -7,7 +7,7 @@ export const createReviewThunk = createAsyncThunk('review/createReview', async (
       const response = await createReview(formData)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '리뷰 등록 실패')
    }
 })
 
@@ -17,7 +17,7 @@ export const updateReviewThunk = createAsyncThunk('review/updateReview', async (
       const response = await updateReview(formData, id)
       return id
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '리뷰 수정 실패')
    }
 })
 
@@ -28,7 +28,7 @@ export const deleteReviewThunk = createAsyncThunk('review/deleteReview', async (
       console.log('🎈reviewSlice.js:', response)
       return id
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '리뷰 삭제 실패')
    }
 })
 
@@ -38,7 +38,7 @@ export const getUserReviewThunk = createAsyncThunk('review/getUserReview', async
       const response = await getUserReview()
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '리뷰 조회 실패')
    }
 })
 

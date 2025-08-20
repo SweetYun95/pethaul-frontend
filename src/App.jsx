@@ -9,6 +9,8 @@ import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 import GoogleSuccessPage from './pages/GoogleSuccessPage'
 import TokenPage from './pages/TokenPage'
+import FindIdPage from './pages/FindIdPage'
+import FindPasswordPage from './pages/FindPasswordPage'
 import ItemSellListPage from './pages/ItemSellListPage'
 import ItemDetailPage from './pages/ItemDetailPage'
 import ItemCreatePage from './pages/ItemCreatePage'
@@ -21,6 +23,7 @@ import ReviewCreatePage from './pages/ReviewCreatePage'
 import ReviewEditPage from './pages/ReviewEditPage'
 import MyReviewList from './pages/MyReviewList'
 import MyPage from './pages/MyPage'
+import EditMyInfoPage from './pages/EditMyInfoPage'
 import AdminPage from './pages/AdminPage'
 import PetCreatePage from './pages/PetCreatePage'
 import PetEditPage from './pages/PetEditPage'
@@ -72,6 +75,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/google-success" element={<GoogleSuccessPage />} />
             <Route path="/token" element={<TokenPage />} />
+            <Route path="find-id" element={<FindIdPage />} />
+            <Route path="find-password" element={<FindPasswordPage />} />
 
             {/* 상품 */}
             <Route path="/item" element={<ItemSellListPage />} />
@@ -84,7 +89,7 @@ function App() {
             <Route path="/cart" element={<ItemCartForm />} />
 
             {/* 주문/결제 */}
-            <Route path="/order" element={<OrderPage />} />
+            <Route path="/order/:id" element={<OrderPage />} />
             <Route path="/myorderlist" element={<MyOrderList />} />
 
             {/* 리뷰 */}
@@ -94,6 +99,7 @@ function App() {
 
             {/* 마이페이지/관리자 */}
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/edit" element={<EditMyInfoPage />} />
             <Route path="/admin" element={<AdminPage />} />
 
             {/* 펫 */}

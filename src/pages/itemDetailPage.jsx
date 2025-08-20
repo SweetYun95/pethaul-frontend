@@ -18,32 +18,35 @@ function ItemDetailPage() {
 
    if (loading) {
       return (
-         <Container sx={{ textAlign: 'center', mt: 5 }}>
+            <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+
             <CircularProgress />
-         </Container>
+         </div>
       )
    }
 
    if (error) {
       return (
-         <Container sx={{ textAlign: 'center', mt: 5 }}>
+             <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+
             <Typography color="error">{error}</Typography>
-         </Container>
+         </div>
       )
    }
 
    if (!item) {
       return (
-         <Container sx={{ textAlign: 'center', mt: 5 }}>
+             <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+
             <Typography>상품 정보를 불러올 수 없습니다.</Typography>
-         </Container>
+         </div>
       )
    }
 
    return (
-      <Container sx={{ mt: 5 }}>
+          <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
          <ItemDetailForm item={item} />
-      </Container>
+      </div>
    )
 }
 

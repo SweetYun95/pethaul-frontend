@@ -4,8 +4,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // 1) 내가 좋아요한 item의 ID 배열 가져오기
 export const fetchMyLikeIdsThunk = createAsyncThunk('like/fetchIds', async (_, { rejectWithValue }) => {
    try {
-      const res = await getMyLikeIds() // cartApi 스타일: response 반환
-      return res.data?.itemIds ?? [] // [1,2,3,...]
+      const response = await getMyLikeIds()
+      return response.data?.itemIds ?? []
    } catch (e) {
       return rejectWithValue(e.response?.data?.message || '좋아요 ID 조회 실패')
    }
@@ -13,8 +13,8 @@ export const fetchMyLikeIdsThunk = createAsyncThunk('like/fetchIds', async (_, {
 // 2) 내가 좋아요한 '상품 상세' 목록 가져오기 (카드 렌더)
 export const fetchMyLikedItemsThunk = createAsyncThunk('like/fetchItems', async (_, { rejectWithValue }) => {
    try {
-      const res = await getMyLikedItems()
-      return res.data?.items ?? [] // [{id, itemNm, price, ItemImages...}, ...]
+      const response = await getMyLikedItems()
+      return response.data?.items ?? []
    } catch (e) {
       return rejectWithValue(e.response?.data?.message || '좋아요 상품 조회 실패')
    }
@@ -23,8 +23,8 @@ export const fetchMyLikedItemsThunk = createAsyncThunk('like/fetchItems', async 
 // 2) 좋아요 토글 (있으면 삭제, 없으면 추가)
 export const toggleLikeThunk = createAsyncThunk('like/toggle', async (itemId, { rejectWithValue }) => {
    try {
-      const res = await toggleLike(itemId) // { data: { liked: boolean } }
-      return { itemId, liked: !!res.data?.liked }
+      const response = await toggleLike(itemId) // { data: { liked: boolean } }
+      return { itemId, liked: !!response.data?.liked }
    } catch (e) {
       return rejectWithValue({ itemId, message: e.response?.data?.message || '좋아요 토글 실패' })
    }

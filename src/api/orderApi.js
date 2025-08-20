@@ -8,6 +8,7 @@ export const createOrder = async (orderData) => {
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
+      +   console.error('API Request 오류:', error?.response?.data || error)
       throw error
    }
 }

@@ -12,7 +12,7 @@ export const createItemThunk = createAsyncThunk('items/createItem', async (formD
          categories: response.data.categories || [],
       }
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '상품 등록 실패')
    }
 })
 
@@ -22,7 +22,7 @@ export const updateItemThunk = createAsyncThunk('items/updateItem', async ({ id,
       await updateItem(id, formData)
       return id
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '상품 수정 실패')
    }
 })
 
@@ -32,7 +32,7 @@ export const deleteItemThunk = createAsyncThunk('items/deleteItem', async (id, {
       await deleteItem(id)
       return id
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '상품 삭제 실패')
    }
 })
 
@@ -43,7 +43,7 @@ export const fetchItemsThunk = createAsyncThunk('items/getItems', async (data, {
       // console.log('🎈:', response.data)
       return response.data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '전체 상품 리스트 가져오기 실패')
    }
 })
 
@@ -53,7 +53,7 @@ export const fetchItemByIdThunk = createAsyncThunk('items/fetchItemById', async 
       const response = await getItemById(id)
       return response.data.item
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message)
+      return rejectWithValue(error.response?.data?.message || '특정 상품 가져오기 실패')
    }
 })
 
@@ -107,17 +107,17 @@ const itemSlice = createSlice({
          })
 
          // 상품 삭제
-         // .addCase(deleteItemThunk.pending, (state) => {
-         //    state.loading = true
-         //    state.error = null
-         // })
-         // .addCase(deleteItemThunk.fulfilled, (state) => {
-         //    state.loading = false
-         // })
-         // .addCase(deleteItemThunk.rejected, (state, action) => {
-         //    state.loading = false
-         //    state.error = action.payload
-         // })
+         .addCase(deleteItemThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(deleteItemThunk.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(deleteItemThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
 
          // 전체 상품 리스트 가져오기
          .addCase(fetchItemsThunk.pending, (state) => {
