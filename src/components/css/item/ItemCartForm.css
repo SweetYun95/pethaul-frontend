@@ -41,7 +41,7 @@
 
 .thumb > img {
   width: 100%;
-  aspect-ratio: 0.8 / 1; /* 정사각 */
+  aspect-ratio: 0.9 / 1; /* 정사각 */
   object-fit: cover;
   border-radius: 12px;
   display: block;

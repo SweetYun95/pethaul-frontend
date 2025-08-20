@@ -35,7 +35,7 @@ function ItemSearchTap({ items }) {
   console.log('🎀sellCategory:', sellCategory)
 
   return (
-    <section id="item-search-tap" style={{ marginTop: 200 }}>
+    <section id="item-search-tap" >
       {/* 전체 초기화 */}
       <div style={{ marginBottom: 16 }}>
         <button type="button" className="btn" onClick={handleReset}>전체</button>

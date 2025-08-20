@@ -1,3 +1,11 @@
+#navbar-section {
+  height: 74px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+}
+
 .logo {
     font-size: 24px;
     padding: 20px;
@@ -25,11 +33,33 @@ li {
     display: flex;
 }
 
+
 .right-icon-bar{
 display: flex;
 align-items: center;
 gap: 20px;
 }
+
+/* 드롭다운: ItemSearchTap 컨테이너 */
+.menu-dropdown-wrap {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 1300;
+  width: 100%;
+  min-width: 300px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  padding: 16px;
+}
+
+/* MENU li가 기준 요소가 되도록 */
+.nav-item {
+  position: relative;
+}
+
 
 /* 검색 말풍선 스타일 */
 .search-bubble {
@@ -114,24 +144,6 @@ gap: 20px;
 }
 
 
-@media (max-width: 1024px) {
-    ul, 
-    .icon,
-    .pc-search-icon {
-        display: none;
-    }
-
-.mobile-menu,
-.mob-search-icon{
-    display: flex;
-}
-
-.right-icon-bar{
-    gap: 10px;
-}
-
-
-}
 
 /* ===========================
    User Menu (pure CSS)
@@ -225,6 +237,30 @@ gap: 20px;
   0% { opacity: 0; translate: 0 -6px; }
   100% { opacity: 1; translate: 0 0; }
 }
+
+@media (max-width: 1024px) {
+  ul{
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+   ul, 
+    .icon,
+    .pc-search-icon {
+        display: none;
+    }
+
+.mobile-menu,
+.mob-search-icon{
+    display: flex;
+}
+
+.right-icon-bar{
+    gap: 10px;
+}
+}
+
 
 /* 모바일 안전폭 */
 @media (max-width: 480px) {

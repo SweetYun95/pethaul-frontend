@@ -61,7 +61,7 @@ const PetCreatePage = () => {
   }
 
   return (
-   <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+   <div className='blue-background'>
     <section id="pet-create-section">
       <h1 className='section-title'>반려동물 등록</h1>
 

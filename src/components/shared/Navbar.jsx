@@ -1,3 +1,4 @@
+// src/components/shared/Navbar.jsx
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,6 +9,7 @@ import IconButton from '@mui/material/IconButton'
 import Container from '@mui/material/Container'
 
 import { logoutUserThunk } from '../../features/authSlice'
+import ItemSearchTap from '../item/ItemSearchTap' // ✅ 추가: 드롭다운에 연결
 import '../css/shared/Navbar_v-ysy.css'
 
 function Navbar() {
@@ -66,7 +68,6 @@ function Navbar() {
   const openUserMenu = () => setUserMenuOpen((v) => !v)
   const closeUserMenu = useCallback(() => setUserMenuOpen(false), [])
 
-  // 유저메뉴 꼬리: 아이콘 "중앙" 정렬 (CSS var --arrow-right) — 검색과 동일 계산식
   const updateUserArrow = useCallback(() => {
     const anchor = userAnchorRef.current
     const menuEl = userMenuRef.current
@@ -77,13 +78,23 @@ function Navbar() {
 
     const iconRect = iconBtn.getBoundingClientRect()
     const menuRect = menuEl.getBoundingClientRect()
-    const arrowHalf = 6 // ::before 12px
+    const arrowHalf = 6
 
     const iconCenterX = iconRect.left + iconRect.width / 2
     const rightPx = Math.max(8, menuRect.right - iconCenterX - arrowHalf)
 
     menuEl.style.setProperty('--arrow-right', `${Math.round(rightPx)}px`)
   }, [])
+
+  // -----------------------------
+  // 메인 MENU 드롭다운 (ItemSearchTap)
+  // -----------------------------
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuAnchorRef = useRef(null)
+  const menuRef = useRef(null)
+
+  const openMenu = () => setMenuOpen((v) => !v)
+  const closeMenu = useCallback(() => setMenuOpen(false), [])
 
   // -----------------------------
   // 공통: 리사이즈/스크롤/바깥클릭 처리
@@ -106,13 +117,17 @@ function Navbar() {
       const mobA = mobAnchorRef.current
       const uA = userAnchorRef.current
       const uM = userMenuRef.current
+      const mA = menuAnchorRef.current
+      const mM = menuRef.current
 
       const inSearch =
         sB?.contains(e.target) || pcA?.contains(e.target) || mobA?.contains(e.target)
       const inUser = uM?.contains(e.target) || uA?.contains(e.target)
+      const inMenu = mM?.contains(e.target) || mA?.contains(e.target)
 
       if (!inSearch) closeSearch()
       if (!inUser) closeUserMenu()
+      if (!inMenu) closeMenu()
     }
 
     window.addEventListener('resize', onResize)
@@ -123,7 +138,15 @@ function Navbar() {
       window.removeEventListener('scroll', onScroll, true)
       document.removeEventListener('mousedown', onDown)
     }
-  }, [searchOpen, userMenuOpen, updateSearchArrow, updateUserArrow, closeSearch, closeUserMenu])
+  }, [
+    searchOpen,
+    userMenuOpen,
+    updateSearchArrow,
+    updateUserArrow,
+    closeSearch,
+    closeUserMenu,
+    closeMenu,
+  ])
 
   // -----------------------------
   // 액션
@@ -150,27 +173,50 @@ function Navbar() {
 
   return (
     <AppBar position="fixed" color="transparent" sx={{ backgroundColor: 'transparent', color: '#000', boxShadow: 'none' }}>
-      <Container maxWidth="xl">
-        <Toolbar sx={{ margin: '0 auto', justifyContent: 'space-between', maxWidth: '1200px' }}>
+      <Container>
+        <section id='navbar-section'>
           {/* 로고 */}
           <NavLink to="/" className="galindo logo">PETHAUL</NavLink>
 
           {/* 상단 메뉴 */}
           <ul>
-            <li><NavLink>MENU</NavLink></li>
+            {/* ▼ MENU 드롭다운 (ItemSearchTap 연결) */}
+            <li className="nav-item" ref={menuAnchorRef}>
+              <NavLink
+                to="#"
+                onClick={(e) => { e.preventDefault(); openMenu() }}
+                aria-expanded={menuOpen}
+                aria-haspopup="menu"
+              >
+                MENU
+              </NavLink>
+
+              {menuOpen && (
+                <div
+                  className="menu-dropdown-wrap"  
+                  ref={menuRef}
+                  role="menu"
+                  aria-label="Main menu"
+                  onKeyDown={(e) => { if (e.key === 'Escape') closeMenu() }}
+                >
+                  <ItemSearchTap />   
+                </div>
+              )}
+            </li>
+
             <li>
-              <NavLink>
+              <NavLink to="/season">
                 SEASON
                 <iconify-icon icon="fluent-emoji-flat:watermelon" width="16" height="16" style={{ marginLeft: 5 }} />
               </NavLink>
             </li>
             <li>
-              <NavLink>
+              <NavLink to="/events">
                 이벤트/기획전
                 <iconify-icon icon="fluent-emoji:star" width="16" height="16" style={{ marginLeft: 5 }} />
               </NavLink>
             </li>
-            <li><NavLink>고객센터</NavLink></li>
+            <li><NavLink to="/support">고객센터</NavLink></li>
           </ul>
 
           {/* 우측 아이콘 바 */}
@@ -282,10 +328,9 @@ function Navbar() {
                     onKeyDown={(e) => {
                       if (e.key === 'Escape') closeUserMenu()
                     }}
-                    // 아이콘 중앙에 붙이되, 꼬리는 --arrow-right로 맞춤
                     style={{ position: 'absolute', top: 'calc(100% + 12px)', right: 0, zIndex: 1300 }}
                   >
-                    {/* 꼬리 (user) */}
+                    {/* user */}
                     <div className="user-menu__arrow" />
 
                     <div className="user-menu__header">
@@ -359,12 +404,12 @@ function Navbar() {
               </div>
             </div>
 
-            {/* 모바일 메뉴 아이콘 (그대로) */}
-            <div className="mobile-menu">
+            {/* 📱 모바일 메뉴 */}
+            <div className="mobile-menu" onClick={openMenu} aria-expanded={menuOpen} aria-haspopup="menu">
               <iconify-icon icon="streamline-pixel:interface-essential-navigation-menu-3" width="35" height="35" />
             </div>
           </div>
-        </Toolbar>
+        </section>
       </Container>
     </AppBar>
   )
