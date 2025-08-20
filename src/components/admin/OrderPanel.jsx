@@ -6,7 +6,7 @@ import { Box, Typography, Button } from '@mui/material'
 function OrderPanel() {
    const dispatch = useDispatch()
    const { orders, loading, error } = useSelector((state) => state.order)
-   console.log('🎀orders:', orders)
+   // console.log('🎀orders:', orders)
 
    const [statusValue, setStatusValue] = useState({})
 
@@ -23,7 +23,7 @@ function OrderPanel() {
    useEffect(() => {
       dispatch(fetchAllOrdersThunk())
    }, [dispatch])
-   console.log('orders', orders)
+   // console.log('orders', orders)
 
    const handleStatusChange = (orderId, value) => {
       setStatusValue((prev) => ({

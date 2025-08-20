@@ -16,7 +16,7 @@ function OrderForm({ item, cartItems }) {
    } else {
       orderPrice = item[0]?.price * item[0]?.quantity
    }
-   // console.log('🎈orderPrice:', orderPrice)
+   console.log('🎈orderPrice:', orderPrice)
    const [formData, setFormData] = useState({
       name: user?.name,
       phone1: '',
