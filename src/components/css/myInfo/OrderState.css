@@ -9,30 +9,33 @@
 
 .summary-state {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: repeat(2,1fr);
+  padding-top: 20px;
 }
 
 .summary-state > img {
-   padding:20px;
    width: 150px;
    border-radius: 20px;
+   margin: 10px auto;
 }
 
 .summary-state > div {
    display: flex;
    flex-direction: column;
    justify-content: center;
+   gap: 10px;
 }
 
 .order-state-details {
+   padding: 30px 20px;
    height: 100%;
    display: grid;
    grid-template-columns: repeat(4, 1fr);
    place-items: center;
+   align-items: center;
 }
 
 .order-state-details > div {
-   height: 130px;
    display: flex;
    flex-direction: column;
    justify-content: start;
@@ -55,26 +58,25 @@ div .order-step {
 }
 
 div .order-step.active {
-   font-weight: bold;
-   font-size: 1.2rem;
+   font-size: 1.1rem;
    color: black;
    animation: active 3s ease-in-out infinite;
 }
 
 @keyframes active {
    0% {
-      transform: rotate(0deg);
+      transform: translateY(0px);
    }
    25% {
-      transform: rotate(-5deg);
+      transform: translateY(-10px);
    }
    50% {
-      transform: rotate(5deg);
+      transform: translateY(0px);
    }
    75% {
-      transform: rotate(-5deg);
+      transform: translateY(-10px);
    }
    100% {
-      transform: rotate(0deg);
+      transform: translateY(0px);
    }
 }

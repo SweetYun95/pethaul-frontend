@@ -7,6 +7,36 @@
 }
 
 
+/* 등록성공메세지 */
+.alert-success {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.preview-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.preview-card > h3 {
+    padding: 10px 0;
+}
+
+.preview-card > p {
+font-size: 13px;
+}
+
+.preview-card > div {
+    display: flex;
+    gap: 10px;
+}
+
+
 .pet-create-form-group {
     width: 100%;
     display: flex;

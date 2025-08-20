@@ -41,7 +41,6 @@ function QtyCounter({ value, min = 1, max = 99, onChange }) {
     </div>
   )
 }
-/* ================================== */
 
 const toInt = (v, fallback = 0) => {
   const n = Number(v)
@@ -124,7 +123,7 @@ const ItemCartForm = () => {
     <section id="itemCart-section">
       <div className="cart-contents">
         {/* 좌측: 장바구니 리스트 */}
-        <div className="cart-list left">
+        <div className="cart-list">
           <h2 className="cart-title">장바구니</h2>
 
           {loading && (
@@ -186,7 +185,7 @@ const ItemCartForm = () => {
         </div>
 
         {/* 우측: 결제 요약 */}
-        <div className="contents-card right">
+        <div className="contents-card">
           <div className="card-header">
             <div className="window-btn">
               <span className="red"></span>

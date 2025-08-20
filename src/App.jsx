@@ -25,96 +25,99 @@ import MyReviewList from './pages/MyReviewList'
 import MyPage from './pages/MyPage'
 import EditMyInfoPage from './pages/EditMyInfoPage'
 import AdminPage from './pages/AdminPage'
+import MobileTabBar from './components/shared/MobileTabBar' // ✅ 추가
+import VerifyPasswordPage from './pages/VerifyPasswordPage'
 import PetCreatePage from './pages/PetCreatePage'
 import PetEditPage from './pages/PetEditPage'
 import Test from './pages/Test'
 import Footer from './components/shared/Footer'
 
+
 // ✅ 통합 인증 체크 Thunk (일반 + 구글 통합)
 import { checkUnifiedAuthThunk } from './features/authSlice'
 
 import './App.css'
-import VerifyPasswordPage from './pages/VerifyPasswordPage'
+
 
 function App() {
-   const location = useLocation()
-   const dispatch = useDispatch()
 
-   // ⛑️ 중복 호출 가드:
-   // - Same location에 대해 아주 짧은 시간(100ms) 내 중복 실행을 막아 레이스/불필요 요청을 줄임
-   // - 개발 모드(StrictMode)에서 이중 호출되는 상황도 일부 완화
-   const lastKeyRef = useRef('')
-   const lastTsRef = useRef(0)
+  const location = useLocation()
+  const dispatch = useDispatch()
 
-   useEffect(() => {
-      // location 객체 전체를 deps로 걸면 해시/기타 변화에도 반응하므로, pathname & search만 수신
-      const sig = `${location.pathname}?${location.search || ''}`
-      const now = Date.now()
+  // ⛑️ 중복 호출 가드
+  const lastKeyRef = useRef('')
+  const lastTsRef = useRef(0)
 
-      // 100ms 쿨다운 (필요 없으면 이 블록 제거 가능)
-      if (sig === lastKeyRef.current && now - lastTsRef.current < 100) {
-         return
-      }
-      lastKeyRef.current = sig
-      lastTsRef.current = now
+  useEffect(() => {
+    const sig = `${location.pathname}?${location.search || ''}`
+    const now = Date.now()
 
-      // ✅ 라우트 변경 시점에 단 한 번의 통합 체크만 수행
-      dispatch(checkUnifiedAuthThunk())
-   }, [location.pathname, location.search, dispatch])
+    if (sig === lastKeyRef.current && now - lastTsRef.current < 100) {
+      return
+    }
+    lastKeyRef.current = sig
+    lastTsRef.current = now
 
-   return (
-      <>
-         {/* ✅ Navbar는 전역 상태만 소비. 인증 체크는 절대 하지 않음 */}
-         <Navbar />
+    dispatch(checkUnifiedAuthThunk())
+  }, [location.pathname, location.search, dispatch])
 
-         <Routes>
-            {/* 메인 */}
-            <Route path="/" element={<MainPage />} />
+  return (
+    <>
+      {/* ✅ Navbar는 전역 상태만 소비. 인증 체크는 절대 하지 않음 */}
+      <Navbar />
 
-            {/* 인증 */}
-            <Route path="/join" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/google-success" element={<GoogleSuccessPage />} />
-            <Route path="/token" element={<TokenPage />} />
-            <Route path="find-id" element={<FindIdPage />} />
-            <Route path="find-password" element={<FindPasswordPage />} />
+      <Routes>
+        {/* 메인 */}
+        <Route path="/" element={<MainPage />} />
 
-            {/* 상품 */}
-            <Route path="/item" element={<ItemSellListPage />} />
-            <Route path="/items/detail/:id" element={<ItemDetailPage />} />
-            <Route path="/items/create" element={<ItemCreatePage />} />
-            <Route path="/items/edit/:id" element={<ItemEditPage />} />
+        {/* 인증 */}
+        <Route path="/join" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/google-success" element={<GoogleSuccessPage />} />
+        <Route path="/token" element={<TokenPage />} />
+        <Route path="find-id" element={<FindIdPage />} />
+        <Route path="find-password" element={<FindPasswordPage />} />
 
-            {/* 좋아요/장바구니 */}
-            <Route path="/likes/item" element={<ItemLikePage />} />
-            <Route path="/cart" element={<ItemCartForm />} />
+        {/* 상품 */}
+        <Route path="/item" element={<ItemSellListPage />} />
+        <Route path="/items/detail/:id" element={<ItemDetailPage />} />
+        <Route path="/items/create" element={<ItemCreatePage />} />
+        <Route path="/items/edit/:id" element={<ItemEditPage />} />
 
-            {/* 주문/결제 */}
-            <Route path="/order/:id" element={<OrderPage />} />
-            <Route path="/myorderlist" element={<MyOrderList />} />
+        {/* 좋아요/장바구니 */}
+        <Route path="/likes/item" element={<ItemLikePage />} />
+        <Route path="/cart" element={<ItemCartForm />} />
 
-            {/* 리뷰 */}
-            <Route path="/review/create" element={<ReviewCreatePage />} />
-            <Route path="/review/edit/:id" element={<ReviewEditPage />} />
-            <Route path="/myreviewlist" element={<MyReviewList />} />
+        {/* 주문/결제 */}
+        <Route path="/order/:id" element={<OrderPage />} />
+        <Route path="/myorderlist" element={<MyOrderList />} />
 
-            {/* 마이페이지/관리자 */}
+        {/* 리뷰 */}
+        <Route path="/review/create" element={<ReviewCreatePage />} />
+        <Route path="/review/edit/:id" element={<ReviewEditPage />} />
+        <Route path="/myreviewlist" element={<MyReviewList />} />
+
+        {/* 마이페이지/관리자 */}
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/verify" element={<VerifyPasswordPage />} />
             <Route path="/mypage/edit" element={<EditMyInfoPage />} />
             <Route path="/admin" element={<AdminPage />} />
 
-            {/* 펫 */}
-            <Route path="/pets" element={<PetCreatePage />} />
-            <Route path="/peteditpage" element={<PetEditPage />} />
+        {/* 펫 */}
+        <Route path="/pets" element={<PetCreatePage />} />
+        <Route path="/peteditpage" element={<PetEditPage />} />
 
-            {/* 기타 */}
-            <Route path="/test" element={<Test />} />
-         </Routes>
+        {/* 기타 */}
+        <Route path="/test" element={<Test />} />
+      </Routes>
 
-         <Footer />
-      </>
-   )
+      {/* ✅ 모바일 하단 탭바 (홈/좋아요에서만 표시, 장바구니/마이페이지에서는 숨김) */}
+      <MobileTabBar />
+
+      <Footer />
+    </>
+  )
+
 }
 
 export default App

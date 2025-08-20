@@ -19,7 +19,7 @@ function ItemEditPage() {
 
    console.log(item)
    return (
-    <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+    <div className='blue-background'>
             <ItemEditForm initialData={item} />
              </div>
 
