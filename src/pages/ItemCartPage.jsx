@@ -2,7 +2,7 @@ import ItemCartForm from '../components/item/ItemCartForm'
 
 function ItemCartPage() {
    return (
-      <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+      <div className='blue-background'>
          <ItemCartForm />
       </div>
    )

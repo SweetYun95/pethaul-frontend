@@ -6,7 +6,7 @@ function ReviewCreatePage() {
    const location = useLocation()
    const { item } = location.state || {}
    return (
-      <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+      <div className='blue-background' >
          <CreateReviewForm item={item} />
       </div>
    )

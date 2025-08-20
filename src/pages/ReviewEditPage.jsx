@@ -8,7 +8,7 @@ function ReviewEditPage() {
    const review = location.state?.review
 
    return (
-      <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+      <div className='blue-background'>
          <EditReviewForm id={id} review={review} />
       </div>
    )

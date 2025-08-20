@@ -10,7 +10,7 @@ function OrderPage() {
    const { cartItems } = location.state || {}
 
    return (
-      <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+      <div className='blue-background'>
          <OrderForm item={item} quantity={quantity} cartItems={cartItems} />
       </div>
    )

@@ -165,7 +165,7 @@ export default function ItemLikePage() {
   // ====== 로딩/에러 ======
   if (loading) {
     return (
-      <section style={{backgroundImage: 'url(../../public/images/ribbon.jpeg)',backgroundRepeat: 'repeat',backgroundSize: '20%', paddingTop: '74px'}} id="itemlike-list" className="wrap">
+      <section id="itemlike-list" className="ribbon-background">
         <div className="grid">
           {Array.from({ length: 8 }).map((_, i) => (
             <div className="card" key={i}>
@@ -183,7 +183,7 @@ export default function ItemLikePage() {
 
   if (error) {
     return (
-      <section style={{backgroundImage: 'url(../../public/images/ribbon.jpeg)',backgroundRepeat: 'repeat',backgroundSize: '20%', paddingTop: '74px'}} id="itemlike-list" className="wrap center">
+      <section  id="itemlike-list" className="ribbon-background">
         <p className="error">에러 발생: {String(error)}</p>
         <button className="btn" onClick={() => { dispatch(fetchMyLikedItemsThunk()); dispatch(fetchMyLikeIdsThunk()) }}>다시 시도</button>
       </section>
@@ -192,7 +192,7 @@ export default function ItemLikePage() {
 
   // ====== 렌더 ======
   return (
-    <section style={{backgroundImage: 'url(../../public/images/ribbon.jpeg)',backgroundRepeat: 'repeat',backgroundSize: '20%', paddingTop: '74px'}} id="itemlike-list" className="wrap">
+    <section className="ribbon-background" id="itemlike-list">
       <div style={{minHeight: '1000px',  maxWidth: '1200px',margin: '0 auto', padding: '20px'}}>
         <div className="contents-card item">
           <div className="item-card-header">
