@@ -13,9 +13,14 @@
 }
 
 .cart-title { 
-  margin-bottom: 20px; 
   max-width: 1200px;
 }
+
+.cart-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 
 .cart-card {
   display: flex;
@@ -94,3 +99,9 @@
 
 /* ---- 반응형 ---- */
 
+@media (max-width: 768px) {
+  .cart-contents {
+    grid-template-columns: 1fr;
+  }
+
+}

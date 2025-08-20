@@ -61,6 +61,29 @@ a {
     flex-shrink: 0;
 }
 
+/* 공통버튼 */
+
+.btn{
+    all: unset;
+    background-color: #fff;
+    border: 1px solid #000;
+    height: 27px;
+    padding: 5px 10px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 13px;
+ } 
+
+.btn:hover {
+    background-color: #463832;
+    color: #fff;
+}
+
+
+
 @media (max-width: 1024px) {
     .card > a > img {
         height: 160px;

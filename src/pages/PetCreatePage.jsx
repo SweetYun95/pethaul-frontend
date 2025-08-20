@@ -68,16 +68,17 @@ const PetCreatePage = () => {
       {/* ✅ 성공 메시지 */}
       {successPet && (
         <div className="alert-success">
-          <p><strong>{successPet.petName}</strong> 프로필이 등록되었습니다.</p>
+          <p> 프로필이 등록되었습니다.</p>
           <div className="preview-card">
             <h3>{successPet.petName}</h3>
             <p>{successPet.petType} / {successPet.breed}</p>
             <p>나이: {successPet.age}</p>
             <p>성별: {successPet.gender === 'M' ? '남' : '여'}</p>
+            <div>
             <Link to="/mypage" className="btn">마이페이지에서 보기</Link>
-            <button onClick={() => setSuccessPet(null)}>다른 펫 추가하기</button>
+            <button className="btn" onClick={() => setSuccessPet(null)}>다른 펫 추가하기</button>
+            </div>
           </div>
-          <hr />
         </div>
       )}
 
