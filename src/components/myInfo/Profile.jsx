@@ -62,7 +62,7 @@ function Profile({ user, loading = false }) {
                      }}
                   />
                   {/* 회원정보수정 페이지 라우트는 프로젝트에 맞게 변경 */}
-                  <Link to="/verify" className="btn">
+                  <Link to="/mypage/edit" className='modal-btn' >
                      회원정보수정
                   </Link>
                </div>
