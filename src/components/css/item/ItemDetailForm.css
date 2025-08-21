@@ -142,6 +142,7 @@
   display: flex;
   margin: 20px 0;
   gap: 10px;
+  position: relative;
 }
 
 .btn-outline {
@@ -161,6 +162,25 @@
 .btn-outline:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.detail-click {
+   background: none;
+   position: absolute;
+   top: 40%;
+   right: -30%;
+   transform: rotate(-20deg);
+   animation: click 3s ease-out infinite;
+}
+
+.detail-click-img {
+   background: none;
+   width: 60px;
+}
+
+.detail-click-text {
+   text-align: center;
+   animation: click-text 3s infinite;
 }
 
 .cart {
@@ -339,4 +359,17 @@
 .btn-outline {
     padding: 15px;
 }
+
+.detail-click {
+   top: -3%;
+   right: -15%;
+}
+
+  .detail-click-img {
+   width: 40px;
+  }
+  .detail-click-text {
+   font-size: 11px;
+  }
+
 }

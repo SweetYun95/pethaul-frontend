@@ -1,77 +1,67 @@
-import { Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
-
+// src/components/item/ItemReviewList.jsx
+// MUI import 전부 제거!
 function ItemReviewList({ item, avgRating, reviewCount }) {
-   console.log('🎁[ItemReviewList.jsx] 아이템 데이터 확인:', item)
-   const Reviews = item.Reviews
-   console.log('🎁[ItemReviewList.jsx] 리뷰 데이터 확인:', Reviews)
-   console.log(Reviews.length)
+  const reviews = item?.Reviews ?? []
+  const count = Number.isFinite(reviewCount) ? reviewCount : reviews.length
+  const hasReviews = reviews.length > 0
+  const apiBase = import.meta.env.VITE_APP_API_URL
 
-   return (
-      <>
-         {item && (
-            <Box>
-               <Accordion>
-                  <AccordionSummary>
-                     <Box>
-                        <Typography>REVIEW({reviewCount > 1 ? `${reviewCount}` : '0'}) </Typography>
-                     </Box>
-                     {/* 리뷰가 존재할 때만 평균 평점 출력 */}
-                     {Reviews.length > 0 && (
-                        <Box>
-                           <Typography>{avgRating} / 5.0</Typography>
-                        </Box>
-                     )}
-                  </AccordionSummary>
-                  <AccordionDetails>
-                     {Reviews.length > 0 ? (
-                        Reviews?.map((review) => (
-                           <Box
-                              sx={{
-                                 display: 'flex',
-                                 justifyContent: 'space-around',
-                              }}
-                              key={review.id}
-                           >
-                              {/* 리뷰 이미지 */}
-                              <Box>
-                                 {review.ReviewImages.map((data, index) => (
-                                    <img src={`${import.meta.env.VITE_APP_API_URL}${data.imgUrl}`} key={index} width="80px" />
-                                 ))}
-                              </Box>
+  return (
+    <section className="review-section">
+      <details className="accordion" open>
+        <summary className="accordion__summary">
+          <span className="review-title">REVIEW({count > 0 ? count : 0})</span>
+          {hasReviews && <span className="avg-rating">{avgRating} / 5.0</span>}
+        </summary>
 
-                              {/* 리뷰 본문 */}
-                              <Box>
-                                 <Typography
-                                    sx={{
-                                       whiteSpace: 'nowrap',
-                                       overflow: 'hidden',
-                                       textOverflow: 'ellipsis',
-                                       maxWidth: '500px',
-                                    }}
-                                 >
-                                    {review?.reviewContent}
-                                 </Typography>
-                              </Box>
-                              {/* 별점 */}
-                              <Box>
-                                 <Typography>별점 {review.rating}</Typography>
-                              </Box>
+        <div className="accordion__details">
+          {hasReviews ? (
+            <ul className="review-list">
+              {reviews.map((review) => (
+                <li className="review-item" key={review.id}>
+                  {/* 리뷰 이미지 */}
+                  <div className="review-images">
+                    {(review?.ReviewImages ?? []).map((data, index) => (
+                      <img
+                        key={index}
+                        src={`${apiBase}${data.imgUrl}`}
+                        alt="리뷰 이미지"
+                        width="80"
+                        height="80"
+                        loading="lazy"
+                      />
+                    ))}
+                  </div>
 
-                              <Box maxWidth="120px">
-                                 <Typography sx={{ fontWeight: 'bold' }}>{review.User.name}</Typography>
-                                 <Typography>{review?.reviewDate.slice(0, 10)}</Typography>
-                              </Box>
-                           </Box>
-                        ))
-                     ) : (
-                        <Typography>해당 상품에 등록된 리뷰가 없습니다.</Typography>
-                     )}
-                  </AccordionDetails>
-               </Accordion>
-            </Box>
-         )}
-      </>
-   )
+                  {/* 리뷰 본문 */}
+                  <div className="review-content">
+                    <p className="review-text" title={review?.reviewContent || ''}>
+                      {review?.reviewContent}
+                    </p>
+                  </div>
+
+                  {/* 별점 */}
+                  <div className="review-rating">
+                    <span>별점 {review?.rating ?? '-'}</span>
+                  </div>
+
+                  {/* 작성자/날짜 */}
+                  <div className="review-meta">
+                    <strong>{review?.User?.name ?? '익명'}</strong>
+                    <time dateTime={review?.reviewDate?.slice(0, 10)}>
+                      {review?.reviewDate?.slice(0, 10) ?? ''}
+                    </time>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>해당 상품에 등록된 리뷰가 없습니다.</p>
+          )}
+        </div>
+      </details>
+    </section>
+  )
 }
 
 export default ItemReviewList
