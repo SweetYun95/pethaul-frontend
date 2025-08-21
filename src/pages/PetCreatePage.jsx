@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createPetThunk, getUserPetsThunk } from '../features/petSlice'
 import { Link } from 'react-router-dom'
 
-import './css/PetCreatePage.css'
+import './css/PetPage.css'
 
 const PetCreatePage = () => {
   const dispatch = useDispatch()
