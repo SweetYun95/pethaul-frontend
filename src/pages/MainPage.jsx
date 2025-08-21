@@ -1,9 +1,11 @@
 // src/pages/MainPage.jsx
-import React, { useEffect, useMemo, useRef } from 'react'
-import './css/Main.css'
+import { useEffect, useMemo, useRef } from 'react'
+import { Link } from 'react-router-dom'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchSortDataThunk } from '../features/itemSlice'
-import { Link } from 'react-router-dom'
+
+import './css/Main.css'
 
 // API 이미지 절대경로/상대경로 모두 커버
 const API = (import.meta.env.VITE_APP_API_URL || '').replace(/\/$/, '')
