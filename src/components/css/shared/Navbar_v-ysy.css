@@ -29,7 +29,12 @@ li {
   position: relative;
 }
 
-li > a:hover {
+.nav-item > button {
+  all: unset;
+}
+
+li > a:hover,
+.nav-item > button:hover {
   transform: translate(0px, -5px);
 }
 

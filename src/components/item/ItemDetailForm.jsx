@@ -139,10 +139,15 @@ function ItemDetailForm({ item }) {
                 >
                   구매하기
                 </Link>
+                <div className="detail-click">
+                  <img className="detail-click-img" src="/images/발.png" alt="bannerimg" />
+                  <p className="detail-click-text">click!</p>
+               </div>
               </div>
             ) : (
               <p className="sold-out">품절된 상품입니다.</p>
             )}
+            
           </div>
         </div>
       </div>
