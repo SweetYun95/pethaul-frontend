@@ -75,8 +75,17 @@ const itemSlice = createSlice({
       items: [],
       loading: false,
       error: null,
+      filters: {
+         searchTerm: '',
+         sellCategory: [],
+         inStockOnly: false,
+      },
    },
-   reducers: {},
+   reducers: {
+      setFilters: (state, action) => {
+         state.filters = { ...state.filters, ...action.payload }
+      },
+   },
    extraReducers: (builder) => {
       builder
          // 상품 등록
@@ -161,5 +170,5 @@ const itemSlice = createSlice({
          })
    },
 })
-
+export const { setFilters } = itemSlice.actions
 export default itemSlice.reducer

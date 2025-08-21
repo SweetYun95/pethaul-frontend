@@ -8,6 +8,7 @@ function VerifyPasswordPage() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const [password, setPassword] = useState('')
+   const [showToggle, setShowToggle] = useState(false)
 
    const handleSubmit = (e) => {
       e.preventDefault()
@@ -24,7 +25,10 @@ function VerifyPasswordPage() {
    return (
       <Container sx={{ marginTop: '200px' }}>
          <form onSubmit={handleSubmit}>
-            <input placeholder="비밀번호를 입력하세요." value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input placeholder="비밀번호를 입력하세요." type={showToggle ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <button type="button" onClick={() => setShowToggle(!showToggle)}>
+               비밀번호 노출 버튼
+            </button>
             <button type="submit">확인</button>
          </form>
       </Container>

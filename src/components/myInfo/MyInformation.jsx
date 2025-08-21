@@ -18,6 +18,7 @@ function MyInformation({ user }) {
    const [isChangedEmail, setIsChangedEmail] = useState(false)
    const [checkedEmail, setCheckedEmail] = useState(false)
    const [nullEmail, setNullEmail] = useState(false)
+   const [showToggle, setShowToggle] = useState(false)
 
    console.log('🎈확인1:', isChangedEmail)
    console.log('🎈확인2:', checkedEmail)
@@ -120,8 +121,11 @@ function MyInformation({ user }) {
                   <input label="address" name="address" value={inputAddress} onChange={(e) => setInputAddress(e.target.value)} />
 
                   <p>비밀번호 변경하기 (선택)</p>
-                  <input label="새 비밀번호" name="new-password" placeholder="변경할 비밀번호를 입력하세요" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-                  <input label="새 비밀번호 확인" name="check-new-password" placeholder="변경할 비밀번호를 한 번 더 입력하세요" value={checkNewPassword} onChange={(e) => setCheckNewPassword(e.target.value)} />
+                  <input label="새 비밀번호" type={showToggle ? 'text' : 'password'} name="new-password" placeholder="변경할 비밀번호를 입력하세요" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                  <input label="새 비밀번호 확인" type={showToggle ? 'text' : 'password'} name="check-new-password" placeholder="변경할 비밀번호를 한 번 더 입력하세요" value={checkNewPassword} onChange={(e) => setCheckNewPassword(e.target.value)} />
+                  <button type="button" onClick={() => setShowToggle(!showToggle)}>
+                     비밀번호 노출 버튼
+                  </button>
                   {newPassword != checkNewPassword && <p style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</p>}
                   <br />
                   <button type="submit">수정하기</button>
