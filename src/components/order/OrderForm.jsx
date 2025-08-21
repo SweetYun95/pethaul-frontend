@@ -1,6 +1,6 @@
 // src/components/order/OrderForm.jsx
-import React, { useMemo, useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import '../css/order/OrderForm.css'
@@ -8,10 +8,11 @@ import '../css/order/OrderForm.css'
 const API_BASE = import.meta.env.VITE_APP_API_URL || ''
 
 function OrderForm({ item, cartItems, order }) {
+   console.log('🎀아이템:', item)
+   console.log('🎀카트아이템:', cartItems)
+   const navigate = useNavigate()
    const location = useLocation()
-
-   // ✅ 로그인된 사용자 정보 (자동 채우기 용)
-   const authUser = useSelector((s) => s.auth?.user || null)
+   console.log('🎀로케이션:', location.state)
 
    // ===== 공통 유틸 =====
    const toNumber = (n, d = 0) => {
@@ -31,13 +32,16 @@ function OrderForm({ item, cartItems, order }) {
       return cartArr.length ? cartArr : itemArr.length ? itemArr : orderArr.length ? orderArr : stateArr.length ? stateArr : Array.isArray(reduxCartItems) ? reduxCartItems : []
    }, [cartArr, itemArr, orderArr, stateArr, reduxCartItems])
 
-   // ===== 가격/수량/아이템ID 추출 =====
+   // ===== 가격/수량/아이템ID 추출 (여러 키 지원) =====
    const pickPrice = (it) => toNumber(it?.price ?? it?.Item?.price ?? it?.unitPrice ?? it?.salePrice ?? it?.originPrice, 0)
+
    const pickQty = (it) => toNumber(it?.quantity ?? it?.count ?? it?.qty ?? it?.amount ?? 1, 1)
+
    const pickItemId = (it) => it?.itemId ?? it?.ItemId ?? it?.id ?? it?.Item?.id
 
    // ===== 합계/수량 =====
    const orderPrice = useMemo(() => rawItems.reduce((sum, it) => sum + pickPrice(it) * pickQty(it), 0), [rawItems])
+
    const totalCount = useMemo(() => rawItems.reduce((sum, it) => sum + pickQty(it), 0), [rawItems])
 
    // ===== 쿠폰/배송 =====
@@ -80,44 +84,6 @@ function OrderForm({ item, cartItems, order }) {
    const [cardNumber, setCardNumber] = useState({ card0: '', card1: '', card2: '', card3: '' })
    const [expiry, setExpiry] = useState({ expiryMonth: '', expiryYear: '' })
    const [selectedCashMethod, setSelectedCashMethod] = useState('')
-
-   // ✅ 로그인 사용자 정보로 자동 채우기 (마운트/사용자 변경 시 1회성 프리필)
-   const splitPhone = (phone) => {
-      if (!phone) return { p1: '', p2: '', p3: '' }
-      const only = String(phone).replace(/[^\d]/g, '')
-      const p3 = only.slice(-4)
-      const mid = only.slice(0, -4)
-      const p2 = mid.slice(-4)
-      const p1 = mid.slice(0, -4)
-      return { p1, p2, p3 }
-   }
-
-   useEffect(() => {
-      if (!authUser) return
-      const { p1, p2, p3 } = splitPhone(authUser.phoneNumber)
-
-      // 이미 사용자가 입력한 값이 있으면 덮어쓰지 않음 (빈 칸만 채우기)
-      setFormData((prev) => ({
-         name: prev.name || authUser.name || '',
-         address: prev.address || authUser.address || '',
-         phone1: prev.phone1 || p1,
-         phone2: prev.phone2 || p2,
-         phone3: prev.phone3 || p3,
-         request: prev.request,
-      }))
-   }, [authUser])
-
-   // ✅ 배송지 변경하기: 입력칸 초기화 (원래 프리필된 값 제거)
-   const handleClearAddress = () => {
-      setFormData((prev) => ({
-         ...prev,
-         name: '',
-         phone1: '',
-         phone2: '',
-         phone3: '',
-         address: '',
-      }))
-   }
 
    const handleChange = (e) => {
       const { name, value } = e.target
@@ -189,9 +155,11 @@ function OrderForm({ item, cartItems, order }) {
       }
 
       try {
-         const res = await axios.post(`${API_BASE}/orders`, payload, { withCredentials: true })
+         const res = await axios.post(`${API_BASE}/order`, payload, { withCredentials: true })
          const orderId = res?.data?.id ?? res?.data?.orderId
          if (orderId) {
+            // 주문상세 라우트가 있을 때:
+            // navigate(`/orders/${orderId}`)
             alert(`주문이 완료되었습니다. 주문번호: ${orderId}`)
          } else {
             alert('주문이 완료되었습니다.')
@@ -277,12 +245,8 @@ function OrderForm({ item, cartItems, order }) {
                   </div>
                   <div className="delivery-address">
                      <div>
-                        {/* ✅ 원래 있던 UI는 그대로 유지 */}
                         <p className="sub-title"> 기존배송지 </p>
-                        <button className="address-btn" type="button" onClick={handleClearAddress}>
-                           {' '}
-                           배송지 변경하기
-                        </button>
+                        <button className="address-btn"> 배송지 변경하기</button>
                      </div>
                      <form className="address-input-group" onSubmit={(e) => e.preventDefault()}>
                         <div className="address-input name">

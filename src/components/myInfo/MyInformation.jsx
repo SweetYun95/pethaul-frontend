@@ -19,6 +19,7 @@ function MyInformation({ user }) {
    const [isChangedEmail, setIsChangedEmail] = useState(false)
    const [checkedEmail, setCheckedEmail] = useState(false)
    const [nullEmail, setNullEmail] = useState(false)
+   const [showToggle, setShowToggle] = useState(false)
 
    console.log('🎈확인1:', isChangedEmail)
    console.log('🎈확인2:', checkedEmail)
