@@ -18,7 +18,7 @@ function ItemDetailPage() {
 
    if (loading) {
       return (
-            <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+            <div className='blue-background'>
 
             <CircularProgress />
          </div>
@@ -27,7 +27,7 @@ function ItemDetailPage() {
 
    if (error) {
       return (
-             <div style={{ backgroundColor: '#F2FAFF', paddingTop: '74px' }}>
+             <div className='blue-background'>
 
             <Typography color="error">{error}</Typography>
          </div>
