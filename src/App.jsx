@@ -1,5 +1,5 @@
 // src/App.jsx
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom' // ✅ useNavigate 추가
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -25,55 +25,59 @@ import MyReviewList from './pages/MyReviewList'
 import MyPage from './pages/MyPage'
 import EditMyInfoPage from './pages/EditMyInfoPage'
 import AdminPage from './pages/AdminPage'
-import MobileTabBar from './components/shared/MobileTabBar' // ✅ 추가
-import VerifyPasswordPage from './pages/VerifyPasswordPage'
+import MobileTabBar from './components/shared/MobileTabBar'
 import PetCreatePage from './pages/PetCreatePage'
 import PetEditPage from './pages/PetEditPage'
 import TestPage from './components/test/TestPage'
 import Footer from './components/shared/Footer'
+import VerifyModal from './components/verify/VerifyModal.jsx' // ✅ 모달 컴포넌트만 사용
 
-// ✅ 통합 인증 체크 Thunk (일반 + 구글 통합)
 import { checkUnifiedAuthThunk } from './features/authSlice'
-
 import './App.css'
 
 function App() {
-   const location = useLocation()
-   const dispatch = useDispatch()
+  const location = useLocation()
+  const navigate = useNavigate() // ✅ 딥링크 방지용
+  const dispatch = useDispatch()
 
-   // ⛑️ 중복 호출 가드
-   const lastKeyRef = useRef('')
-   const lastTsRef = useRef(0)
+  const backgroundLocation = location.state?.backgroundLocation
+  const isVerifyRoute = location.pathname === '/verify'
+  const shouldShowVerifyModal = Boolean(backgroundLocation) && isVerifyRoute
 
-   useEffect(() => {
-      const sig = `${location.pathname}?${location.search || ''}`
-      const now = Date.now()
+  // ✅ /verify로 직접 진입(딥링크)하면 홈으로 돌려보내기 (페이지 라우트가 없으니 에러 방지)
+  useEffect(() => {
+    if (isVerifyRoute && !backgroundLocation) {
+      navigate('/', { replace: true })
+    }
+  }, [isVerifyRoute, backgroundLocation, navigate])
 
-      if (sig === lastKeyRef.current && now - lastTsRef.current < 100) {
-         return
-      }
-      lastKeyRef.current = sig
-      lastTsRef.current = now
+  // 기존 인증 체크 (그대로)
+  const lastKeyRef = useRef('')
+  const lastTsRef = useRef(0)
+  useEffect(() => {
+    const sig = `${location.pathname}?${location.search || ''}`
+    const now = Date.now()
+    if (sig === lastKeyRef.current && now - lastTsRef.current < 100) return
+    lastKeyRef.current = sig
+    lastTsRef.current = now
+    dispatch(checkUnifiedAuthThunk())
+  }, [location.pathname, location.search, dispatch])
 
-      dispatch(checkUnifiedAuthThunk())
-   }, [location.pathname, location.search, dispatch])
+  return (
+    <>
+      <Navbar />
 
-   return (
-      <>
-         {/* ✅ Navbar는 전역 상태만 소비. 인증 체크는 절대 하지 않음 */}
-         <Navbar />
+      {/* 모달이 열리면 배경 라우트는 backgroundLocation으로 고정 */}
+      <Routes location={backgroundLocation || location}>
+        <Route path="/" element={<MainPage />} />
 
-         <Routes>
-            {/* 메인 */}
-            <Route path="/" element={<MainPage />} />
-
-            {/* 인증 */}
-            <Route path="/join" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/google-success" element={<GoogleSuccessPage />} />
-            <Route path="/token" element={<TokenPage />} />
-            <Route path="find-id" element={<FindIdPage />} />
-            <Route path="find-password" element={<FindPasswordPage />} />
+        {/* 인증 */}
+        <Route path="/join" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/google-success" element={<GoogleSuccessPage />} />
+        <Route path="/token" element={<TokenPage />} />
+        <Route path="/find-id" element={<FindIdPage />} />
+        <Route path="/find-password" element={<FindPasswordPage />} />
 
             {/* 상품 */}
             <Route path="/item" element={<ItemSellListPage />} />
@@ -94,26 +98,29 @@ function App() {
             <Route path="/review/edit/:id" element={<ReviewEditPage />} />
             <Route path="/myreviewlist" element={<MyReviewList />} />
 
-            {/* 마이페이지/관리자 */}
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/verify" element={<VerifyPasswordPage />} />
-            <Route path="/mypage/edit" element={<EditMyInfoPage />} />
-            <Route path="/admin" element={<AdminPage />} />
+        {/* 마이페이지/관리자 */}
+        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/edit" element={<EditMyInfoPage />} />
+        <Route path="/admin" element={<AdminPage />} />
 
             {/* 펫 */}
             <Route path="/pets" element={<PetCreatePage />} />
             <Route path="/peteditpage" element={<PetEditPage />} />
 
-            {/* 기타 */}
-            <Route path="/test" element={<TestPage />} />
-         </Routes>
+        {/* 기타 */}
+        <Route path="/test" element={<Test />} />
 
-         {/* ✅ 모바일 하단 탭바 (홈/좋아요에서만 표시, 장바구니/마이페이지에서는 숨김) */}
-         <MobileTabBar />
+        {/* 안전망 */}
+        <Route path="*" element={null} />
+      </Routes>
 
-         <Footer />
-      </>
-   )
+      {/* ✅ 모달 전용: 라우팅이 아니라 조건부 마운트 */}
+      {shouldShowVerifyModal && <VerifyModal />}
+
+      <MobileTabBar />
+      <Footer />
+    </>
+  )
 }
 
 export default App

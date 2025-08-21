@@ -25,10 +25,7 @@
     text-align: center;
     font-size: 13px;
 }
-.profile-info > a {
-    text-decoration: underline;
-    font-size: 13px;
-}
+
 
 @media (max-width: 768px) {
    .profile-info {

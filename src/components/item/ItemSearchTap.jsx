@@ -1,5 +1,5 @@
 // src/components/item/ItemSearchTap.jsx
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 import { useDispatch } from 'react-redux'
 import { fetchItemsThunk } from '../../features/itemSlice'
 
@@ -419,4 +419,5 @@ function ItemSearchTap({ items }) {
    )
 }
 
-export default ItemSearchTap
+export default memo(ItemSearchTap)
+
