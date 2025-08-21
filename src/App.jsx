@@ -79,6 +79,7 @@ function App() {
             <Route path="/find-id" element={<FindIdPage />} />
             <Route path="/find-password" element={<FindPasswordPage />} />
 
+
             {/* 상품 */}
             <Route path="/item" element={<ItemSellListPage />} />
             <Route path="/items/detail/:id" element={<ItemDetailPage />} />
@@ -98,10 +99,12 @@ function App() {
             <Route path="/review/edit/:id" element={<ReviewEditPage />} />
             <Route path="/myreviewlist" element={<MyReviewList />} />
 
+
             {/* 마이페이지/관리자 */}
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/edit" element={<EditMyInfoPage />} />
             <Route path="/admin" element={<AdminPage />} />
+
 
             {/* 펫 */}
             <Route path="/pets" element={<PetCreatePage />} />
