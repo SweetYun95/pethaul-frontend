@@ -1,7 +1,6 @@
-// src/components/shared/Navbar.jsx
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import AppBar from '@mui/material/AppBar'
 import IconButton from '@mui/material/IconButton'
@@ -9,16 +8,17 @@ import Container from '@mui/material/Container'
 
 import { logoutUserThunk } from '../../features/authSlice'
 import ItemSearchTap from '../item/ItemSearchTap'
+import UserMenuPopover from './UserMenuPopover'
 import '../css/shared/Navbar_v-ysy.css'
 
 function Navbar() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isAuthenticated, user } = useSelector((s) => s.auth)
+  const items = useSelector((s) => s.item.list ?? s.item.items ?? [], shallowEqual)
   const isGoogleUser = user?.provider === 'google'
   const isAdmin = user?.role === 'ADMIN'
 
-  // 데스크탑 시작 브레이크포인트(px) — 프로젝트 기준 맞춰 조정
   const BREAKPOINT = 768
 
   // -----------------------------
@@ -33,7 +33,6 @@ function Navbar() {
   const searchBubbleRef = useRef(null)
 
   const openSearchAt = (owner) => {
-    // A패치: 검색 열면 나머지 닫기
     closeMenu(); closeUserMenu()
     setSearchOwner(owner)
     setSearchOpen((prev) => (owner === searchOwner ? !prev : true))
@@ -43,7 +42,6 @@ function Navbar() {
     setSearchOwner(null)
   }, [])
 
-  // 검색 꼬리 위치 보정 (CSS var --arrow-right)
   const updateSearchArrow = useCallback(() => {
     const anchor = searchOwner === 'pc' ? pcAnchorRef.current : mobAnchorRef.current
     const bubble = searchBubbleRef.current
@@ -60,33 +58,12 @@ function Navbar() {
   }, [searchOwner])
 
   // -----------------------------
-  // 유저 메뉴
+  // 유저 메뉴 (팝오버 컴포넌트 사용)
   // -----------------------------
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userAnchorRef = useRef(null)
-  const userMenuRef = useRef(null)
-
-  const openUserMenu = () => {
-    // A패치: 유저 열면 나머지 닫기
-    closeMenu(); closeSearch()
-    setUserMenuOpen((v) => !v)
-  }
+  const openUserMenu = () => { closeMenu(); closeSearch(); setUserMenuOpen((v) => !v) }
   const closeUserMenu = useCallback(() => setUserMenuOpen(false), [])
-
-  const updateUserArrow = useCallback(() => {
-    const anchor = userAnchorRef.current
-    const menuEl = userMenuRef.current
-    if (!anchor || !menuEl) return
-    const iconBtn = anchor.querySelector('button, [role="button"]')
-    if (!iconBtn) return
-
-    const iconRect = iconBtn.getBoundingClientRect()
-    const menuRect = menuEl.getBoundingClientRect()
-    const arrowHalf = 6
-    const iconCenterX = iconRect.left + iconRect.width / 2
-    const rightPx = Math.max(8, menuRect.right - iconCenterX - arrowHalf)
-    menuEl.style.setProperty('--arrow-right', `${Math.round(rightPx)}px`)
-  }, [])
 
   // -----------------------------
   // 메인 MENU 드롭다운 (PC/Mobile 공용)
@@ -98,7 +75,6 @@ function Navbar() {
   const menuRef = useRef(null)
 
   const openMenuAt = (owner) => {
-    // A패치: 메뉴 열면 나머지 닫기
     closeSearch(); closeUserMenu()
     setMenuOwner(owner)
     setMenuOpen((prev) => (owner === menuOwner ? !prev : true))
@@ -126,35 +102,25 @@ function Navbar() {
   // 공통: 리사이즈/스크롤/바깥클릭 + 브레이크포인트 동기화
   // -----------------------------
   useEffect(() => {
-    // 브레이크포인트 전환 시 반대 레이아웃의 메뉴 닫기
     const syncByBreakpoint = () => {
       const w = window.innerWidth
       const isDesktop = w >= BREAKPOINT
       const isMobile = !isDesktop
-
-      if (menuOpen && menuOwner === 'mob' && isDesktop) {
-        closeMenu()
-      }
-      if (menuOpen && menuOwner === 'pc' && isMobile) {
-        closeMenu()
-      }
+      if (menuOpen && menuOwner === 'mob' && isDesktop) closeMenu()
+      if (menuOpen && menuOwner === 'pc' && isMobile) closeMenu()
     }
 
     if (searchOpen) requestAnimationFrame(updateSearchArrow)
-    if (userMenuOpen) requestAnimationFrame(updateUserArrow)
     if (menuOpen) requestAnimationFrame(updateMenuArrow)
-    // mount 시 1회 동기화
     syncByBreakpoint()
 
     const onResize = () => {
       syncByBreakpoint()
       if (searchOpen) updateSearchArrow()
-      if (userMenuOpen) updateUserArrow()
       if (menuOpen) updateMenuArrow()
     }
     const onScroll = () => {
       if (searchOpen) updateSearchArrow()
-      if (userMenuOpen) updateUserArrow()
       if (menuOpen) updateMenuArrow()
     }
     const onDown = (e) => {
@@ -165,18 +131,13 @@ function Navbar() {
       const inSearch = sB?.contains(e.target) || pcA?.contains(e.target) || mobA?.contains(e.target)
       if (!inSearch) closeSearch()
 
-      // 유저
-      const uA = userAnchorRef.current
-      const uM = userMenuRef.current
-      const inUser = uM?.contains(e.target) || uA?.contains(e.target)
-      if (!inUser) closeUserMenu()
-
       // 메뉴 (PC/Mob 공용)
       const mPcA = pcMenuAnchorRef.current
       const mMobA = mobMenuAnchorRef.current
       const mM = menuRef.current
       const inMenu = mM?.contains(e.target) || mPcA?.contains(e.target) || mMobA?.contains(e.target)
       if (!inMenu) closeMenu()
+      // 유저 메뉴는 UserMenuPopover 내부에서 바깥클릭 처리
     }
 
     window.addEventListener('resize', onResize)
@@ -191,9 +152,9 @@ function Navbar() {
     }
   }, [
     BREAKPOINT,
-    searchOpen, userMenuOpen, menuOpen, menuOwner,
-    updateSearchArrow, updateUserArrow, updateMenuArrow,
-    closeSearch, closeUserMenu, closeMenu,
+    searchOpen, menuOpen, menuOwner,
+    updateSearchArrow, updateMenuArrow,
+    closeSearch, closeMenu,
   ])
 
   // -----------------------------
@@ -208,12 +169,7 @@ function Navbar() {
   }
 
   const handleLogin = () => { navigate('/login'); closeUserMenu() }
-  
-     const handleJoin = () => {
-      navigate('/join')
-      closeUserMenu()
-   }
-  
+  const handleJoin = () => { navigate('/join'); closeUserMenu() }
   const handleLogout = () => {
     if (!confirm('로그아웃하시겠습니까?')) return
     dispatch(logoutUserThunk())
@@ -233,14 +189,14 @@ function Navbar() {
           <ul>
             {/* ▼ MENU 드롭다운 (PC 앵커) */}
             <li className="nav-item" ref={pcMenuAnchorRef}>
-              <NavLink
-                to="#"
+              <button
+                type="button"
                 onClick={(e) => { e.preventDefault(); openMenuAt('pc') }}
                 aria-expanded={menuOpen && menuOwner === 'pc'}
                 aria-haspopup="menu"
               >
                 MENU
-              </NavLink>
+              </button>
 
               {/* PC 드롭다운 */}
               {menuOpen && menuOwner === 'pc' && (
@@ -251,7 +207,7 @@ function Navbar() {
                   aria-label="Main menu"
                   onKeyDown={(e) => { if (e.key === 'Escape') closeMenu() }}
                 >
-                  <ItemSearchTap />
+                  <ItemSearchTap items={items} />
                 </div>
               )}
             </li>
@@ -358,7 +314,7 @@ function Navbar() {
                 <iconify-icon icon="streamline-pixel:shopping-shipping-basket" width="24" height="24" />
               </IconButton>
 
-              {/* 👤 유저 메뉴 앵커 */}
+              {/* 👤 유저 메뉴 앵커 + 팝오버 */}
               <div className="user-anchor" ref={userAnchorRef}>
                 <IconButton
                   onClick={openUserMenu}
@@ -369,84 +325,26 @@ function Navbar() {
                   <iconify-icon icon="streamline-pixel:user-single-aim" width="24" height="24" />
                 </IconButton>
 
-                {userMenuOpen && (
-                  <div
-                    className="user-menu"
-                    ref={userMenuRef}
-                    role="dialog"
-                    aria-modal="true"
-                    onKeyDown={(e) => { if (e.key === 'Escape') closeUserMenu() }}
-                  >
-                    <div className="user-menu__arrow" />
-
-                    <div className="user-menu__header">
-                      {isAuthenticated ? (
-                        <>
-                          <span className="user-menu__avatar" aria-hidden="true">👤</span>
-                          <div className="user-menu__meta">
-                            <strong className="user-menu__name">{user?.nickname ?? user?.name ?? '사용자'}</strong>
-                            <span className="user-menu__role">{isAdmin ? 'ADMIN' : 'MEMBER'}</span>
-                          </div>
-                        </>
-                      ) : (
-                        <span className="user-menu__welcome">어서오세요!</span>
-                      )}
-                    </div>
-
-                    <nav className="user-menu__list" role="menu" aria-label="User menu">
-                      {isAuthenticated ? (
-                        <>
-                          <button type="button" role="menuitem" className="user-menu__item" onClick={handleLogout}>
-                            <span className="user-menu__icon">🚪</span>
-                            로그아웃
-                          </button>
-
-                          <button
-                            type="button"
-                            role="menuitem"
-                            className="user-menu__item"
-                            onClick={() => { closeUserMenu(); navigate('/mypage') }}
-                          >
-                            <span className="user-menu__icon">🏠</span>
-                            마이페이지
-                          </button>
-
-                          {isAdmin && (
-                            <>
-                              <div className="user-menu__divider" />
-                              <button type="button" role="menuitem" className="user-menu__item" onClick={() => { closeUserMenu(); navigate('/admin') }}>
-                                <span className="user-menu__icon">🛠️</span>
-                                관리자 페이지
-                              </button>
-
-                              {!isGoogleUser && (
-                                <button type="button" role="menuitem" className="user-menu__item" onClick={() => { closeUserMenu(); navigate('/items/create') }}>
-                                  <span className="user-menu__icon">➕</span>
-                                  상품 등록
-                                </button>
-                              )}
-                            </>
-                          )}
-                        </>
-                      ) : (
-                       <>
-                                       <button type="button" role="menuitem" className="user-menu__item" onClick={handleLogin}>
-                                          <span className="user-menu__icon">🔑</span>
-                                          로그인
-                                       </button>
-                                       <button type="button" role="menuitem" className="user-menu__item" onClick={handleJoin}>
-                                          <span className="user-menu__icon">📝</span>
-                                          회원가입
-                                       </button>
-                                    </>
-                      )}
-                    </nav>
-                  </div>
-                )}
+                <UserMenuPopover
+                  open={userMenuOpen}
+                  onClose={closeUserMenu}
+                  anchorRef={userAnchorRef}
+                  variant="pc"
+                  isAuthenticated={isAuthenticated}
+                  isAdmin={isAdmin}
+                  isGoogleUser={isGoogleUser}
+                  user={user}
+                  onLogin={handleLogin}
+                  onJoin={handleJoin}
+                  onLogout={handleLogout}
+                  onGoMyPage={() => { closeUserMenu(); navigate('/mypage') }}
+                  onGoAdmin={() => { closeUserMenu(); navigate('/admin') }}
+                  onCreateItem={() => { closeUserMenu(); navigate('/items/create') }}
+                />
               </div>
             </div>
 
-            {/* 📱 모바일 메뉴 아이콘 (항상 보여야 함 — 데스크탑에서 숨기려면 CSS로 제어) */}
+            {/* 📱 모바일 메뉴 아이콘 */}
             <div
               className="mobile-menu"
               ref={mobMenuAnchorRef}
@@ -457,7 +355,7 @@ function Navbar() {
               <iconify-icon icon="streamline-pixel:interface-essential-navigation-menu-3" width="35" height="35" />
             </div>
 
-            {/* 📱 모바일 드롭다운 (menuOpen일 때만 보여야 함) */}
+            {/* 📱 모바일 드롭다운 */}
             {menuOpen && menuOwner === 'mob' && (
               <div
                 className="menu-dropdown-wrap is-mob"
@@ -466,15 +364,11 @@ function Navbar() {
                 aria-label="Main menu"
                 onKeyDown={(e) => { if (e.key === 'Escape') closeMenu() }}
               >
-                {/* 닫기 버튼 */}
                 <div className="menu-header">
                   <p className="galindo">MENU</p>
-                  <button className="menu-close-btn" onClick={closeMenu} aria-label="메뉴 닫기">
-                    ✕
-                  </button>
+                  <button className="menu-close-btn" onClick={closeMenu} aria-label="메뉴 닫기">✕</button>
                 </div>
-
-                <ItemSearchTap />
+                <ItemSearchTap items={items} />
               </div>
             )}
           </div>
