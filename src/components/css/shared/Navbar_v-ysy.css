@@ -238,13 +238,37 @@ gap: 20px;
   border-radius: 1px;
 }
 
-/* 검색/유저 메뉴는 항상 고정된 플로팅 레이어 */
+/* 공통: 앵커는 기준 컨테이너 */
+.search-anchor,
+.user-anchor,
+.nav-item { position: relative; }
+
+/* 말풍선/유저메뉴 기본 위치 + 미세조정 변수 */
 .search-anchor .search-bubble,
 .user-anchor .user-menu {
-  position: absolute;            
-  top: calc(100% + 12px);
-  right: 0;
+  position: absolute;
+  top: calc(100% + 12px + var(--nudge-y, 0px));
+  right: calc(0px + var(--nudge-x, 0px));
+  z-index: 1000;
 }
+
+/* PC/모바일별로 원하는 만큼 보정 */
+.pc-search-icon .search-bubble { --nudge-x: -8px; --nudge-y: 0px; }
+.mob-search-icon .search-bubble { --nudge-x: 6px;  --nudge-y: 2px; }
+.user-anchor .user-menu        { --nudge-x: -12px; --nudge-y: 4px; }
+
+/* 화살표는 기존 JS가 --arrow-right 갱신하므로 그대로 사용 */
+.search-bubble::after,
+.user-menu__arrow {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: var(--arrow-right, 16px);
+  width: 12px; height: 12px;
+  transform: rotate(45deg);
+  background: inherit;
+}
+
 
 /* 애니메이션 */
 @keyframes bubble-pop-in {
