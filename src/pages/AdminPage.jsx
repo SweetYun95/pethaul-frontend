@@ -1,33 +1,57 @@
-import { Container, Tabs, Tab, Box } from '@mui/material'
+import { useState } from 'react'
 import ItemPanel from '../components/admin/ItemPanel'
 import OrderPanel from '../components/admin/OrderPanel'
 import ChartPanel from '../components/admin/ChartPanel'
-import { useState } from 'react'
-
-function CustomTabPanel({ children, value, index }) {
-   if (value !== index) return null
-   return <Box sx={{ p: 3, height: '500px' }}>{children}</Box>
-}
-
-function a11yProps(index) {
-   return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-   }
-}
+import './css/AdminPage.css' 
 
 function AdminPage() {
-   const [value, setValue] = useState(0)
+   const [activeTab, setActiveTab] = useState(0)
 
-   const handleChange = (event, newValue) => {
-      setValue(newValue)
+   const renderPanel = () => {
+      switch (activeTab) {
+         case 0:
+            return <OrderPanel />
+         case 1:
+            return <ItemPanel />
+         case 2:
+            return <ChartPanel />
+         default:
+            return null
+      }
    }
 
    return (
-      <div style={{ backgroundImage: 'url(/images/ribbon.jpeg)', backgroundRepeat:'repeat',backgroundSize:'20%', paddingTop:'74px', overflowY: 'hidden' }}>
-            <OrderPanel />
-            <ItemPanel />
+      <div className='dot-background'>
+      <section id="admin-section">
+         <h1 className='section-title admin-title'>ADMIN SECTION</h1>
+         {/* 탭 버튼 */}
+         <div className="tab-buttons">
+            <button 
+               className={activeTab === 0 ? "active" : ""} 
+               onClick={() => setActiveTab(0)}
+            >
+               주문 관리
+            </button>
+            <button 
+               className={activeTab === 1 ? "active" : ""} 
+               onClick={() => setActiveTab(1)}
+            >
+               상품 관리
+            </button>
+            <button 
+               className={activeTab === 2 ? "active" : ""} 
+               onClick={() => setActiveTab(2)}
+            >
+               매출 차트
+            </button>
          </div>
+
+         {/* 패널 */}
+         <div className="tab-content">
+            {renderPanel()}
+         </div>
+      </section>
+   </div>
    )
 }
 
