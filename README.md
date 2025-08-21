@@ -35,28 +35,169 @@ React(Vite) ↔ Axios ↔ Express API ↔ MySQL
 ```
 🔗[피그마 디자인 링크](https://www.figma.com/design/X5Mcqkr47tfpCU6N13QPLy/project1?node-id=14-99&t=7GAi95jrQTmjhpnn-1)
 
-## 📁 레포 구조
-
--  `/public` — HTML 템플릿, 파비콘 등 정적 파일
--  `/src` — 메인 소스 디렉토리
-   -  `/api` — Axios 요청 로직
-      -  `authApi.js`, `orderApi.js`, `tokenApi.js`
-   -  `/components` — 재사용 가능한 UI 컴포넌트
-      -  `Button.jsx`, `Navbar.jsx`, `ProductCard.jsx`
-   -  `/components/chat` — 실시간 채팅 관련 컴포넌트
-   -  `/components/chart` — 주문 통계, 차트 컴포넌트
-   -  `/components/shared` — 공통 UI 요소 (Header, Footer 등)
-   -  `/features` — Redux Toolkit 슬라이스 모음
-      -  `authSlice.js`, `orderSlice.js`, `tokenSlice.js`
-   -  `/pages` — 라우팅 페이지
-      -  `LoginPage.jsx`, `ProductPage.jsx`, `ChatPage.jsx`, `ChartPage.jsx`
-   -  `/store` — Redux store 설정
-   -  `/styles` — Tailwind 설정 또는 스타일 파일
-   -  `App.jsx` — 전체 라우팅 및 구조 설정
-   -  `main.jsx` — React 앱 진입점
--  `.env` — 환경 변수 (API 주소 등)
--  `vite.config.js` — Vite 빌드 설정
-
+## 📁 pethaul-frontend (Frontend)
+```bash
+[pethaul-frontend]
+├── [node_modules]
+│
+├── [public]
+│   ├── vite.svg
+│   └── [images]     # 공용 이미지 폴더
+│
+├── [src]
+│   ├── [api]
+│   │   ├── authApi.js
+│   │   ├── axiosApi.js
+│   │   ├── cartApi.js
+│   │   ├── itemApi.js
+│   │   ├── likeApi.js
+│   │   ├── orderApi.js
+│   │   ├── petApi.js
+│   │   ├── reviewApi.js
+│   │   └── tokenApi.js
+│   │
+│   ├── [assets]
+│   │   └── react.svg
+│   │
+│   ├── [components]
+│   │   ├── [admin]
+│   │   │   ├── ChartPanel.jsx
+│   │   │   ├── ItemPanel.jsx
+│   │   │   └── OrderPanel.jsx
+│   │   │
+│   │   ├── [auth]
+│   │   │   ├── FindFormBase.jsx
+│   │   │   ├── LoginForm.jsx
+│   │   │   └── RegisterForm.jsx
+│   │   │
+│   │   ├── [item]
+│   │   │   ├── ItemCartForm.jsx
+│   │   │   ├── ItemCreateForm.jsx
+│   │   │   ├── ItemDetailForm.jsx
+│   │   │   ├── ItemEditForm.jsx
+│   │   │   ├── ItemFormBase.jsx
+│   │   │   ├── ItemSearchTap.jsx
+│   │   │   └── ItemSellList.jsx
+│   │   │
+│   │   ├── [myInfo]
+│   │   │   ├── MenuBar.jsx
+│   │   │   ├── MyInformation.jsx
+│   │   │   ├── OrderState.jsx
+│   │   │   ├── PetProfile.jsx
+│   │   │   └── Profile.jsx
+│   │   │
+│   │   ├── [order]
+│   │   │   └── OrderForm.jsx
+│   │   │
+│   │   ├── [review]
+│   │   │   ├── CreateReviewForm.jsx
+│   │   │   ├── EditReviewForm.jsx
+│   │   │   ├── ItemReviewList.jsx
+│   │   │   └── UserReviewList.jsx
+│   │   │
+│   │   ├── [shared]
+│   │   │   ├── Footer.jsx
+│   │   │   ├── MobileTabBar.jsx
+│   │   │   └── Navbar.jsx
+│   │   │
+│   │   ├── [slider]
+│   │   │   └── PetProfileSlider.jsx
+│   │   │
+│   │   └── [css]
+│   │       ├── [admin]
+│   │       │   └── ItemPanel.css
+│   │       ├── [auth]
+│   │       │   ├── LoginForm.css
+│   │       │   └── RegisterForm.css
+│   │       ├── [item]
+│   │       │   ├── ItemCartForm.css
+│   │       │   ├── ItemDetailForm.css
+│   │       │   ├── ItemFormBase.css
+│   │       │   ├── ItemSearchTap.css
+│   │       │   └── ItemSellList.css
+│   │       ├── [myInfo]
+│   │       │   ├── MenuBar.css
+│   │       │   ├── OrderState.css
+│   │       │   ├── PetProfile.css
+│   │       │   ├── PetProfileSlider.css
+│   │       │   └── Profile.css
+│   │       ├── [order]
+│   │       │   └── OrderForm.css
+│   │       ├── [review]
+│   │       │   ├── CreateReviewForm.css
+│   │       │   └── ItemReviewList.css
+│   │       ├── [shared]
+│   │       │   ├── MobileTabBar.css
+│   │       │   ├── Navbar_v-ysy.css
+│   │       │   └── Navbar.css
+│   │       └── [slider]
+│   │           └── PetProfileSlider.css
+│   │
+│   ├── [features]
+│   │   ├── authSlice.js
+│   │   ├── cartSlice.js
+│   │   ├── itemSlice.js
+│   │   ├── likeSlice.js
+│   │   ├── orderSlice.js
+│   │   ├── petSlice.js
+│   │   ├── reviewSlice.js
+│   │   └── tokenSlice.js
+│   │
+│   ├── [pages]
+│   │   ├── [css]
+│   │   │   ├── ItemLikePage.css
+│   │   │   ├── Main.css
+│   │   │   ├── MyOrderList.css
+│   │   │   └── PetPage.css
+│   │   │
+│   │   ├── AdminPage.jsx
+│   │   ├── EditMyInfoPage.jsx
+│   │   ├── FindIdPage.jsx
+│   │   ├── FindPasswordPage.jsx
+│   │   ├── GoogleSuccessPage.jsx
+│   │   ├── ItemCartPage.jsx
+│   │   ├── ItemCreatePage.jsx
+│   │   ├── itemDetailPage.jsx
+│   │   ├── ItemEditPage.jsx
+│   │   ├── ItemLikePage.jsx
+│   │   ├── ItemSellListPage.jsx
+│   │   ├── LoginPage.jsx
+│   │   ├── MainPage.jsx
+│   │   ├── MyOrderList.jsx
+│   │   ├── MyPage.jsx
+│   │   ├── MyReviewList.jsx
+│   │   ├── OrderPage.jsx
+│   │   ├── PetCreatePage.jsx
+│   │   ├── PetEditPage.jsx
+│   │   ├── RegisterPage.jsx
+│   │   ├── ReviewCreatePage.jsx
+│   │   ├── ReviewEditPage.jsx
+│   │   ├── Test.jsx
+│   │   ├── TokenPage.jsx
+│   │   └── VerifyPasswordPage.jsx
+│   │
+│   ├── [store]
+│   │   └── store.js
+│   │
+│   ├── [utils]
+│   │   ├── getTokenErrorMessage.js
+│   │   ├── phoneFormat.js
+│   │   └── priceSet.js
+│   │
+│   ├── App.css
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+│
+├── .env
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── README.md
+└── vite.config.js
+```
 ---
 
 ## 📦 Import 순서 가이드
