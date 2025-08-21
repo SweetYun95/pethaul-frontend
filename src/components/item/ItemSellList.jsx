@@ -9,7 +9,7 @@ import '../css/item/ItemSellList.css'
 export default function ItemSellList() {
    const dispatch = useDispatch()
    const { items = [], loading, error } = useSelector((s) => s.item)
-   const likes = useSelector((s) => s.like.likes) || {}
+   const likes = useSelector((s) => s.like.idMap) || {}
 
    // ====== 필터 상태 ======
    const [isFilterOpen, setIsFilterOpen] = useState(false)
