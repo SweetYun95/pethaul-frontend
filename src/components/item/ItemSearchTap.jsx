@@ -1,5 +1,5 @@
 // src/components/item/ItemSearchTap.jsx
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 import { useDispatch } from 'react-redux'
 import { fetchItemsThunk } from '../../features/itemSlice'
 
@@ -124,4 +124,5 @@ const Button = ({ value, children }) => (
   )
 }
 
-export default ItemSearchTap
+export default memo(ItemSearchTap)
+

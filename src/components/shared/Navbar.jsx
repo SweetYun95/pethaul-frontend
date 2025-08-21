@@ -1,7 +1,7 @@
 // src/components/shared/Navbar.jsx
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import AppBar from '@mui/material/AppBar'
 import IconButton from '@mui/material/IconButton'
@@ -15,6 +15,10 @@ function Navbar() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isAuthenticated, user } = useSelector((s) => s.auth)
+  const items = useSelector(
+  (s) => s.item.list ?? s.item.items ?? [],
+  shallowEqual 
+);
   const isGoogleUser = user?.provider === 'google'
   const isAdmin = user?.role === 'ADMIN'
 
@@ -233,14 +237,14 @@ function Navbar() {
           <ul>
             {/* ▼ MENU 드롭다운 (PC 앵커) */}
             <li className="nav-item" ref={pcMenuAnchorRef}>
-              <NavLink
-                to="#"
+              <button 
+              type="button"
                 onClick={(e) => { e.preventDefault(); openMenuAt('pc') }}
                 aria-expanded={menuOpen && menuOwner === 'pc'}
                 aria-haspopup="menu"
               >
                 MENU
-              </NavLink>
+              </button>
 
               {/* PC 드롭다운 */}
               {menuOpen && menuOwner === 'pc' && (
@@ -251,7 +255,7 @@ function Navbar() {
                   aria-label="Main menu"
                   onKeyDown={(e) => { if (e.key === 'Escape') closeMenu() }}
                 >
-                  <ItemSearchTap />
+                  <ItemSearchTap items={items} />
                 </div>
               )}
             </li>
@@ -474,7 +478,7 @@ function Navbar() {
                   </button>
                 </div>
 
-                <ItemSearchTap />
+                <ItemSearchTap items={items} />
               </div>
             )}
           </div>
