@@ -1,9 +1,8 @@
 import { useSelector } from 'react-redux'
+import RainyDogPage from '../pages/RainyDogPage'
 
-import ItemSearchTap from '../components/item/itemSearchTap'
 function Test() {
-   const { items, loading, error } = useSelector((state) => state.item)
-   return <ItemSearchTap items={items} />
+   return <RainyDogPage />
 }
 
 export default Test
