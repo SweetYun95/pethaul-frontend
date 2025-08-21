@@ -198,5 +198,5 @@ const itemSlice = createSlice({
       })
   },
 })
-
+export const { setFilters } = itemSlice.actions
 export default itemSlice.reducer

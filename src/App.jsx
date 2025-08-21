@@ -28,7 +28,7 @@ import AdminPage from './pages/AdminPage'
 import MobileTabBar from './components/shared/MobileTabBar'
 import PetCreatePage from './pages/PetCreatePage'
 import PetEditPage from './pages/PetEditPage'
-import Test from './pages/Test'
+import TestPage from './components/test/TestPage'
 import Footer from './components/shared/Footer'
 import VerifyModal from './components/verify/VerifyModal.jsx' // ✅ 모달 컴포넌트만 사용
 
@@ -79,33 +79,33 @@ function App() {
         <Route path="/find-id" element={<FindIdPage />} />
         <Route path="/find-password" element={<FindPasswordPage />} />
 
-        {/* 상품 */}
-        <Route path="/item" element={<ItemSellListPage />} />
-        <Route path="/items/detail/:id" element={<ItemDetailPage />} />
-        <Route path="/items/create" element={<ItemCreatePage />} />
-        <Route path="/items/edit/:id" element={<ItemEditPage />} />
+            {/* 상품 */}
+            <Route path="/item" element={<ItemSellListPage />} />
+            <Route path="/items/detail/:id" element={<ItemDetailPage />} />
+            <Route path="/items/create" element={<ItemCreatePage />} />
+            <Route path="/items/edit/:id" element={<ItemEditPage />} />
 
-        {/* 좋아요/장바구니 */}
-        <Route path="/likes/item" element={<ItemLikePage />} />
-        <Route path="/cart" element={<ItemCartForm />} />
+            {/* 좋아요/장바구니 */}
+            <Route path="/likes/item" element={<ItemLikePage />} />
+            <Route path="/cart" element={<ItemCartForm />} />
 
-        {/* 주문/결제 */}
-        <Route path="/order/:id" element={<OrderPage />} />
-        <Route path="/myorderlist" element={<MyOrderList />} />
+            {/* 주문/결제 */}
+            <Route path="/order/:id" element={<OrderPage />} />
+            <Route path="/myorderlist" element={<MyOrderList />} />
 
-        {/* 리뷰 */}
-        <Route path="/review/create" element={<ReviewCreatePage />} />
-        <Route path="/review/edit/:id" element={<ReviewEditPage />} />
-        <Route path="/myreviewlist" element={<MyReviewList />} />
+            {/* 리뷰 */}
+            <Route path="/review/create" element={<ReviewCreatePage />} />
+            <Route path="/review/edit/:id" element={<ReviewEditPage />} />
+            <Route path="/myreviewlist" element={<MyReviewList />} />
 
         {/* 마이페이지/관리자 */}
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/edit" element={<EditMyInfoPage />} />
         <Route path="/admin" element={<AdminPage />} />
 
-        {/* 펫 */}
-        <Route path="/pets" element={<PetCreatePage />} />
-        <Route path="/peteditpage" element={<PetEditPage />} />
+            {/* 펫 */}
+            <Route path="/pets" element={<PetCreatePage />} />
+            <Route path="/peteditpage" element={<PetEditPage />} />
 
         {/* 기타 */}
         <Route path="/test" element={<Test />} />
