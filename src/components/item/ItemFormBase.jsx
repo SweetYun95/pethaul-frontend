@@ -1,6 +1,6 @@
 // src/components/item/ItemFormBase.jsx
 import { Box } from '@mui/material'
-import '../css/item/ItemFormBase.css' // 등록 폼 CSS 그대로 사용
+import '../css/item/ItemFormBase.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { formatWithComma, stripComma } from '../../utils/priceSet'
 
@@ -41,7 +41,7 @@ export default function ItemFormBase({
 }) {
   const apiBase = import.meta.env.VITE_APP_API_URL
 
-  // ✅ initialData가 있으면 무조건 edit처럼 동작
+  // initialData가 있으면 무조건 edit처럼 동작
   const formMode = initialData ? 'edit' : String(mode || 'create').trim().toLowerCase()
   const finalSubmitLabel = formMode === 'edit' ? '수정하기' : '등록하기'
 
@@ -164,7 +164,7 @@ const handleImageChange = (e) => {
   // payload
   const buildFormData = () => {
     const fd = new FormData()
-    // ✅ edit일 때 id도 같이 보냄(백엔드가 기대하는 경우 대비)
+    // edit일 때 id도 같이 보냄(백엔드가 기대하는 경우 대비)
     if (formMode === 'edit' && norm?.id != null) fd.append('id', String(norm.id))
 
     fd.append('itemNm', itemNm)
@@ -204,7 +204,7 @@ const handleSubmit = async (e) => {
     }
 
     const fd = buildFormData()
-    await onSubmit(fd)       // ✅ optional chaining 제거!
+    await onSubmit(fd)       // optional chaining 제거!
     console.log('[ItemFormBase] submit done')
   } catch (err) {
     console.error('[ItemFormBase] submit failed', err)

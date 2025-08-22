@@ -5,9 +5,9 @@ function FindIdPage() {
    const mode = 'id'
    return (
       <>
-         <Container>
+         <div className='blue-background'>
             <FindFormBase mode={mode} />
-         </Container>
+         </div>
       </>
    )
 }

@@ -3,11 +3,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-// ✅ likeSlice 쪽 Thunk들만 사용 (develop 기준)
+//
 import { fetchMyLikedItemsThunk, fetchMyLikeIdsThunk, toggleLikeThunk } from '../features/likeSlice'
 
-// ✅ 스타일 (jse 기준)
-import '../components/css/item/ItemSellList.css'
 
 export default function ItemLikePage() {
   const dispatch = useDispatch()

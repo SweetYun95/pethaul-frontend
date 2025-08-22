@@ -1,65 +1,88 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteReviewThunk, getUserReviewThunk } from '../features/reviewSlice'
-import { Container, Button, Box, Typography } from '@mui/material'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import './css/MyReviewList.css'   
 
 function MyReviewList() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const { reviews, loading, error } = useSelector((state) => state.review)
+
    useEffect(() => {
       dispatch(getUserReviewThunk())
    }, [dispatch])
-   // console.log('🎈reviews:', reviews)
 
    const handleReviewDelete = (id) => {
+      const res = confirm('정말 삭제하시겠습니까?')
+      if (!res) return
+
       dispatch(deleteReviewThunk(id))
          .unwrap()
          .then(() => {
-            const res = confirm('정말 삭제하시겠습니까?')
-            if (res) {
-               alert('후기를 삭제했습니다!')
-               dispatch(getUserReviewThunk())
-               navigate('/myreviewlist')
-            }
+            alert('후기를 삭제했습니다!')
+            dispatch(getUserReviewThunk())
+            navigate('/myreviewlist')
          })
          .catch((error) => {
-            alert('후기 삭제에 실패했습니다.:', error)
+            alert('후기 삭제에 실패했습니다: ' + error)
             console.log('후기 삭제 중 에러 발생: ' + error)
          })
    }
 
    if (loading) return <p>로딩 중...</p>
    if (error) return <p>에러 발생: {error}</p>
+
    return (
-      <Container>
-         <Box>
-            <Typography variant="h6">리뷰 목록</Typography>
-         </Box>
-         {/* 리뷰 내역 출력 박스 */}
-         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+      <div className='dot-background'>
+      <section id="myreview-section" >
+         <h2 className="section-title">리뷰 목록</h2>
+
+         <div className="review-list">
             {reviews.map((r) => (
-               <Box key={r.id} sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                  <Box>
-                     <Typography>{r.reviewDate.slice(0, 10)}</Typography>
-                     {r.ReviewImages.length > 0 ? <img src={`${import.meta.env.VITE_APP_API_URL}${r.ReviewImages[0].imgUrl}`} width="100px" /> : ''}
-                     {/* 이미지 없는 리뷰 어떻게 할지 결정 필요 */}
-                  </Box>
-                  <Box>
-                     <Typography>{r.Item.itemNm}</Typography>
-                     <Typography>{r.rating}</Typography>
-                     <Typography>{r.Item.price}원</Typography>
-                     <Typography>{r.reviewContent}</Typography>
-                     <Button component={Link} to={`/review/edit/${r.id}`} state={{ review: r }}>
-                        수정
-                     </Button>
-                     <Button onClick={() => handleReviewDelete(r.id)}>삭제</Button>
-                  </Box>
-               </Box>
+               <div key={r.id} className="contents-card" >
+                  <div className="card-header">
+                    <div className="window-btn">
+                     <span className="red"></span>
+                     <span className="green"></span>
+                     <span className="blue"></span>
+                    </div>
+                 <span className="contents-card-title">{r.reviewDate.slice(0, 10)}</span>
+                  </div>
+                  <div className='review-card'>
+                  <div className="review-left">
+                     {r.ReviewImages.length > 0 ? (
+                        <img
+                           src={`${import.meta.env.VITE_APP_API_URL}${r.ReviewImages[0].imgUrl}`}
+                           alt="리뷰 이미지"
+                           className="review-img"
+                        />
+                     ) : (
+                        <div className="review-noimg">이미지 없음</div>
+                     )}
+                  </div>
+
+                  <div className="review-right">
+                     <p className="review-item">{r.Item.itemNm}</p>
+                     <p className="review-rating">⭐ {r.rating}</p>
+                     <p className="review-price">{r.Item.price}원</p>
+                     <p className="review-content">{r.reviewContent}</p>
+
+                     <div className="review-actions">
+                        <Link to={`/review/edit/${r.id}`} state={{ review: r }} className="btn btn-edit">
+                           수정
+                        </Link>
+                        <button onClick={() => handleReviewDelete(r.id)} className="btn btn-delete">
+                           삭제
+                        </button>
+                     </div>
+                  </div>
+                  </div>
+               </div>
             ))}
-         </Box>
-      </Container>
+         </div>
+      </section>
+      </div>
    )
 }
 

@@ -5,11 +5,12 @@ import { Link } from 'react-router-dom'
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
 import '../css/item/ItemSellList.css'
-
+import { Pagination, Stack } from '@mui/material'
 export default function ItemSellList() {
    const dispatch = useDispatch()
-   const { items = [], loading, error } = useSelector((s) => s.item)
-   const likes = useSelector((s) => s.like.idsMap) || {}
+   const { items = [], pagination, loading, error } = useSelector((s) => s.item)
+   const likes = useSelector((s) => s.like.idMap) || {}
+   const [page, setPage] = useState(1)
 
    // ====== 필터 상태 ======
    const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -21,9 +22,9 @@ export default function ItemSellList() {
 
    // ====== 초기 로드 ======
    useEffect(() => {
-      dispatch(fetchItemsThunk({}))
+      dispatch(fetchItemsThunk({ page, limit: 8 }))
       dispatch(fetchMyLikeIdsThunk())
-   }, [dispatch])
+   }, [dispatch, page])
 
    // ====== 유틸 ======
    const buildImgUrl = (url) => {
@@ -32,6 +33,11 @@ export default function ItemSellList() {
       const base = (import.meta.env.VITE_APP_API_URL || '').replace(/\/+$/, '')
       const path = String(url).replace(/^\/+/, '')
       return `${base}/${path}`
+   }
+
+   // 페이지 변경
+   const handlePageChange = (e, value) => {
+      setPage(value)
    }
 
    const getNumericPrice = (item) => {
@@ -360,6 +366,16 @@ export default function ItemSellList() {
             <div className="center">
                <p>검색된 상품이 없습니다.</p>
             </div>
+         )}
+         {/* 페이징 */}
+         {pagination && (
+            <Stack spacing={2} sx={{ mt: 3, mb: 3, alignItems: 'center' }}>
+               <Pagination
+                  count={pagination.totalPages} // 총 페이지 수
+                  page={page} // 현재 페이지
+                  onChange={handlePageChange} // 페이지 변경 핸들러
+               />
+            </Stack>
          )}
       </section>
    )
