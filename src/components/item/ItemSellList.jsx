@@ -1,15 +1,18 @@
 // src/components/item/ItemSellList.jsx
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
 import '../css/item/ItemSellList.css'
 import { Pagination, Stack } from '@mui/material'
 export default function ItemSellList() {
+   const location = useLocation()
+   const sellCategory = location.state?.sellCategory
    const dispatch = useDispatch()
    const { items = [], pagination, loading, error } = useSelector((s) => s.item)
-   const likes = useSelector((s) => s.like.idMap) || {}
+
+   const likes = useSelector((s) => s.like.idsMap) || {}
    const [page, setPage] = useState(1)
 
    // ====== 필터 상태 ======
@@ -22,9 +25,19 @@ export default function ItemSellList() {
 
    // ====== 초기 로드 ======
    useEffect(() => {
-      dispatch(fetchItemsThunk({ page, limit: 8 }))
+      if (sellCategory) {
+         dispatch(fetchItemsThunk({ sellCategory, page, limit: 8 }))
+      } else {
+         dispatch(fetchItemsThunk({}))
+      }
+
       dispatch(fetchMyLikeIdsThunk())
-   }, [dispatch, page])
+   }, [dispatch, sellCategory, page])
+
+   // 페이지 변경
+   const handlePageChange = (e, value) => {
+      setPage(value)
+   }
 
    // ====== 유틸 ======
    const buildImgUrl = (url) => {
@@ -33,11 +46,6 @@ export default function ItemSellList() {
       const base = (import.meta.env.VITE_APP_API_URL || '').replace(/\/+$/, '')
       const path = String(url).replace(/^\/+/, '')
       return `${base}/${path}`
-   }
-
-   // 페이지 변경
-   const handlePageChange = (e, value) => {
-      setPage(value)
    }
 
    const getNumericPrice = (item) => {

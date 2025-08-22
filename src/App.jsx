@@ -17,6 +17,8 @@ import ItemCreatePage from './pages/ItemCreatePage'
 import ItemEditPage from './pages/ItemEditPage'
 import ItemLikePage from './pages/ItemLikePage'
 import ItemCartForm from './components/item/ItemCartForm'
+import ItemFilteredPage from './components/test/ItemFilteredPage'
+import ItemSortedPage from './components/test/ItemSortedPage'
 import OrderPage from './pages/OrderPage'
 import MyOrderList from './pages/MyOrderList'
 import ReviewCreatePage from './pages/ReviewCreatePage'
@@ -82,12 +84,13 @@ function App() {
             <Route path="/find-id" element={<FindIdPage />} />
             <Route path="/find-password" element={<FindPasswordPage />} />
 
-
             {/* 상품 */}
             <Route path="/item" element={<ItemSellListPage />} />
             <Route path="/items/detail/:id" element={<ItemDetailPage />} />
             <Route path="/items/create" element={<ItemCreatePage />} />
             <Route path="/items/edit/:id" element={<ItemEditPage />} />
+            <Route path="/items/search" element={<ItemFilteredPage />} />
+            <Route path="/items/sorted" element={<ItemSortedPage />} />
 
             {/* 좋아요/장바구니 */}
             <Route path="/likes/item" element={<ItemLikePage />} />
@@ -114,7 +117,6 @@ function App() {
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/edit" element={<EditMyInfoPage />} />
             <Route path="/admin" element={<AdminPage />} />
-
 
             {/* 펫 */}
             <Route path="/pets" element={<PetCreatePage />} />

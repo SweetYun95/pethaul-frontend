@@ -10,12 +10,11 @@ function ItemCardHeader({ title }) {
    const [isFilterOpen, setIsFilterOpen] = useState(false)
    const [inputPriceMin, setInputPriceMin] = useState('')
    const [inputPriceMax, setInputPriceMax] = useState('')
+   const [isAll, setIsAll] = useState(false)
 
-   console.log('🎈state 확인 판매중:', sellStatus)
-   // console.log('🎈state 확인 최저가:', inputPriceMin)
-   // console.log('🎈state 확인 최고가:', priceMax)
-   // console.log('🎈state 확인 최고가:', inputPriceMax)
-   // console.log('🎈state 확인 카테고리필터:', selectedCats)
+   if (title === '카테고리 전체') {
+      setIsAll(true)
+   }
 
    const list = useMemo(() => (Array.isArray(items) ? items.filter(Boolean) : []), [items])
 
@@ -97,7 +96,7 @@ function ItemCardHeader({ title }) {
 
             <div className="card-title-wrap">
                <div className="title-selected-cats">
-                  {title === '카테고리 전체' && selectedCats.length > 0 ? (
+                  {isAll && selectedCats.length > 0 ? (
                      selectedCats.map((n) => (
                         <span className="pill" key={`title-cat:${n}`}>
                            #{n}
@@ -119,25 +118,27 @@ function ItemCardHeader({ title }) {
          {isFilterOpen && (
             <div id="sell-filter-panel" className="item-filter-panel">
                {/* 카테고리(다중) */}
-               <div className="filter-row">
-                  <div className="filter-label">카테고리</div>
-                  <div className="filter-chips">
-                     {allCategories.length === 0 ? (
-                        <span className="muted">카테고리 데이터 없음</span>
-                     ) : (
-                        allCategories.map((c) => (
-                           <button type="button" key={c.name} className={`chip ${selectedCats.includes(c.name) ? 'active' : ''}`} onClick={() => handleToggleCat(c.name)}>
-                              #{c.name}
+               {isAll && (
+                  <div className="filter-row">
+                     <div className="filter-label">카테고리</div>
+                     <div className="filter-chips">
+                        {allCategories.length === 0 ? (
+                           <span className="muted">카테고리 데이터 없음</span>
+                        ) : (
+                           allCategories.map((c) => (
+                              <button type="button" key={c.name} className={`chip ${selectedCats.includes(c.name) ? 'active' : ''}`} onClick={() => handleToggleCat(c.name)}>
+                                 #{c.name}
+                              </button>
+                           ))
+                        )}
+                        {selectedCats.length > 0 && (
+                           <button type="button" className="btn-subtle" onClick={clearCats}>
+                              전체 해제
                            </button>
-                        ))
-                     )}
-                     {selectedCats.length > 0 && (
-                        <button type="button" className="btn-subtle" onClick={clearCats}>
-                           전체 해제
-                        </button>
-                     )}
+                        )}
+                     </div>
                   </div>
-               </div>
+               )}
 
                {/* 가격 */}
                <div className="filter-row">

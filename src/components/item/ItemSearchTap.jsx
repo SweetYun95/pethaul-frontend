@@ -4,42 +4,26 @@ import { useDispatch } from 'react-redux'
 import { fetchItemsThunk } from '../../features/itemSlice'
 
 import '../css/item/ItemSearchTap.css'
+import { Link } from 'react-router-dom'
 
-function ItemSearchTap({ items }) {
-   const dispatch = useDispatch()
-   const [sellCategory, setSellCategory] = useState([]) // 선택 토글 배열
-
-   useEffect(() => {
-      dispatch(fetchItemsThunk({ sellCategory }))
-   }, [dispatch, sellCategory])
-
-   const handleSelect = (value) => {
-      setSellCategory((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
-   }
-
-   const handleReset = () => setSellCategory([]) // ← '' 말고 빈 배열로 초기화!
-
+function ItemSearchTap() {
    // Button 컴포넌트 수정
    const Button = ({ value, children }) => (
-      <button type="button" className={`btn ${sellCategory.includes(value) ? 'active' : ''}`} onClick={() => handleSelect(value)} aria-pressed={sellCategory.includes(value)}>
-         {/* 아이콘 */}
-         {children && <span className="btn-icon">{children}</span>}
-         {/* 텍스트 */}
-         <span className="btn-label">{value}</span>
-      </button>
+      <Link to="/item" state={{ sellCategory: value ? value : '' }}>
+         <button type="button" className="btn">
+            {/* 아이콘 */}
+            {children && <span className="btn-icon">{children}</span>}
+            {/* 텍스트 */}
+            <span className="btn-label">{value}</span>
+         </button>
+      </Link>
    )
-
-   // 디버그 로그 (배포전 삭제)
-   console.log('🎀items:', items)
-   console.log('🎀sellCategory:', sellCategory)
 
    return (
       <section id="item-search-tap">
          {/* 전체 초기화 */}
          <div>
-            <button type="button" className="btn" onClick={handleReset}>
-               전체상품보기
-            </button>
+            <Button>전체상품보기</Button>
          </div>
 
          <div className="filter-group">
@@ -420,4 +404,3 @@ function ItemSearchTap({ items }) {
 }
 
 export default memo(ItemSearchTap)
-
