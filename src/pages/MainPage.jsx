@@ -27,7 +27,6 @@ function MainPage() {
     [mainData]
   )
 
-  // ✅ StrictMode(개발모드) 중복호출 가드
   useEffect(() => {
     if (fetchedRef.current) return
     fetchedRef.current = true
