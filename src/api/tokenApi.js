@@ -5,8 +5,6 @@ export const getToken = async () => {
    try {
       const response = await shopmaxApi.get('/token/get')
 
-      console.log('💾[tokenSlice] tokenApi response:', response)
-
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)

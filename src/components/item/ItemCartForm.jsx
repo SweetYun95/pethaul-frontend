@@ -117,7 +117,6 @@ const ItemCartForm = () => {
 
       try {
          setSubmitting(true)
-         console.log('[ORDER payload]', orderData)
          const res = await dispatch(createOrderThunk(orderData))
 
          if (res.meta.requestStatus === 'fulfilled') {
