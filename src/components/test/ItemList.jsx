@@ -2,28 +2,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toggleLikeThunk } from '../../features/likeSlice'
 import ItemCard from './ItemCard'
 import ItemSubBar from './ItemSubBar'
+import { useLocation } from 'react-router-dom'
 
-function ItemList() {
+function ItemList({ sort }) {
+   const location = useLocation()
+   const sellCategory = location.sellCategory
+   console.log('🎈sort:', sort)
+
    const { items, loading, error } = useSelector((state) => state.item)
    const { selectedCats, priceMin, priceMax, sellStatus, inStockOnly } = useSelector((state) => state.filter)
    const likes = useSelector((state) => state.like.idsMap) || {}
 
    console.log('🎈상품정보:', items)
-
-   const filteredList = items.filter((item) => {
-      if (selectedCats.length > 0) {
-         const hasCategories = Array.isArray(item.Categories)
-         const match = hasCategories ? item.Categories.some((cat) => selectedCats.includes(cat.categoryName)) : false
-         if (!match) return false
-      }
-
-      if (priceMin && item.price < priceMin) return false
-      if (priceMax && item.price > priceMax) return false
-      if (sellStatus && item.itemSellStatus != sellStatus) return false
-      if (inStockOnly && item.itemSellStatus === 'SOLD_OUT') return false
-
-      return true
-   })
 
    const dispatch = useDispatch()
 
@@ -70,28 +60,68 @@ function ItemList() {
          </div>
       )
    }
-   return (
-      <>
-         {/* 서브 필터 (품절 제외) */}
-         <ItemSubBar items={filteredList} />
-         {filteredList.length ? (
-            <div className="item-panel-card-list">
-               {filteredList.map((item, index) => {
-                  const repImage = item.ItemImages?.find((img) => img.repImgYn === 'Y')?.imgUrl || item.ItemImages?.[0]?.imgUrl
-                  const imgSrc = buildImgUrl(repImage)
-                  const liked = !!likes[item.id]
-                  const isSoldOut = (item.itemSellStatus ?? item.sellStatus) === 'SOLD_OUT'
-                  // 상품 개별 정보 카드
-                  return <ItemCard handleLike={handleLike} item={item} imgSrc={imgSrc} liked={liked} isSoldOut={isSoldOut} key={index} />
-               })}
-            </div>
-         ) : (
-            <div className="center">
-               <p>검색된 상품이 없습니다.</p>
-            </div>
-         )}
-      </>
-   )
+   if (!sort && items) {
+      const filteredList = items.filter((item) => {
+         if (selectedCats.length > 0) {
+            const hasCategories = Array.isArray(item.Categories)
+            const match = hasCategories ? item.Categories.some((cat) => selectedCats.includes(cat.categoryName)) : false
+            if (!match) return false
+         }
+
+         if (priceMin && item.price < priceMin) return false
+         if (priceMax && item.price > priceMax) return false
+         if (sellStatus && item.itemSellStatus != sellStatus) return false
+         if (inStockOnly && item.itemSellStatus === 'SOLD_OUT') return false
+
+         return true
+      })
+      return (
+         <>
+            {/* 서브 필터 (품절 제외) */}
+            <ItemSubBar items={filteredList} />
+            {filteredList.length ? (
+               <div className="item-panel-card-list">
+                  {filteredList.map((item, index) => {
+                     const repImage = item.ItemImages?.find((img) => img.repImgYn === 'Y')?.imgUrl || item.ItemImages?.[0]?.imgUrl
+                     const imgSrc = buildImgUrl(repImage)
+                     const liked = !!likes[item.id]
+                     const isSoldOut = (item.itemSellStatus ?? item.sellStatus) === 'SOLD_OUT'
+                     // 상품 개별 정보 카드
+                     return <ItemCard handleLike={handleLike} item={item} imgSrc={imgSrc} liked={liked} isSoldOut={isSoldOut} key={index} />
+                  })}
+               </div>
+            ) : (
+               <div className="center">
+                  <p>검색된 상품이 없습니다.</p>
+               </div>
+            )}
+         </>
+      )
+   }
+   if (sort) {
+      return (
+         <>
+            {/* 서브 필터 (품절 제외) */}
+            <ItemSubBar items={sort} />
+            {sort.length ? (
+               <div className="item-panel-card-list">
+                  {sort.map((item, index) => {
+                     const repImage = item.ItemImages?.[0]?.imgUrl
+                     const imgSrc = repImage ? buildImgUrl(repImage) : buildImgUrl(item.ItemImages.oriImgName)
+                     const liked = !!likes[item.id]
+                     const isSoldOut = (item.itemSellStatus ?? item.sellStatus) === 'SOLD_OUT'
+                     // 상품 개별 정보 카드
+                     return <ItemCard handleLike={handleLike} item={item} imgSrc={imgSrc} liked={liked} isSoldOut={isSoldOut} key={index} />
+                  })}
+               </div>
+            ) : (
+               <div className="center">
+                  <p>검색된 상품이 없습니다.</p>
+               </div>
+            )}
+         </>
+      )
+   }
 }
 
 export default ItemList
