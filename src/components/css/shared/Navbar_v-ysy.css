@@ -33,6 +33,23 @@ li {
   all: unset;
 }
 
+.nav--pc-contents {
+  display: inline-block;
+    animation: float 3s ease-in-out infinite,
+             sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
 li > a:hover,
 .nav-item > button:hover {
   transform: translate(0px, -5px);

@@ -1,0 +1,13 @@
+.admin-filter-wrap { margin-bottom: 16px; }
+.admin-filter-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.admin-filter-form {
+  display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: flex-end;
+  padding: 12px; border-radius: 12px; background: #f7f8fa; border: 1px solid #eceff3;
+}
+.admin-filter-field { display: flex; flex-direction: column; gap: 6px; }
+.admin-filter-grow { flex: 1 1 240px; }
+.admin-filter-label { font-size: 12px; color:#555; }
+.admin-filter-actions { display: flex; gap: 8px; margin-left: auto; }

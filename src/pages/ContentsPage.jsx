@@ -58,9 +58,9 @@ export default function ContentsPage() {
   }
 
   return (
-    <main className="contents-wrap">
-      <h1 className="page-title">Contents</h1>
-
+    <section className="dot-background" >
+      <div id="contents-wrap">
+      <h1 className="section-title">Contents</h1>
       {/* 관리자만 보이는 등록 버튼 */}
       {isAdmin && (
         <div className="admin-actions">
@@ -110,6 +110,7 @@ export default function ContentsPage() {
           )}
         </>
       )}
-    </main>
+      </div>
+    </section>
   )
 }
