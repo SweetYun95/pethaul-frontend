@@ -5,9 +5,9 @@ function FindPasswordPage() {
    const mode = 'pw'
    return (
       <>
-         <Container>
+         <div className='blue-background'>
             <FindFormBase mode={mode} />
-         </Container>
+         </div>
       </>
    )
 }

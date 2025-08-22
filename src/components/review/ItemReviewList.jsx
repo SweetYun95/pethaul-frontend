@@ -1,5 +1,4 @@
 // src/components/item/ItemReviewList.jsx
-// MUI import 전부 제거!
 function ItemReviewList({ item, avgRating, reviewCount }) {
   const reviews = item?.Reviews ?? []
   const count = Number.isFinite(reviewCount) ? reviewCount : reviews.length

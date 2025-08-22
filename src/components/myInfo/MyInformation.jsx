@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { checkEmail } from '../../api/authApi'
 
 import '../css/myInfo/MyInformation.css'
+
 function MyInformation({ user }) {
    const dispatch = useDispatch()
    const navigate = useNavigate()
