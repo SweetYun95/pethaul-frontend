@@ -1,8 +1,6 @@
 // src/pages/OrderPage.jsx
-import { Container, Typography } from '@mui/material'
-
-import OrderForm from '../components/order/OrderForm'
 import { useLocation } from 'react-router-dom'
+import OrderForm from '../components/order/OrderForm'
 
 function OrderPage() {
    const location = useLocation()
@@ -10,7 +8,7 @@ function OrderPage() {
    const { cartItems } = location.state || {}
 
    return (
-      <div className='blue-background'>
+      <div className="blue-background">
          <OrderForm item={item} quantity={quantity} cartItems={cartItems} />
       </div>
    )
