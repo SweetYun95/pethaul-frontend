@@ -1,12 +1,14 @@
 // src/components/item/ItemSellList.jsx
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
 import '../css/item/ItemSellList.css'
 
 export default function ItemSellList() {
+   const location = useLocation()
+   const sellCategory = location.state.sellCategory
    const dispatch = useDispatch()
    const { items = [], loading, error } = useSelector((s) => s.item)
    const likes = useSelector((s) => s.like.idMap) || {}
@@ -21,9 +23,14 @@ export default function ItemSellList() {
 
    // ====== 초기 로드 ======
    useEffect(() => {
-      dispatch(fetchItemsThunk({}))
+      if (sellCategory) {
+         dispatch(fetchItemsThunk({ sellCategory }))
+      } else {
+         dispatch(fetchItemsThunk({}))
+      }
+
       dispatch(fetchMyLikeIdsThunk())
-   }, [dispatch])
+   }, [dispatch, sellCategory])
 
    // ====== 유틸 ======
    const buildImgUrl = (url) => {

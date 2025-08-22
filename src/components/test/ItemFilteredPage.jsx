@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { fetchItemsThunk } from '../../features/itemSlice'
+import { fetchItemsThunk, fetchSortDataThunk } from '../../features/itemSlice'
 import { useDispatch } from 'react-redux'
 
 import { Container } from '@mui/material'
@@ -12,10 +12,11 @@ import { fetchMyLikedItemsThunk, fetchMyLikeIdsThunk } from '../../features/like
 function ItemFilteredPage() {
    const [searchParams] = useSearchParams()
    const dispatch = useDispatch()
-   const filters = searchParams.getAll('filter')
+   const filters = searchParams.getAll('filter') || null
 
    useEffect(() => {
       dispatch(fetchItemsThunk({ sellCategory: filters }))
+
       dispatch(fetchMyLikeIdsThunk())
       dispatch(fetchMyLikedItemsThunk())
    }, [dispatch, filters])

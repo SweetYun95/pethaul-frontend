@@ -211,28 +211,20 @@ function Navbar() {
 
                      {/* PC 드롭다운 */}
                      {menuOpen && menuOwner === 'pc' && (
-                        <div
-                           className="menu-dropdown-wrap is-pc"
-                           ref={menuRef}
-                           role="menu"
-                           aria-label="Main menu"
-                           onKeyDown={(e) => {
-                              if (e.key === 'Escape') closeMenu()
-                           }}
-                        >
+                        <div className="menu-dropdown-wrap is-pc" ref={menuRef} role="menu" aria-label="Main menu" onClick={() => closeMenu()}>
                            <ItemSearchTap />
                         </div>
                      )}
                   </li>
 
                   <li>
-                     <NavLink to="/items?filter=시즌">
+                     <NavLink to="/items/search?filter=시즌">
                         SEASON
                         <iconify-icon icon="fluent-emoji-flat:watermelon" width="16" height="16" />
                      </NavLink>
                   </li>
                   <li>
-                     <NavLink to="/items?filter=이벤트&filter=기획전">
+                     <NavLink to="/items/search?filter=이벤트&filter=기획전">
                         이벤트/기획전
                         <iconify-icon icon="fluent-emoji:star" width="16" height="16" />
                      </NavLink>

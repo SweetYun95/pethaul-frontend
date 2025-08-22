@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 function ItemSearchTap() {
    // Button 컴포넌트 수정
    const Button = ({ value, children }) => (
-      <Link to="items" state={{ sellCategory: value }}>
+      <Link to="/item" state={{ sellCategory: value ? value : '' }}>
          <button type="button" className="btn">
             {/* 아이콘 */}
             {children && <span className="btn-icon">{children}</span>}
@@ -23,11 +23,7 @@ function ItemSearchTap() {
       <section id="item-search-tap">
          {/* 전체 초기화 */}
          <div>
-            <Link to="/items">
-               <button type="button" className="btn">
-                  전체상품보기
-               </button>
-            </Link>
+            <Button>전체상품보기</Button>
          </div>
 
          <div className="filter-group">
