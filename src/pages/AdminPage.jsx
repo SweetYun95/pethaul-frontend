@@ -2,6 +2,7 @@ import { useState } from 'react'
 import ItemPanel from '../components/admin/ItemPanel'
 import OrderPanel from '../components/admin/OrderPanel'
 import ChartPanel from '../components/admin/ChartPanel'
+import ContentPanel from '../components/admin/ContentPanel'
 import './css/AdminPage.css' 
 
 function AdminPage() {
@@ -15,6 +16,8 @@ function AdminPage() {
             return <ItemPanel />
          case 2:
             return <ChartPanel />
+         case 3:
+            return <ContentPanel />
          default:
             return null
       }
@@ -43,6 +46,12 @@ function AdminPage() {
                onClick={() => setActiveTab(2)}
             >
                매출 차트
+            </button>
+            <button 
+               className={activeTab === 2 ? "active" : ""} 
+               onClick={() => setActiveTab(3)}
+            >
+               컨텐츠 등록
             </button>
          </div>
 

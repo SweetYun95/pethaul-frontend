@@ -1,4 +1,4 @@
-import { Container, CircularProgress, Typography } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -19,7 +19,6 @@ function ItemDetailPage() {
    if (loading) {
       return (
             <div className='blue-background'>
-
             <CircularProgress />
          </div>
       )

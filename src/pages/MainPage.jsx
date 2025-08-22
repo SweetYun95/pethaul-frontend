@@ -31,6 +31,13 @@ function MainPage() {
    // <댕댕이 장마 대비존> 섹션 데이터
    const eventData = useSelector((s) => s.item.items.slice(0, 4))
 
+   useEffect(() => {
+      if (fetchedRef.current) return
+      fetchedRef.current = true
+      dispatch(fetchSortDataThunk(5))
+      dispatch(fetchItemsThunk({ sellCategory: ['강아지/장마'] }))
+   }, [dispatch])
+
    // ✅ StrictMode(개발모드) 중복호출 가드
    useEffect(() => {
       if (fetchedRef.current) return

@@ -1,5 +1,5 @@
-// src/components/order/OrderForm.jsx
-import React, { useMemo, useState } from 'react'
+// src/components/order/OrderForm.jsx (auto-fill user info)
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
@@ -18,6 +18,22 @@ function OrderForm({ item, cartItems, order }) {
    const toNumber = (n, d = 0) => {
       const v = Number(n)
       return Number.isFinite(v) ? v : d
+   }
+
+   // 휴대폰 번호를 3-4-4 / 3-3-4 / 2-4-4 형태로 분해
+   const splitPhone = (raw) => {
+      if (!raw) return { phone1: '', phone2: '', phone3: '' }
+      const digits = String(raw).replace(/[^0-9]/g, '')
+      // 02로 시작하고 10자리라면 2-4-4
+      if (digits.startsWith('02') && digits.length === 10) {
+         return { phone1: digits.slice(0, 2), phone2: digits.slice(2, 6), phone3: digits.slice(6, 10) }
+      }
+      // 11자리면 3-4-4 (예: 010-1234-5678)
+      if (digits.length === 11) {
+         return { phone1: digits.slice(0, 3), phone2: digits.slice(3, 7), phone3: digits.slice(7, 11) }
+      }
+      // 그 외는 3-3-4로 맞춤
+      return { phone1: digits.slice(0, 3), phone2: digits.slice(3, 6), phone3: digits.slice(6, 10) }
    }
 
    // ===== 입력 소스 정규화 =====
@@ -84,6 +100,50 @@ function OrderForm({ item, cartItems, order }) {
    const [cardNumber, setCardNumber] = useState({ card0: '', card1: '', card2: '', card3: '' })
    const [expiry, setExpiry] = useState({ expiryMonth: '', expiryYear: '' })
    const [selectedCashMethod, setSelectedCashMethod] = useState('')
+
+   // ===== 로그인 유저 정보 자동 입력 =====
+   useEffect(() => {
+      let alive = true
+
+      const hydrateFromUser = (user) => {
+         if (!user) return
+         const phoneParts = splitPhone(user.phoneNumber)
+         setFormData((prev) => ({
+            ...prev,
+            name: prev.name || user.name || '',
+            address: prev.address || user.address || '',
+            phone1: prev.phone1 || phoneParts.phone1,
+            phone2: prev.phone2 || phoneParts.phone2,
+            phone3: prev.phone3 || phoneParts.phone3,
+         }))
+      }
+
+      // 1) 라우터 state에 유저가 실려온 경우 우선 적용
+      const stateUser = location.state?.user
+      if (stateUser)
+         hydrateFromUser(stateUser)
+
+         // 2) 세션 기반 로그인 확인 (백엔드 /auth/check)
+      ;(async () => {
+         try {
+            const res = await axios.get(`${API_BASE}/auth/check`, { withCredentials: true })
+            if (!alive) return
+            if (res?.data?.isAuthenticated && res?.data?.user) {
+               hydrateFromUser(res.data.user)
+            }
+         } catch (err) {
+            console.warn('[OrderForm] /auth/check 실패 또는 비로그인 상태:', err?.response?.status || err?.message)
+         }
+      })()
+
+      // 3) (옵션) 로컬스토리지/리덕스 등에서 추가 보강
+      // const authUser = useSelector((s) => s.auth?.user) //
+      // hydrateFromUser(authUser)
+
+      return () => {
+         alive = false
+      }
+   }, [location.state])
 
    const handleChange = (e) => {
       const { name, value } = e.target
@@ -169,6 +229,10 @@ function OrderForm({ item, cartItems, order }) {
          console.error('[OrderForm] order create error:', err)
          const msg = err?.response?.data?.message || err?.message || '주문 처리 중 오류가 발생했습니다.'
          alert(msg)
+         if (err?.response?.status === 401) {
+            // 로그인 만료시 로그인 페이지로 유도 (필요시 라우팅 수정)
+            // navigate('/login', { state: { from: location.pathname } })
+         }
       }
    }
 
@@ -214,7 +278,7 @@ function OrderForm({ item, cartItems, order }) {
 
    return (
       <section id="order-section">
-         <h1 className="section-title">주문/배송</h1>
+         <h1 className="section-title">주문/결재</h1>
          <div className="section-contents">
             {/* 좌측 */}
             <div className="order-left">
@@ -246,7 +310,9 @@ function OrderForm({ item, cartItems, order }) {
                   <div className="delivery-address">
                      <div>
                         <p className="sub-title"> 기존배송지 </p>
-                        <button className="address-btn"> 배송지 변경하기</button>
+                        <button className="address-btn" onClick={() => setFormData({ name: '', phone1: '', phone2: '', phone3: '', address: '', request: '' })}>
+                           배송지 변경하기
+                        </button>
                      </div>
                      <form className="address-input-group" onSubmit={(e) => e.preventDefault()}>
                         <div className="address-input name">
@@ -311,7 +377,7 @@ function OrderForm({ item, cartItems, order }) {
                                  key={m.value}
                                  onClick={(e) => {
                                     e.preventDefault()
-                                    handleSimplePaySelect(m.value)
+                                    setSimplePay(m.value)
                                  }}
                                  className={simplePay === m.value ? 'active' : ''}
                               >

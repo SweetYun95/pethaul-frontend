@@ -24,6 +24,9 @@ import MyOrderList from './pages/MyOrderList'
 import ReviewCreatePage from './pages/ReviewCreatePage'
 import ReviewEditPage from './pages/ReviewEditPage'
 import MyReviewList from './pages/MyReviewList'
+import ContentsPage from './pages/ContentsPage'
+import ContentDetailPage from './pages/ContentDetailPage'
+import ContentUpsertPage from './pages/ContentUpsertPage'
 import MyPage from './pages/MyPage'
 import EditMyInfoPage from './pages/EditMyInfoPage'
 import AdminPage from './pages/AdminPage'
@@ -102,6 +105,17 @@ function App() {
             <Route path="/review/edit/:id" element={<ReviewEditPage />} />
             <Route path="/myreviewlist" element={<MyReviewList />} />
 
+<<<<<<< HEAD
+=======
+            {/* 공개 콘텐츠 */}
+            <Route path="/contents" element={<ContentsPage />} />
+            <Route path="/contents/:id" element={<ContentDetailPage />} />
+
+            {/* 콘텐츠 등록/수정 (UPSERT 단일 페이지) */}
+            <Route path="/contents/new" element={<ContentUpsertPage />} />
+            <Route path="/admin/contents/:id/edit" element={<ContentUpsertPage />} />
+ 
+>>>>>>> eafbfa5793e705a43328994bcf9948fb7785471b
             {/* 마이페이지/관리자 */}
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/edit" element={<EditMyInfoPage />} />

@@ -1,0 +1,60 @@
+.content-panel-wrap{ padding:16px; }
+.content-panel-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.content-panel-header h2{ font-size:18px; font-weight:800; }
+
+.content-panel-filters{ display:flex; gap:8px; margin-bottom:12px; }
+.content-panel-filters select,
+.content-panel-filters input{
+  border:1px solid #e5e7eb; border-radius:6px; padding:6px 8px; font-size:14px;
+}
+
+.content-panel-error{
+  margin:10px 0; padding:10px 12px;
+  border:1px solid #fecaca; background:#fee2e2; color:#991b1b; border-radius:8px;
+}
+
+.content-panel-table{ border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; background:#fff; }
+.thead, .trow{ display:grid; grid-template-columns: 4fr 1fr 1fr 1.2fr .8fr 1.4fr; }
+.thead{ background:#f9fafb; font-weight:600; padding:8px 10px; border-bottom:1px solid #e5e7eb; }
+.tbody .trow{ padding:8px 10px; border-bottom:1px solid #f1f5f9; }
+.tbody .trow:last-child{ border-bottom:none; }
+
+.cell.title{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cell.actions{ display:flex; gap:6px; }
+.btn-link{ background:none; border:none; color:#2563eb; cursor:pointer; padding:0; }
+.btn-link:hover{ text-decoration:underline; }
+.status.published{ color:#16a34a; }
+.status.draft{ color:#b45309; }
+
+.trow.empty{ text-align:center; grid-column:1 / -1; padding:14px 0; color:#6b7280; }
+
+.content-panel-loadmore{ display:flex; justify-content:center; margin-top:12px; }
+
+.btn-primary{
+  border:none; border-radius:6px; padding:8px 12px; font-weight:700; cursor:pointer;
+  background:#463832; color:#fff;
+}
+.btn-secondary{
+  border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; background:#fff; cursor:pointer;
+}
+
+
+.cell.actions{ display:flex; gap:8px; }
+
+/* 링크 버튼 */
+.btn-link{
+  background:none; border:none; color:#2563eb; cursor:pointer; padding:0;
+}
+.btn-link:hover{ text-decoration:underline; }
+
+/* 위험 액션(삭제) */
+.btn-danger-link{
+  background:none; border:none; color:#dc2626; cursor:pointer; padding:0;
+}
+.btn-danger-link:hover{ text-decoration:underline; }
+
+/* 비활성화 공통 */
+.btn-link[disabled],
+.btn-danger-link[disabled]{
+  opacity:.6; cursor:default; text-decoration:none;
+}
