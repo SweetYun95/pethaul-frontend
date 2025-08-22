@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Galindo&display=swap');
 
+
 .galindo {
-   font-family: 'Galindo', sans-serif;
-   font-weight: 400;
-   font-style: normal;
+  font-family: "Galindo", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
+
 
 *,
 body {
@@ -20,8 +22,8 @@ a {
 
 /* 배경 css */
 .blue-background {
-   background-color: #f2faff;
-   padding-top: 74px;
+   background-color: #F2FAFF; 
+   padding-top: 74px; 
 }
 
 .ribbon-background {
@@ -30,6 +32,13 @@ a {
    background-size: 20%;
    padding-top: 74px;
 }
+.dot-background {
+      background-image: url(../public/images/dots.jpeg);
+   background-repeat: repeat;
+   background-size: 20%;
+   padding-top: 74px;
+}
+
 
 /* card */
 .card-list {
@@ -51,69 +60,84 @@ a {
    transform: translateY(-5px);
 }
 .card > a > img {
-   width: 100%;
-   height: 180px;
-   object-fit: cover;
-   border-radius: 20px 20px 0 0;
-   flex-shrink: 0;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+    flex-shrink: 0;
 }
 
 /* 공통버튼 */
 
-.btn {
-   all: unset;
-   background-color: #fff;
-   border: 1px solid #000;
-   height: 27px;
-   padding: 5px 10px;
-   border-radius: 30px;
-   transition: all 0.3s ease;
-   display: flex;
-   align-items: center;
-   gap: 3px;
-   font-size: 13px;
-}
+.btn{
+    all: unset;
+    background-color: #fff;
+    border: 1px solid #000;
+    height: 27px;
+    padding: 5px 10px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 13px;
+ } 
 
 .btn:hover {
-   background-color: #463832;
-   color: #fff;
+    background-color: #463832;
+    color: #fff;
 }
-.btn.active {
-   background-color: #463832;
-   color: #fff;
+
+/* 공통 아이템 필터 */
+
+.item-card-header {
+    background-color: #463832;
+    color: #fff;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #000;
 }
+
+
 
 @media (max-width: 1024px) {
-   .card > a > img {
-      height: 160px;
+    .card > a > img {
+        height: 160px;
+    }
+}
+
+
+@media (max-width: 767px) {
+
+  .card-list {
+    gap: 10px;
+}
+  .card-text {
+   font-size: 13px;
+}
+.card-header{
+   gap: 3px;
+   padding: 8px 3px;
+}
+.window-btn span{
+   margin-right: 1px;
+   width: 10px;
+   height: 10px;
+}
+.contents-card-title {
+   font-size: 11px;
+}
+
+
+}
+@media (max-width: 640px) {
+   .card-list{
+   grid-template-columns: repeat(3, 1fr);
    }
 }
 
-@media (max-width: 767px) {
-   .card-list {
-      gap: 10px;
-   }
-   .card-text {
-      font-size: 13px;
-   }
-   .card-header {
-      gap: 3px;
-      padding: 8px 3px;
-   }
-   .window-btn span {
-      margin-right: 1px;
-      width: 10px;
-      height: 10px;
-   }
-   .contents-card-title {
-      font-size: 11px;
-   }
-}
-@media (max-width: 640px) {
-   .card-list {
-      grid-template-columns: repeat(3, 1fr);
-   }
-}
 
 /* contents-card */
 

@@ -13,17 +13,6 @@
     margin-bottom: 10px;
 }
 
-.item-card-header {
-    background-color: #463832;
-    color: #fff;
-    padding: 5px 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border: 1px solid #000;
-}
-
-
 /* 상단 타이틀: 선택 카테고리만 */
 .card-title-wrap {
     width: 100%;
@@ -240,6 +229,9 @@ input:checked + .slider:before { transform:translateX(20px); }
 
 
 @media (max-width: 430px) {
+   .itempanel-contents {
+    padding: 5px;
+}
   .item-panel-card-list {
         gap: 10px;
         grid-template-columns: repeat(2, minmax(0, 1fr));

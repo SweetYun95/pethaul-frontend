@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleLikeThunk } from '../../features/likeSlice'
 import ItemCard from './ItemCard'
-import ItemSubBar from '../item/ItemSubBar'
+import ItemSubBar from './ItemSubBar'
 
 function ItemList() {
    const { items, loading, error } = useSelector((state) => state.item)
