@@ -34,6 +34,7 @@ import VerifyModal from './components/verify/VerifyModal.jsx' // ✅ 모달 컴�
 
 import { checkUnifiedAuthThunk } from './features/authSlice'
 import './App.css'
+import ItemFilteredPage from './components/test/ItemFilteredPage.jsx'
 
 function App() {
    const location = useLocation()
@@ -84,6 +85,7 @@ function App() {
             <Route path="/items/detail/:id" element={<ItemDetailPage />} />
             <Route path="/items/create" element={<ItemCreatePage />} />
             <Route path="/items/edit/:id" element={<ItemEditPage />} />
+            <Route path="/items" element={<ItemFilteredPage />} />
 
             {/* 좋아요/장바구니 */}
             <Route path="/likes/item" element={<ItemLikePage />} />

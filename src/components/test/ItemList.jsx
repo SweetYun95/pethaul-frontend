@@ -2,8 +2,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toggleLikeThunk } from '../../features/likeSlice'
 import ItemCard from './ItemCard'
 import ItemSubBar from './ItemSubBar'
+import { useLocation } from 'react-router-dom'
 
 function ItemList() {
+   const location = useLocation()
+   const sellCategory = location.sellCategory
+   console.log('🎈sellCategory:', sellCategory)
+
    const { items, loading, error } = useSelector((state) => state.item)
    const { selectedCats, priceMin, priceMax, sellStatus, inStockOnly } = useSelector((state) => state.filter)
    const likes = useSelector((state) => state.like.idsMap) || {}
