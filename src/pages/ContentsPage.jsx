@@ -1,64 +1,110 @@
 // src/pages/ContentsPage.jsx
-import { useEffect, useState } from 'react'
-import './css/ContentsPage.css'
+import { useEffect, useState, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import {
+  fetchContentsThunk,
+} from '../features/contentSlice'
 import { ContentHero, ContentGrid, SkeletonHero, SkeletonGrid } from '../components/contents'
-import { makeMock } from '../utils/mockContents' // 선택사항: 아래 대안 주석 참고
+import './css/ContentsPage.css'
 
-function ContentsPage() {
-  const [loading, setLoading] = useState(true)
-  const [posts, setPosts] = useState([])
-  const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
+export default function ContentsPage() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+
+  // 로그인 사용자(관리자 판별)
+  const user = useSelector((s) => s.auth?.user)
+  const isAdmin = !!user && (user.isAdmin === true || user.role === 'admin' || user.role === 'ADMIN')
+
+  const hero = useSelector((s) => s.content.hero)
+  const list = useSelector((s) => s.content.list)
+  const page = useSelector((s) => s.content.page)
+  const hasMore = useSelector((s) => s.content.hasMore)
+  const loading = useSelector((s) => s.content.loading)
+  const error = useSelector((s) => s.content.error)
+
+  const [initialLoading, setInitialLoading] = useState(true)
+  const [moreLoading, setMoreLoading] = useState(false)
+
+  const tag = searchParams.get('tag') || undefined
+  const q = searchParams.get('q') || undefined
+  const size = 10
+
+  const load = useCallback(
+    async (nextPage = 1) => {
+      try {
+        if (nextPage === 1) setInitialLoading(true)
+        else setMoreLoading(true)
+
+        await dispatch(fetchContentsThunk({ page: nextPage, size, tag, q })).unwrap()
+      } catch (e) {
+        console.error('fetchContentsThunk error:', e)
+      } finally {
+        if (nextPage === 1) setInitialLoading(false)
+        else setMoreLoading(false)
+      }
+    },
+    [dispatch, tag, q]
+  )
 
   useEffect(() => {
-    fetchContents(1, true)
-    // eslint-disable-next-line
-  }, [])
+    load(1)
+  }, [load])
 
-  const fetchContents = async (nextPage = 1, replace = false) => {
-    try {
-      setLoading(true)
-      // ★ 실제 API 연결 시 아래 3줄만 교체
-      // const res = await fetch(`/api/contents?page=${nextPage}&size=10`)
-      // const data = await res.json()
-      const data = { list: makeMock(nextPage), hasMore: nextPage < 3 }
-
-      setPosts((prev) => (replace ? data.list : [...prev, ...data.list]))
-      setHasMore(data.hasMore)
-      setPage(nextPage)
-    } catch (e) {
-      console.error('fetchContents error:', e)
-    } finally {
-      setLoading(false)
-    }
+  const goDetail = (post) => {
+    if (!post) return
+    navigate(`/contents/${post.id}`)
   }
-
-  const hero = posts[0]
-  const grid = posts.slice(1)
 
   return (
     <main className="contents-wrap">
       <h1 className="page-title">Contents</h1>
 
-      {loading && posts.length === 0 ? (
+      {/* 관리자만 보이는 등록 버튼 */}
+      {isAdmin && (
+        <div className="admin-actions">
+          <button
+            type="button"
+            className="btn-admin-primary"
+            onClick={() => navigate('/contents/new')}
+          >
+            컨텐츠 등록
+          </button>
+        </div>
+      )}
+
+
+      {error && (
+        <div className="error-message">
+          {typeof error === 'string' ? error : '콘텐츠를 불러오지 못했습니다.'}
+        </div>
+      )}
+
+      {initialLoading && !hero ? (
         <>
           <SkeletonHero />
           <SkeletonGrid />
         </>
       ) : (
         <>
-          <ContentHero post={hero} />
+          <ContentHero post={hero} onClick={goDetail} />
 
-          <ContentGrid posts={grid} />
+          {list.length > 0 ? (
+            <ContentGrid posts={list} onItemClick={goDetail} />
+          ) : (
+            <p className="empty-message">표시할 콘텐츠가 없습니다.</p>
+          )}
 
           {hasMore && (
             <div className="loadmore-wrap">
               <button
                 className="loadmore-btn"
-                onClick={() => fetchContents(page + 1)}
-                disabled={loading}
+                onClick={() => load(page + 1)}
+                disabled={moreLoading || loading}
+                aria-busy={moreLoading || loading}
               >
-                {loading ? '로딩 중…' : '더 보기'}
+                {moreLoading ? '로딩 중…' : '더 보기'}
               </button>
             </div>
           )}
@@ -67,5 +113,3 @@ function ContentsPage() {
     </main>
   )
 }
-
-export default ContentsPage

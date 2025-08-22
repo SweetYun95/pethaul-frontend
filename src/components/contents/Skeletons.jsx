@@ -1,4 +1,5 @@
-// src/components/contents/Skeletons.jsx
+import '../css/contents/Skeletons.css'
+
 export function SkeletonHero() {
   return <div className="skeleton-hero" />
 }

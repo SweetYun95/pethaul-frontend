@@ -114,3 +114,34 @@ body{background:var(--bg); color:var(--fg);}
 .skeleton-lines>div:nth-child(1){width:40%}
 .skeleton-lines>div:nth-child(2){width:90%}
 .skeleton-lines>div:nth-child(3){width:70%}
+/* 에러 메시지 */
+.error-message {
+  margin: 12px 0;
+  color: #b91c1c; /* 진한 레드 */
+  font-weight: 600;
+}
+
+/* 빈 상태 메시지 */
+.empty-message {
+  color: #6b7280; /* gray-500 */
+  margin-top: 12px;
+}
+
+
+/* 컴포넌트공통 */
+
+:root{
+  --fg:#1b1b1b;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --card:#ffffff;
+  --bg:#fafafa;
+  --brand:#463832;
+}
+
+*{ box-sizing: border-box; }
+body{ background: var(--bg); color: var(--fg); }
+
+/* 공통 컨테이너 (페이지에서 사용) */
+.contents-wrap{ max-width:1200px; margin:0 auto; padding:32px 20px; }
+.page-title{ font-size:28px; font-weight:800; margin:8px 0 20px; }
