@@ -22,6 +22,8 @@ import MyOrderList from './pages/MyOrderList'
 import ReviewCreatePage from './pages/ReviewCreatePage'
 import ReviewEditPage from './pages/ReviewEditPage'
 import MyReviewList from './pages/MyReviewList'
+import ContentsPage from './pages/ContentsPage'
+
 import MyPage from './pages/MyPage'
 import EditMyInfoPage from './pages/EditMyInfoPage'
 import AdminPage from './pages/AdminPage'
@@ -99,6 +101,8 @@ function App() {
             <Route path="/review/edit/:id" element={<ReviewEditPage />} />
             <Route path="/myreviewlist" element={<MyReviewList />} />
 
+            {/* 컨텐츠 */}
+            <Route path="/content" element={<ContentsPage />} />
 
             {/* 마이페이지/관리자 */}
             <Route path="/mypage" element={<MyPage />} />
