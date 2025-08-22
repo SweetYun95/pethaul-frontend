@@ -46,7 +46,6 @@ export const cancelOrderThunk = createAsyncThunk('order/cancelOrder', async (ord
 export const updateOrderStatusThunk = createAsyncThunk('order/updateOrderStatus', async ({ orderId, status }, { rejectWithValue }) => {
    try {
       const response = await updateOrderStatus(orderId, status)
-      console.log('🎈response:', response)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '주문 상태 변경 실패')
@@ -57,7 +56,6 @@ export const updateOrderStatusThunk = createAsyncThunk('order/updateOrderStatus'
 export const fetchAllOrdersThunk = createAsyncThunk('order/fetchAllOrders', async (sort, { rejectWithValue }) => {
    try {
       const response = await fetchAllOrders(sort)
-      console.log('🎈response.data:', response.data)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '주문 조회 실패')

@@ -60,7 +60,6 @@ export const fetchItemByIdThunk = createAsyncThunk('items/fetchItemById', async 
 export const fetchSortDataThunk = createAsyncThunk('order/fetchSortData', async (limit, { rejectWithValue }) => {
    try {
       const response = await fetchSortData(limit)
-      // console.log(':balloon:response.data:', response.data) // { topSales, topToday, newItems }
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '데이터 조회 실패')

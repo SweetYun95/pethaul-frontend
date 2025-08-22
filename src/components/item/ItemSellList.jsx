@@ -8,7 +8,7 @@ import '../css/item/ItemSellList.css'
 
 export default function ItemSellList() {
    const location = useLocation()
-   const sellCategory = location.state.sellCategory
+   const sellCategory = location.state || ''
    const dispatch = useDispatch()
    const { items = [], loading, error } = useSelector((s) => s.item)
    const likes = useSelector((s) => s.like.idMap) || {}
@@ -23,11 +23,7 @@ export default function ItemSellList() {
 
    // ====== 초기 로드 ======
    useEffect(() => {
-      if (sellCategory) {
-         dispatch(fetchItemsThunk({ sellCategory }))
-      } else {
-         dispatch(fetchItemsThunk({}))
-      }
+      dispatch(fetchItemsThunk({ sellCategory }))
 
       dispatch(fetchMyLikeIdsThunk())
    }, [dispatch, sellCategory])

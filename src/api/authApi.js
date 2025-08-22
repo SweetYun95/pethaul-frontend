@@ -52,7 +52,6 @@ export const checkAuthStatus = async () => {
 export const checkUsername = async (userId) => {
    try {
       const response = await shopmaxApi.post('/auth/check-username', { userId })
-      console.log('아이디 중복 확인 response', response)
       return response
    } catch (error) {
       console.error(`아이디 중복 확인 오류: ${error}`)

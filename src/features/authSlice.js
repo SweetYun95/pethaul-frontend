@@ -119,9 +119,7 @@ export const updatePasswordThunk = createAsyncThunk('auth/updatePassword', async
 // 회원 정보 수정
 export const updateMyInfoThunk = createAsyncThunk('auth/updateMyInfo', async (data, { rejectWithValue }) => {
    try {
-      console.log('🎀수정 데이터: ', data)
       const response = await updateMyInfo(data)
-      console.log('🎀수정 데이터 확인: ', response.data)
 
       return response.data
    } catch (error) {

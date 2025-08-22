@@ -7,13 +7,10 @@ import { useLocation } from 'react-router-dom'
 function ItemList({ sort }) {
    const location = useLocation()
    const sellCategory = location.sellCategory
-   console.log('🎈sort:', sort)
 
    const { items, loading, error } = useSelector((state) => state.item)
    const { selectedCats, priceMin, priceMax, sellStatus, inStockOnly } = useSelector((state) => state.filter)
    const likes = useSelector((state) => state.like.idsMap) || {}
-
-   console.log('🎈상품정보:', items)
 
    const dispatch = useDispatch()
 
