@@ -1,6 +1,7 @@
 // src/features/itemSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { createItem, updateItem, deleteItem, getItems, getItemById, fetchSortData } from '../api/itemApi'
+import { recommendLikes } from '../api/recommend'
 
 // 상품 등록
 export const createItemThunk = createAsyncThunk('items/createItem', async (formData, { rejectWithValue }) => {
@@ -66,6 +67,17 @@ export const fetchSortDataThunk = createAsyncThunk('order/fetchSortData', async 
    }
 })
 
+// 추천 상품 조회
+export const recommendLikesThunk = createAsyncThunk('recommend/recommendLikes', async (userId, { rejectWithValue }) => {
+   try {
+      const response = await recommendLikes(userId)
+
+      return response.result
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '좋아요 상품 조회 실패')
+   }
+})
+
 const initialState = {
    item: null, // 상세
    main: {
@@ -76,6 +88,7 @@ const initialState = {
    },
    list: [], // 목록/검색 전용 데이터
    items: [], // :white_check_mark: 기존 코드 호환(= list 미러)
+   recommends: [], // 유저 별 추천 상품 데이터
    loading: false,
    error: null,
 }
@@ -168,6 +181,20 @@ const itemSlice = createSlice({
             // :x: 더 이상 state.items를 건드리지 않음 (메인/목록 분리)
          })
          .addCase(fetchSortDataThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+
+         // 추천상품 조회
+         .addCase(recommendLikesThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(recommendLikesThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.recommends = action.payload || []
+         })
+         .addCase(recommendLikesThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
