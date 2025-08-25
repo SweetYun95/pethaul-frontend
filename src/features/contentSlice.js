@@ -1,4 +1,4 @@
-// src/features/contentSlice.js
+// src/features/contentSlice.js — fixed to match backend (no ContentImage table)
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import {
    fetchContentsApi,
@@ -6,17 +6,16 @@ import {
    createContentApi,
    updateContentApi,
    deleteContentApi,
-   uploadContentImageApi, // 단독 URL 발급
-   uploadContentImageForContentApi, // ★ 콘텐츠 귀속 업로드
+   uploadContentImageApi, // 단독 URL 발급만 사용
 } from '../api/contentApi'
 
 /** 목록 조회
- *  params: { page=1, size=10, tag, q, status } */
+ *  params: { page=1, size=10, tag, q } */
 export const fetchContentsThunk = createAsyncThunk('content/fetchList', async (params, { rejectWithValue }) => {
    try {
       return await fetchContentsApi(params)
    } catch (e) {
-      return rejectWithValue(e.response?.data || e.message)
+      return rejectWithValue(e?.response?.data || e.message)
    }
 })
 
@@ -25,7 +24,7 @@ export const fetchContentByIdThunk = createAsyncThunk('content/fetchOne', async 
    try {
       return await fetchContentByIdApi(id)
    } catch (e) {
-      return rejectWithValue(e.response?.data || e.message)
+      return rejectWithValue(e?.response?.data || e.message)
    }
 })
 
@@ -34,7 +33,7 @@ export const createContentThunk = createAsyncThunk('content/create', async (payl
    try {
       return await createContentApi(payload)
    } catch (e) {
-      return rejectWithValue(e.response?.data || e.message)
+      return rejectWithValue(e?.response?.data || e.message)
    }
 })
 
@@ -43,7 +42,7 @@ export const updateContentThunk = createAsyncThunk('content/update', async ({ id
    try {
       return await updateContentApi(id, payload)
    } catch (e) {
-      return rejectWithValue(e.response?.data || e.message)
+      return rejectWithValue(e?.response?.data || e.message)
    }
 })
 
@@ -53,25 +52,17 @@ export const deleteContentThunk = createAsyncThunk('content/delete', async (id, 
       await deleteContentApi(id)
       return id
    } catch (e) {
-      return rejectWithValue(e.response?.data || e.message)
+      return rejectWithValue(e?.response?.data || e.message)
    }
 })
 
-/** ★ 이미지 업로드(thunk 분리) */
+/** 이미지 업로드(단독 URL 발급) */
 export const uploadContentImageThunk = createAsyncThunk('content/uploadImage', async (file, { rejectWithValue }) => {
    try {
-      return await uploadContentImageApi(file) // { url }
+      // 기대 응답: { url: 'http://.../uploads/xxx.png' }
+      return await uploadContentImageApi(file)
    } catch (e) {
-      return rejectWithValue(e.response?.data || e.message)
-   }
-})
-
-/** ★ 콘텐츠에 귀속 이미지 업로드 (contentImages에 레코드 생성) */
-export const uploadContentImageForContentThunk = createAsyncThunk('content/uploadImageForContent', async ({ contentId, file, rep = 'N' }, { rejectWithValue }) => {
-   try {
-      return await uploadContentImageForContentApi({ contentId, file, rep })
-   } catch (e) {
-      return rejectWithValue(e.response?.data || e.message)
+      return rejectWithValue(e?.response?.data || e.message)
    }
 })
 
@@ -85,7 +76,8 @@ const initialState = {
    current: null,
    loading: false,
    error: null,
-   // ★ 업로드 전용 상태
+
+   // 업로드 전용 상태
    uploading: false,
    uploadError: null,
 }
@@ -104,7 +96,7 @@ const contentSlice = createSlice({
             s.error = null
          })
          .addCase(fetchContentsThunk.fulfilled, (s, { payload }) => {
-            const { list = [], page = 1, size = s.size, total = 0, hasMore = false } = payload
+            const { list = [], page = 1, size = s.size, total = 0, hasMore = false } = payload || {}
             const isFirstPage = page === 1
 
             // 메타 업데이트
@@ -113,9 +105,18 @@ const contentSlice = createSlice({
             s.total = total
             s.hasMore = hasMore
 
+            if (!Array.isArray(list) || list.length === 0) {
+               if (isFirstPage) {
+                  s.hero = null
+                  s.list = []
+               }
+               s.loading = false
+               return
+            }
+
             if (isFirstPage) {
                // 1페이지: featured 우선 hero, 없으면 첫 항목
-               const idx = list.findIndex((p) => p.isFeatured)
+               const idx = list.findIndex((p) => p?.isFeatured)
                if (idx !== -1) {
                   s.hero = list[idx] || null
                   s.list = list.filter((_, i) => i !== idx)
@@ -127,6 +128,7 @@ const contentSlice = createSlice({
                // 2페이지+: hero 유지, 리스트에 append(중복 제거)
                const byId = new Map(s.list.map((p) => [p.id, p]))
                for (const item of list) {
+                  if (!item) continue
                   if (item.id === s.hero?.id) continue
                   byId.set(item.id, item)
                }
@@ -146,7 +148,7 @@ const contentSlice = createSlice({
             s.error = null
          })
          .addCase(fetchContentByIdThunk.fulfilled, (s, { payload }) => {
-            s.current = payload
+            s.current = payload || null
             s.loading = false
          })
          .addCase(fetchContentByIdThunk.rejected, (s, { payload }) => {
@@ -156,16 +158,18 @@ const contentSlice = createSlice({
 
          /** ===== 생성 ===== */
          .addCase(createContentThunk.fulfilled, (s, { payload }) => {
+            if (!payload) return
             if (payload.isFeatured) {
                s.hero = payload
             } else if (!s.list.some((p) => p.id === payload.id)) {
                s.list.unshift(payload)
             }
-            s.total += 1
+            s.total = (s.total || 0) + 1
          })
 
          /** ===== 수정 ===== */
          .addCase(updateContentThunk.fulfilled, (s, { payload }) => {
+            if (!payload) return
             if (s.current?.id === payload.id) s.current = payload
             if (s.hero?.id === payload.id) s.hero = payload
             s.list = s.list.map((p) => (p.id === payload.id ? payload : p))
@@ -176,10 +180,10 @@ const contentSlice = createSlice({
             s.list = s.list.filter((p) => p.id !== id)
             if (s.hero?.id === id) s.hero = null
             if (s.current?.id === id) s.current = null
-            s.total = Math.max(0, s.total - 1)
+            s.total = Math.max(0, (s.total || 0) - 1)
          })
 
-         /** 단독 업로드 상태 */
+         /** ===== 이미지 업로드 상태 (단독 URL 발급) ===== */
          .addCase(uploadContentImageThunk.pending, (s) => {
             s.uploading = true
             s.uploadError = null
@@ -191,28 +195,9 @@ const contentSlice = createSlice({
             s.uploading = false
             s.uploadError = payload || '이미지 업로드에 실패했습니다.'
          })
-
-         /** ★ 콘텐츠 귀속 업로드 상태 */
-         .addCase(uploadContentImageForContentThunk.pending, (s) => {
-            s.uploading = true
-            s.uploadError = null
-         })
-         .addCase(uploadContentImageForContentThunk.fulfilled, (s, { payload }) => {
-            // payload: 새 ContentImage 레코드
-            s.uploading = false
-            // 선택: 상세 보던 중이라면 current.Images에 푸시(백엔드 include 명에 맞춰 조정)
-            if (s.current && Array.isArray(s.current.ContentImages)) {
-               s.current.ContentImages = [payload, ...s.current.ContentImages]
-            } else if (s.current && Array.isArray(s.current.Images)) {
-               s.current.Images = [payload, ...s.current.Images]
-            }
-         })
-         .addCase(uploadContentImageForContentThunk.rejected, (s, { payload }) => {
-            s.uploading = false
-            s.uploadError = payload || '콘텐츠 이미지 업로드에 실패했습니다.'
-         })
    },
 })
+
 export const { resetContentState } = contentSlice.actions
 export default contentSlice.reducer
 
