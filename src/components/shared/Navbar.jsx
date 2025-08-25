@@ -163,7 +163,7 @@ function Navbar() {
    const submitSearch = () => {
       const q = query.trim()
       if (!q) return
-      navigate(`/search?q=${encodeURIComponent(q)}`)
+      navigate(`/item?searchTerm=${q}`)
       setQuery('')
       closeSearch()
    }

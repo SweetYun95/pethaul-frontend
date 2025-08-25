@@ -1,16 +1,13 @@
-import { useEffect } from 'react'
 import ItemSellList from '../components/item/ItemSellList'
-import { fetchItemsThunk } from '../features/itemSlice'
-import { useDispatch } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 
 function ItemSellListPage() {
-   const dispatch = useDispatch()
-   useEffect(() => {
-      dispatch(fetchItemsThunk({}))
-   }, [dispatch])
+   const [searchParams] = useSearchParams()
+   const searchTerm = searchParams?.get('searchTerm') || ''
+
    return (
       <div className="ribbon-background">
-         <ItemSellList />
+         <ItemSellList searchTerm={searchTerm} />
       </div>
    )
 }

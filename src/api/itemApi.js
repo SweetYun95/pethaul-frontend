@@ -1,5 +1,6 @@
 // src/api/itemApi.js
 import shopmaxApi from './axiosApi'
+import qs from 'qs'
 
 // 상품 등록 (FormData 사용)
 export const createItem = async (formData) => {
@@ -42,13 +43,20 @@ export const deleteItem = async (id) => {
 export const getItems = async (data) => {
    try {
       const { searchTerm = '', sellCategory = [] } = data
-      const activeCategories = Array.isArray(sellCategory) ? sellCategory.filter(Boolean) : sellCategory ? [sellCategory] : []
+      const activeCategories = Array.isArray(sellCategory)
+         ? sellCategory.filter(Boolean) // ["강아지", "고양이"]
+         : sellCategory
+         ? [sellCategory] // ["강아지"]
+         : []
+
       const response = await shopmaxApi.get('item', {
          params: {
             searchTerm,
             sellCategory: activeCategories,
          },
+         paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
       })
+
       return response
    } catch (error) {
       console.error(`API Request 오류:${error}`)
