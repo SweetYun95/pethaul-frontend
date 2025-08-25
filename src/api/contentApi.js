@@ -10,6 +10,7 @@ export const fetchContentsApi = async ({ page = 1, size = 10, tag, q } = {}) => 
   return data // { list, page, size, total, hasMore }
 }
 
+
 // 단건 조회
 export const fetchContentByIdApi = async (id) => {
   const { data } = await shopmaxApi.get(`/contents/${id}`)
@@ -18,6 +19,7 @@ export const fetchContentByIdApi = async (id) => {
 
 // 생성 (관리자 전용)
 export const createContentApi = async (payload) => {
+  // payload: { title, summary, body, tag, isFeatured, status, publishedAt, slug, coverUrl?, thumbUrl? }
   const { data } = await shopmaxApi.post('/contents', payload)
   return data
 }
@@ -34,12 +36,15 @@ export const deleteContentApi = async (id) => {
   return data
 }
 
-// 이미지 업로드 (선택)
+
+// 이미지 업로드 (단독 URL 발급)
+// - 백엔드가 파일을 저장하고 공용 URL을 반환합니다: { url }
+// - 반환된 url을 coverUrl 혹은 thumbUrl로 create/update에 포함시키세요.
 export const uploadContentImageApi = async (file) => {
   const form = new FormData()
   form.append('image', file)
   const { data } = await shopmaxApi.post('/contents/images', form, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
-  return data 
+  return data // { url }
 }
