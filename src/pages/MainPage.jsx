@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchItemsThunk, fetchSortDataThunk } from '../features/itemSlice'
+import { fetchContentsThunk as fetchPostsThunk } from '../features/contentSlice'
+import NewContentsSlider from '../components/slider/NewContentsSlider'
 
 import './css/Main.css'
 import { createSelector } from '@reduxjs/toolkit'
@@ -28,6 +30,8 @@ function MainPage() {
       }),
       [mainData]
    )
+   // NEW CONTENTS용
+   const posts = useSelector(s => s.content?.posts ?? [])
 
    // <댕댕이 장마 대비존> 섹션 데이터
    const selectEventData = createSelector(
@@ -35,18 +39,19 @@ function MainPage() {
       (items) => items.slice(0, 4)
    )
    const eventData = useSelector(selectEventData)
-
+   
    // ✅ StrictMode(개발모드) 중복호출 가드
    useEffect(() => {
       if (fetchedRef.current) return
       fetchedRef.current = true
       dispatch(fetchSortDataThunk(5))
       dispatch(fetchItemsThunk({ sellCategory: ['강아지/장마'] }))
+      dispatch(fetchPostsThunk())
    }, [dispatch])
 
    //  전역 loading 대신, 메인데이터 유무로 로딩 판단
    const isLoading = !mainData || topSales.length + topToday.length + newItems.length === 0
-
+console.log('============topToday',topToday)
    if (isLoading) return <p>로딩 중...</p>
 
    return (
@@ -182,22 +187,24 @@ function MainPage() {
 
             {/* NEW / KEYWORD / REVIEW */}
             <section id="contents-review">
-               <div className="contents-card">
+               <div className="contents-card left-card">
                   <div className="card-header">
                      <div className="window-btn">
                         <span className="red"></span>
                         <span className="green"></span>
                         <span className="blue"></span>
                      </div>
+                     <div className='card-header__new-contents'>
                      <span className="contents-card-title">NEW CONTENTS</span>
+                     <Link to={'/contents'}>
+                        보러가기<svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24"><path fill="currentColor" d="M16 11v2h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1H9v1H8v-1H7v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1V9h-1V8H9V7H8V6H7V5h1V4h1v1h1v1h1v1h1v1h1v1h1v1h1v1z"></path></svg>
+                     </Link>
+                     </div>
                   </div>
-                  <div className="new-contents-card-body">콘텐츠 1</div>
-                  <div className="new-contents-card-footer">
-                     <a href="#">
-                        NEW CONTENT <br />
-                        보러가기
-                     </a>
+                  <div className="new-contents-card-body">
+                     <NewContentsSlider posts={posts} />
                   </div>
+
                </div>
 
                <div className="right-contents">

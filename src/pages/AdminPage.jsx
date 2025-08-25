@@ -48,7 +48,7 @@ function AdminPage() {
                매출 차트
             </button>
             <button 
-               className={activeTab === 2 ? "active" : ""} 
+               className={activeTab === 3 ? "active" : ""} 
                onClick={() => setActiveTab(3)}
             >
                컨텐츠 등록

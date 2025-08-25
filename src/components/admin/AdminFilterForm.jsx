@@ -68,7 +68,7 @@ export default function AdminFilterForm({
         </label>
 
         <div className="admin-filter-actions">
-          <button className="btn-secondary" type="submit">검색</button>
+          <button className="btn-primary" type="submit">검색</button>
           {onReset && (
             <button className="btn-ghost" type="button" onClick={onReset}>초기화</button>
           )}

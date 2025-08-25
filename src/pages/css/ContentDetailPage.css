@@ -5,15 +5,14 @@
 }
 
 .back-btn {
-  border: none;
-  background: none;
-  font-size: 14px;
-  color: #2563eb;
-  cursor: pointer;
-  margin-bottom: 12px;
-}
-.back-btn:hover {
-  text-decoration: underline;
+  all: unset;
+    margin-top: 20px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .content-detail {

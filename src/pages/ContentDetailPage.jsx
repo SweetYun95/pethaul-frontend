@@ -30,8 +30,7 @@ export default function ContentDetailPage() {
 
   return (
     <section className="blue-background">
-      <div className='.content-detail-wrap'>
-      <button className="back-btn" onClick={() => navigate(-1)}>← 목록으로</button>
+      <div className='content-detail-wrap'>
       <article className="content-detail">
         <div className="detail-header">
           <h1 className="detail-title">{current.title}</h1>
@@ -54,6 +53,7 @@ export default function ContentDetailPage() {
           )}
         </div>
       </article>
+      <button className="back-btn" onClick={() => navigate(-1)}>← 목록으로</button>
       </div>
     </section>
   )

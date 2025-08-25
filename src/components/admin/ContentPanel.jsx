@@ -108,7 +108,7 @@ export default function ContentPanel() {
           const isDeleting = deletingId === r.id
           return (
             <div className="admin-card" key={r.id}>
-              <div className="admin-card__list">
+              <div className="admin-card__list2">
                 <div>
                   <div className="cell-title">{r.title}</div>
                   <div className="admin-meta">

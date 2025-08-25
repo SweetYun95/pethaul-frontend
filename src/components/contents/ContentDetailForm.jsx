@@ -96,7 +96,7 @@ export default function ContentDetailForm({ value, editable = true, onClose, onS
   return (
     <div className="detail-form">
       <div className="detail-head">
-        <h3>콘텐츠 상세</h3>
+        <h1>콘텐츠 상세</h1>
         <div className="head-actions">
           {editable && (
             <button className="btn-secondary" onClick={() => setEditing((v) => !v)} disabled={busy}>

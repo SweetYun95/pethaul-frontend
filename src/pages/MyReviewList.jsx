@@ -64,8 +64,10 @@ function MyReviewList() {
 
                   <div className="review-right">
                      <p className="review-item">{r.Item.itemNm}</p>
+                     <div className='review-right__sub-info'>
                      <p className="review-rating">⭐ {r.rating}</p>
                      <p className="review-price">{r.Item.price}원</p>
+                     </div>
                      <p className="review-content">{r.reviewContent}</p>
 
                      <div className="review-actions">
