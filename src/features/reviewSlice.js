@@ -32,9 +32,9 @@ export const deleteReviewThunk = createAsyncThunk('review/deleteReview', async (
 })
 
 //회원이 작성한 리뷰 조회하기
-export const getUserReviewThunk = createAsyncThunk('review/getUserReview', async (_, { rejectWithValue }) => {
+export const getUserReviewThunk = createAsyncThunk('review/getUserReview', async ({ page = 1, limit = 10 } = {}, { rejectWithValue }) => {
    try {
-      const response = await getUserReview()
+      const response = await getUserReview({page, limit})
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '리뷰 조회 실패')
@@ -48,6 +48,7 @@ export const reviewSlice = createSlice({
       reviews: [], // 리뷰 리스트 (회원/상품에 대한 리뷰 전체 조회)
       loading: false,
       error: null,
+      pagination: null,
    },
    reducers: {},
    extraReducers: (builder) => {
@@ -100,6 +101,7 @@ export const reviewSlice = createSlice({
          .addCase(getUserReviewThunk.fulfilled, (state, action) => {
             state.loading = false
             state.reviews = action.payload.review
+            state.pagination = action.payload.pagination
          })
          .addCase(getUserReviewThunk.rejected, (state, action) => {
             state.loading = false
