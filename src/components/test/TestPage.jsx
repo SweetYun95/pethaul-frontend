@@ -7,6 +7,7 @@ import { Container } from '@mui/material'
 
 import ItemList from './ItemList'
 import { fetchMyLikedItemsThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
+import ItemRecommend from '../item/ItemRecommend'
 
 function TestPage() {
    const dispatch = useDispatch()
