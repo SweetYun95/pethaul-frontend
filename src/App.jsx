@@ -24,6 +24,7 @@ import MyOrderList from './pages/MyOrderList'
 import ReviewCreatePage from './pages/ReviewCreatePage'
 import ReviewEditPage from './pages/ReviewEditPage'
 import MyReviewList from './pages/MyReviewList'
+import ItemReviewList from './components/review/ItemReviewList'
 import ContentsPage from './pages/ContentsPage'
 import ContentDetailPage from './pages/ContentDetailPage'
 import ContentUpsertPage from './pages/ContentUpsertPage'
@@ -104,6 +105,7 @@ function App() {
             <Route path="/review/create" element={<ReviewCreatePage />} />
             <Route path="/review/edit/:id" element={<ReviewEditPage />} />
             <Route path="/myreviewlist" element={<MyReviewList />} />
+            <Route path="/reviews" element={<ItemReviewList />} />
 
             {/* 공개 콘텐츠 */}
             <Route path="/contents" element={<ContentsPage />} />

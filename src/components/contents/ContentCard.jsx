@@ -1,8 +1,19 @@
+import { useNavigate } from 'react-router-dom'
 import '../css/contents/ContentCard.css'
 
 export default function ContentCard({ post, onClick }) {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick(post)
+    } else {
+      navigate(`/contents/${post.id}`)   // ✅ 클릭 시 이동
+    }
+  }
+
   return (
-    <article className="content-card" onClick={() => onClick?.(post)}>
+    <article className="content-card" onClick={handleClick}>
       <div className="card-media">
         <img src={post.thumbUrl || post.thumb} alt={post.title} />
       </div>
