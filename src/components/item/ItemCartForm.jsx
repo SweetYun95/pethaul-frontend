@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 
 import { fetchCartItemsThunk, updateCartItemThunk, deleteCartItemThunk } from '../../features/cartSlice'
 import { createOrderThunk } from '../../features/orderSlice'
+import { recommendLikesThunk } from '../../features/itemSlice'
+import ItemRecommend from './ItemRecommend'
 import '../css/item/ItemCartForm.css'
 
 /* ===== 수량 카운터 ===== */
@@ -74,13 +76,18 @@ const ItemCartForm = () => {
    const navigate = useNavigate()
 
    const { items: cartItems = [], loading } = useSelector((state) => state.cart)
+   const { recommends } = useSelector((state) => state.item)
    const user = useSelector((state) => state.auth.user)
    const userId = user?.id
 
    const [submitting, setSubmitting] = useState(false)
 
    useEffect(() => {
-      if (userId) dispatch(fetchCartItemsThunk(userId))
+      if (userId) {
+         dispatch(fetchCartItemsThunk(userId))
+
+         dispatch(recommendLikesThunk(user.id))
+      }
    }, [dispatch, userId])
 
    const buildImgUrl = (url) => {
@@ -225,6 +232,11 @@ const ItemCartForm = () => {
                      </button>
                   </div>
                </div>
+            </div>
+            {/* 추천 상품 카드리스트 */}
+            <div>
+               <p>{user?.name} 님만을 위한 추천 상품</p>
+               <ItemRecommend recommends={recommends} />
             </div>
          </div>
       </section>

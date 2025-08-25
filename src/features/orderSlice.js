@@ -103,6 +103,7 @@ const orderSlice = createSlice({
          .addCase(fetchOrdersThunk.fulfilled, (state, action) => {
             state.loading = false
             state.orders = action.payload.orders
+            state.pagination = action.payload?.pagination ?? null
          })
          .addCase(fetchOrdersThunk.rejected, (state, action) => {
             state.loading = false

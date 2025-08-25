@@ -1,10 +1,13 @@
 import ItemCartForm from '../components/item/ItemCartForm'
+import { Container } from '@mui/material'
 
 function ItemCartPage() {
    return (
-      <div className='blue-background'>
-         <ItemCartForm />
-      </div>
+      <Container>
+         <div className="blue-background">
+            <ItemCartForm />
+         </div>
+      </Container>
    )
 }
 
