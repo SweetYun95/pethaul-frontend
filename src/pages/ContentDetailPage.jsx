@@ -29,11 +29,10 @@ export default function ContentDetailPage() {
   if (!current) return null
 
   return (
-    <main className="content-detail-wrap">
-      <button className="back-btn" onClick={() => navigate(-1)}>← 목록으로</button>
-      
+    <section className="blue-background">
+      <div className='content-detail-wrap'>
       <article className="content-detail">
-        <header className="detail-header">
+        <div className="detail-header">
           <h1 className="detail-title">{current.title}</h1>
           <div className="detail-meta">
             <span className="detail-tag">{current.tag}</span>
@@ -43,9 +42,8 @@ export default function ContentDetailPage() {
           {current.coverUrl && (
             <img className="detail-cover" src={current.coverUrl} alt={current.title} />
           )}
-        </header>
-
-        <section className="detail-body">
+        </div>
+        <div className="detail-body">
           <p>{current.summary}</p>
           {current.body && (
             <div
@@ -53,8 +51,10 @@ export default function ContentDetailPage() {
               dangerouslySetInnerHTML={{ __html: current.body }}
             />
           )}
-        </section>
+        </div>
       </article>
-    </main>
+      <button className="back-btn" onClick={() => navigate(-1)}>← 목록으로</button>
+      </div>
+    </section>
   )
 }
