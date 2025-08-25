@@ -36,7 +36,6 @@ export const updateReview = async (formData, id) => {
 export const deleteReview = async (id) => {
    try {
       const response = await shopmaxApi.delete(`review/${id}`)
-      console.log('🎈reviewApi.js:', response)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)

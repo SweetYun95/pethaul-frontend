@@ -8,7 +8,7 @@ import '../css/item/ItemSellList.css'
 import { Pagination, Stack } from '@mui/material'
 export default function ItemSellList() {
    const location = useLocation()
-   const sellCategory = location.state?.sellCategory
+   const sellCategory = location.state || ''
    const dispatch = useDispatch()
    const { items = [], pagination, loading, error } = useSelector((s) => s.item)
 
@@ -25,11 +25,7 @@ export default function ItemSellList() {
 
    // ====== 초기 로드 ======
    useEffect(() => {
-      if (sellCategory) {
-         dispatch(fetchItemsThunk({ sellCategory, page, limit: 8 }))
-      } else {
-         dispatch(fetchItemsThunk({}))
-      }
+      dispatch(fetchItemsThunk({ page, limit: 10, sellCategory }))
 
       dispatch(fetchMyLikeIdsThunk())
    }, [dispatch, sellCategory, page])

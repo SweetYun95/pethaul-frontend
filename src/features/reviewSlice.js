@@ -25,7 +25,6 @@ export const updateReviewThunk = createAsyncThunk('review/updateReview', async (
 export const deleteReviewThunk = createAsyncThunk('review/deleteReview', async (id, { rejectWithValue }) => {
    try {
       const response = await deleteReview(id)
-      console.log('🎈reviewSlice.js:', response)
       return id
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '리뷰 삭제 실패')

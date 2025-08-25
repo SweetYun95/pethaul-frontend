@@ -1,85 +1,84 @@
 #petprofile-list {
-    display: flex;
-    flex-direction: column;
+   display: flex;
+   flex-direction: column;
 }
 
 .petprofile-slider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+   display: flex;
+   align-items: center;
+   justify-content: center;
 }
 
 .petprofile-empty {
-  padding: 16px;
-  text-align: center;
-  position: relative;
+   padding: 16px;
+   text-align: center;
+   position: relative;
 }
 
 .petprofile-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+   width: 100%;
+   display: flex;
+   justify-content: center;
 }
 
 #petprofile-list > div {
-    width: 100%;
-    display: flex;
-    justify-content: end;
-    padding: 20px;
+   width: 100%;
+   display: flex;
+   justify-content: end;
+   padding: 20px;
 }
 
 .pet-arrow {
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: url('/icons/arrow.svg') no-repeat center center / 16px;
-  cursor: pointer;
+   width: 32px;
+   height: 32px;
+   border: none;
+   background: url('/icons/arrow.svg') no-repeat center center / 16px;
+   cursor: pointer;
 }
 .pet-arrow:disabled {
-  opacity: 0.3;
-  cursor: default;
+   opacity: 0.3;
+   cursor: default;
 }
 
 .pet-arrow.left {
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%) rotate(180deg);
+   position: absolute;
+   left: 8px;
+   top: 50%;
+   transform: translateY(-50%) rotate(180deg);
 }
 
 .pet-arrow.right {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
+   position: absolute;
+   right: 8px;
+   top: 50%;
+   transform: translateY(-50%);
 }
 
 /* 추가,편집 버튼 */
 .edit-btn,
-.add-btn { 
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+.add-btn {
+   padding: 8px 12px;
+   border-radius: 8px;
+   border: 1px solid #ddd;
+   background: #fff;
+   cursor: pointer;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
-
 
 /* 마지막 카드에서 보이는 큰 추가하기 버튼 */
 .add-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 12px;
+   padding: 16px;
 }
 
 .add-btn-lg {
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+   padding: 8px 16px;
+   border-radius: 8px;
+   border: 1px solid #ddd;
+   background: #fff;
+   cursor: pointer;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }

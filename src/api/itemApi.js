@@ -53,8 +53,6 @@ export const getItems = async (data) => {
             sellCategory: activeCategories,
          },
       })
-      console.log('🎀activeCategories:', activeCategories)
-      // console.log('🎀response:', response)
       return response
    } catch (error) {
       console.error(`API Request 오류:${error}`)

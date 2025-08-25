@@ -13,9 +13,7 @@ function ItemSortedPage() {
    const [searchParams] = useSearchParams()
    const sort = searchParams.get('sort')
    const main = useSelector((state) => state.item.main)
-   console.log('main:', main)
    const sortedList = main[sort]
-   console.log('sortedList:', sortedList)
 
    useEffect(() => {
       dispatch(fetchSortDataThunk(50))

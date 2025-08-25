@@ -4,9 +4,7 @@ import { getUserPets, createPet, updatePet, deletePet } from '../api/petApi'
 // 펫 등록
 export const createPetThunk = createAsyncThunk('pet/create', async (formData, { rejectWithValue }) => {
    try {
-      console.log('formData:', formData)
       const response = await createPet(formData)
-      // console.log(response)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '펫 등록 실패')
@@ -27,7 +25,6 @@ export const updatePetThunk = createAsyncThunk('pet/update', async ({ id, formDa
 export const getUserPetsThunk = createAsyncThunk('pet/getUserPets', async (_, { rejectWithValue }) => {
    try {
       const response = await getUserPets()
-      // console.log('[petApi.js]response', response)
 
       return response.data
    } catch (error) {

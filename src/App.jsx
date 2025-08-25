@@ -112,7 +112,7 @@ function App() {
             {/* 콘텐츠 등록/수정 (UPSERT 단일 페이지) */}
             <Route path="/contents/new" element={<ContentUpsertPage />} />
             <Route path="/admin/contents/:id/edit" element={<ContentUpsertPage />} />
- 
+
             {/* 마이페이지/관리자 */}
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/edit" element={<EditMyInfoPage />} />

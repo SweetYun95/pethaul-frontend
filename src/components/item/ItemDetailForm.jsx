@@ -66,7 +66,6 @@ function ItemDetailForm({ item }) {
    const submitInquiry = (e) => {
       e.preventDefault()
       if (!inquiry.content.trim()) return alert('문의 내용을 입력해 주세요.')
-      console.log('[상품문의] 제출', { itemId: item.id, ...inquiry })
       alert('문의가 등록되었습니다.')
       setInquiry({ name: '', contact: '', content: '', isPrivate: false })
    }
@@ -102,37 +101,32 @@ function ItemDetailForm({ item }) {
 
                   {item.itemSummary && <p className="sub-ex">{item.itemSummary}</p>}
 
-            <div className="quantity-row">
-              <label htmlFor="quantity">수량</label>
-              <input id="quantity" type="number" value={quantity} onChange={handleQuantityChange} min="1" />
-              <p>총 {((Number(item.price) || 0) * quantity).toLocaleString()} 원</p>
-            </div>
-            
-            {item.itemSellStatus === 'SELL' ? (
-              <div className="button-row">
-                <button className="btn-outline cart" type="button" onClick={handleAddToCart}>
-                  장바구니
-                </button>
-                <Link
-                  to="/order"
-                  state={{ item: [{ itemId: item.id, price: Number(item.price) || 0, quantity }] }}
-                  className="btn-outline order"
-                >
-                  구매하기
-                </Link>
-                <div className="detail-click">
-                  <img className="detail-click-img" src="/images/발.png" alt="bannerimg" />
-                  <p className="detail-click-text">click!</p>
+                  <div className="quantity-row">
+                     <label htmlFor="quantity">수량</label>
+                     <input id="quantity" type="number" value={quantity} onChange={handleQuantityChange} min="1" />
+                     <p>총 {((Number(item.price) || 0) * quantity).toLocaleString()} 원</p>
+                  </div>
+
+                  {item.itemSellStatus === 'SELL' ? (
+                     <div className="button-row">
+                        <button className="btn-outline cart" type="button" onClick={handleAddToCart}>
+                           장바구니
+                        </button>
+                        <Link to="/order" state={{ item: [{ itemId: item.id, price: Number(item.price) || 0, quantity }] }} className="btn-outline order">
+                           구매하기
+                        </Link>
+                        <div className="detail-click">
+                           <img className="detail-click-img" src="/images/발.png" alt="bannerimg" />
+                           <p className="detail-click-text">click!</p>
+                        </div>
+                     </div>
+                  ) : (
+                     <p className="sold-out">품절된 상품입니다.</p>
+                  )}
                </div>
-              </div>
-            ) : (
-              <p className="sold-out">품절된 상품입니다.</p>
-            )}
-            
-          </div>
-        </div>
-      </div>
-      {/* ↑ top-section 닫힘 */}
+            </div>
+         </div>
+         {/* ↑ top-section 닫힘 */}
 
          {/* 하단 카드: 리뷰 */}
          <div className={`contents-card detail-card ${openKey === 'review' ? 'is-open' : ''}`}>

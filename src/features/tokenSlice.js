@@ -7,11 +7,9 @@ export const getTokenThunk = createAsyncThunk('token/getToken', async (_, { reje
    try {
       const response = await getToken()
 
-      console.log('💾[tokenSlice] getTokenThunk response:', response)
-
       return response.data.token
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message||'토큰 발급 실패')
+      return rejectWithValue(error.response?.data?.message || '토큰 발급 실패')
    }
 })
 
@@ -23,7 +21,7 @@ export const readTokenThunk = createAsyncThunk('token/readToken', async (_, { re
       localStorage.setItem('token', token)
       return token
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message||'토큰 조회 실패')
+      return rejectWithValue(error.response?.data?.message || '토큰 조회 실패')
    }
 })
 
@@ -33,7 +31,7 @@ export const refreshTokenThunk = createAsyncThunk('token/refreshToken', async (_
       const response = await refreshToken()
       return response.data.token
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message||'토큰 재발급 실패')
+      return rejectWithValue(error.response?.data?.message || '토큰 재발급 실패')
    }
 })
 

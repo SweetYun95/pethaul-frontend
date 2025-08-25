@@ -5,8 +5,6 @@ export const getUserPets = async () => {
    try {
       const response = await shopmaxApi.get(`/pets`)
 
-      // console.log('[petApi.js]response', response)
-
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -17,14 +15,12 @@ export const getUserPets = async () => {
 // 펫 등록 (이미지 포함)
 export const createPet = async (formData) => {
    try {
-      // console.log('formData', formData)
       const config = {
          headers: {
             'Content-Type': 'multipart/form-data',
          },
       }
       const response = await shopmaxApi.post('/pets', formData, config)
-      // console.log('formData', formData)
 
       return response
    } catch (error) {

@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchItemsThunk, fetchSortDataThunk } from '../features/itemSlice'
 
 import './css/Main.css'
+import { createSelector } from '@reduxjs/toolkit'
 
 // API 이미지 절대경로/상대경로 모두 커버
-const API = (import.meta.env.VITE_APP_API_URL || '').replace(/\/$/, '')
+const API = (`${import.meta.env.VITE_APP_API_URL}` || '').replace(/\/$/, '')
 const buildImg = (u) => (u?.startsWith('http') ? u : `${API}${u?.startsWith('/') ? '' : '/'}${u || ''}`)
 
 function MainPage() {
@@ -29,14 +30,11 @@ function MainPage() {
    )
 
    // <댕댕이 장마 대비존> 섹션 데이터
-   const eventData = useSelector((s) => s.item.items.slice(0, 4))
-
-   useEffect(() => {
-      if (fetchedRef.current) return
-      fetchedRef.current = true
-      dispatch(fetchSortDataThunk(5))
-      dispatch(fetchItemsThunk({ sellCategory: ['강아지/장마'] }))
-   }, [dispatch])
+   const selectEventData = createSelector(
+      (state) => state.item.items,
+      (items) => items.slice(0, 4)
+   )
+   const eventData = useSelector(selectEventData)
 
    // ✅ StrictMode(개발모드) 중복호출 가드
    useEffect(() => {
