@@ -24,6 +24,9 @@ import MyOrderList from './pages/MyOrderList'
 import ReviewCreatePage from './pages/ReviewCreatePage'
 import ReviewEditPage from './pages/ReviewEditPage'
 import MyReviewList from './pages/MyReviewList'
+import QnACreatePage from './pages/QnACreatePage.jsx'
+import QnAEditPage from './pages/QnAEditPage.jsx'
+import QnAList from './components/QnA/QnAList.jsx'
 import ContentsPage from './pages/ContentsPage'
 import ContentDetailPage from './pages/ContentDetailPage'
 import ContentUpsertPage from './pages/ContentUpsertPage'
@@ -104,6 +107,11 @@ function App() {
             <Route path="/review/create" element={<ReviewCreatePage />} />
             <Route path="/review/edit/:id" element={<ReviewEditPage />} />
             <Route path="/myreviewlist" element={<MyReviewList />} />
+
+            {/* 1:1 문의 */}
+            <Route path="/qna" element={<QnACreatePage />} />
+            <Route path="/qna/edit/:id" element={<QnAEditPage />} />
+            <Route path="/myQnAlist" element={<QnAList />} />
 
             {/* 공개 콘텐츠 */}
             <Route path="/contents" element={<ContentsPage />} />
