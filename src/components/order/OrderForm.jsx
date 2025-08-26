@@ -278,7 +278,7 @@ function OrderForm({ item, cartItems, order }) {
 
    return (
       <section id="order-section">
-         <h1 className="section-title">주문/결재</h1>
+         <h1 className="section-title">주문/결제</h1>
          <div className="section-contents">
             {/* 좌측 */}
             <div className="order-left">
