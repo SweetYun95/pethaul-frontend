@@ -13,9 +13,9 @@ export const createOrderThunk = createAsyncThunk('order/createOrder', async (ord
 })
 
 // 주문 목록 조회 Thunk
-export const fetchOrdersThunk = createAsyncThunk('order/fetchOrders', async (_, { rejectWithValue }) => {
+export const fetchOrdersThunk = createAsyncThunk('order/fetchOrders', async ({ page = 1, limit = 10 } = {}, { rejectWithValue }) => {
    try {
-      const response = await getOrders()
+      const response = await getOrders({ page, limit })
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '주문 목록 조회 실패')
@@ -70,6 +70,7 @@ const orderSlice = createSlice({
       loading: false,
       error: null,
       successMessage: null,
+      pagination: null,
    },
    reducers: {
       clearOrderMessages(state) {
@@ -102,6 +103,7 @@ const orderSlice = createSlice({
          .addCase(fetchOrdersThunk.fulfilled, (state, action) => {
             state.loading = false
             state.orders = action.payload.orders
+            state.pagination = action.payload.pagination
          })
          .addCase(fetchOrdersThunk.rejected, (state, action) => {
             state.loading = false

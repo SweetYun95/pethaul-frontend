@@ -89,6 +89,7 @@ const initialState = {
    list: [], // 목록/검색 전용 데이터
    items: [], // :white_check_mark: 기존 코드 호환(= list 미러)
    recommends: [], // 유저 별 추천 상품 데이터
+   pagination: null, // 페이징 객체
    loading: false,
    error: null,
 }
@@ -150,6 +151,7 @@ const itemSlice = createSlice({
             const list = Array.isArray(payload) ? payload : payload?.items ?? []
             state.list = list
             state.items = list // :white_check_mark: 호환: 기존 컴포넌트가 state.item.items를 읽어도 동작하도록
+            state.pagination = action.payload.pagination
          })
          .addCase(fetchItemsThunk.rejected, (state, action) => {
             state.loading = false

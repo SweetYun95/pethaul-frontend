@@ -13,10 +13,16 @@ export const createOrder = async (orderData) => {
 }
 
 // 주문 목록 조회
-export const getOrders = async () => {
+export const getOrders = async (opts = {}) => {
    try {
-      const response = await shopmaxApi.get('/order')
-      return response
+      const { page, limit } = opts
+      const params = {}
+      if (page != null) params.page = page
+      if (limit != null) params.limit = limit
+
+      // 백엔드 마운트 경로가 '/order'인지 '/orders'인지 확인하세요.
+      const response = await shopmaxApi.get('/order', { params })
+      return response // ✅ axios response 그대로 반환 (슬라이스 호환)
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
       throw error
