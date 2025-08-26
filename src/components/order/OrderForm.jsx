@@ -8,11 +8,8 @@ import '../css/order/OrderForm.css'
 const API_BASE = import.meta.env.VITE_APP_API_URL || ''
 
 function OrderForm({ item, cartItems, order }) {
-   console.log('🎀아이템:', item)
-   console.log('🎀카트아이템:', cartItems)
    const navigate = useNavigate()
    const location = useLocation()
-   console.log('🎀로케이션:', location.state)
 
    // ===== 공통 유틸 =====
    const toNumber = (n, d = 0) => {

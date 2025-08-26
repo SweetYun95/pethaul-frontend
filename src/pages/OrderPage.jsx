@@ -6,7 +6,6 @@ function OrderPage() {
    const location = useLocation()
    const { item, quantity } = location.state || {}
    const { cartItems } = location.state || {}
-   console.log(location.state)
 
    return (
       <div className="blue-background">

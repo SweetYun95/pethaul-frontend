@@ -12,7 +12,6 @@ function QnA() {
    const { user } = useSelector((state) => state.auth)
    const { qnaList } = useSelector((state) => state.qna)
    const [activeQnaId, setActiveQnaId] = useState(null)
-   console.log(user)
 
    useEffect(() => {
       dispatch(getQnaThunk({ id: user?.id, role: user?.role }))

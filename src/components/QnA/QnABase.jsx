@@ -11,8 +11,6 @@ function QnABase({ mode = 'create', initialData, onSubmit }) {
    const [content, setContent] = useState(initialData?.content ?? '')
    const [submitting, setSubmitting] = useState(false)
 
-   console.log(initialData)
-
    const formMode = initialData
       ? 'edit'
       : String(mode || 'create')

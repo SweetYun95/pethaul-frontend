@@ -172,7 +172,7 @@ function Navbar() {
    const submitSearch = () => {
       const q = query.trim()
       if (!q) return
-      navigate(`/search?q=${encodeURIComponent(q)}`)
+      navigate(`/items/search?keyword=${q}`)
       setQuery('')
       closeSearch()
    }
@@ -248,7 +248,7 @@ function Navbar() {
                      </NavLink>
                   </li>
                   <li>
-                     <NavLink to="/myQnAlist">고객센터</NavLink>
+                     <NavLink to="/myQnAlist">고객센터g</NavLink>
                   </li>
                </ul>
 
