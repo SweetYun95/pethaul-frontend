@@ -23,11 +23,21 @@ export default function ContentUpsertPage() {
   }, [dispatch, id])
 
   return (
-    <main className="admin-form-wrap">
-      <h1 className="admin-form-title">
+    <section className="blue-background">
+      <div id='content-upsert'>
+      <h1 className="section-title">
         {mode === 'create' ? '새 콘텐츠 등록' : '콘텐츠 수정'}
       </h1>
-
+      <div className="contents-card">
+        <div className="card-header">
+          <div className="window-btn">
+            <span className="red"></span>
+            <span className="green"></span>
+            <span className="blue"></span>
+          </div>
+          <span className="card-title">컨텐츠를 입력해주세요.</span>
+        </div>
+      <div className='admin-form-wrap'>
       {mode === 'create' && (
         <AdminContentForm
           mode="create"
@@ -50,6 +60,9 @@ export default function ContentUpsertPage() {
           )}
         </>
       )}
-    </main>
+        </div>
+        </div>
+      </div>
+    </section>
   )
 }

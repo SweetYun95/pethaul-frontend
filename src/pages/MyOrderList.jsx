@@ -94,9 +94,8 @@ function MyOrderList() {
                                                    </svg>
                                                    &nbsp;+
                                                 </button>
-                                                <button className="btn btn-primary">바로구매</button>
 
-                                                {/* 리뷰 버튼: map 내부로 이동 (item 접근 가능) */}
+                                                {/* ✅ 리뷰 버튼: map 내부로 이동 (item 접근 가능) */}
                                                 {order.orderStatus !== 'ORDER' && order.orderStatus !== 'CANCEL' && (
                                                    <Link to="/review/create" state={{ item }} className="btn">
                                                       리뷰 작성
@@ -117,7 +116,14 @@ function MyOrderList() {
 
                                  {order.orderStatus === 'CANCEL' && <p className="cancelled">취소완료</p>}
 
-                                 {/* 여기서는 item을 쓰지 않음 */}
+                                 {/* ✅ 배송완료 상태일 때만 표시 */}
+                                 {order.orderStatus === 'DELIVERED' && (
+                                    <div className="delivered-info">
+                                       <p>배송완료</p>
+                                    </div>
+                                 )}
+
+                                 {/* ❌ 여기서는 item을 쓰지 않음 */}
                                  <button className="btn order-detail-btn">주문상세보기</button>
                                  <button className="btn return-btn">교환/반품 신청</button>
                                  <button className="btn delivery-btn">배송조회</button>

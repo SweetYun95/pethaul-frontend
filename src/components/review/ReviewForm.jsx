@@ -82,6 +82,7 @@ export default function ReviewForm({
 
   // 제출
   const handleSubmit = (e) => {
+     console.log('🟡 onSubmit fired', { submitting, itemId, rating, reviewContentLen: reviewContent.length });
     e.preventDefault()
     if (submitting) return
 
@@ -212,7 +213,7 @@ export default function ReviewForm({
             </label>
 
             {/* 제출 */}
-            <button type="submit" className="submit-btn" disabled={submitting}>
+            <button type="submit" className="submit-btn" disabled={submitting}onClick={() => console.log('✅ submit button clicked')}  >
               {submitting ? (isEdit ? '수정 중...' : '등록 중...') : isEdit ? '수정하기' : '등록하기'}
             </button>
           </form>

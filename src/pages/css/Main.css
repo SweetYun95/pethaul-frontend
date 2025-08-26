@@ -10,7 +10,7 @@ main::before {
    bottom: 0;
    left: 0;
    width: 100%;
-   height: 1220px;
+   height: 1020px;
    background-color: #f2faff;
 
    border-radius: 0 15% 0 0;
@@ -357,23 +357,19 @@ main::before {
    display: grid;
    grid-template-columns: 2fr 1fr;
    gap: 20px;
-   height: 800px;
 }
 
-.new-contents-card-body {
-   height: 400px;
-}
-
-.new-contents-card-footer {
-   position: absolute;
+.card-header__new-contents {
+   width: 100%;
    display: flex;
-   justify-content: center;
-   text-align: center;
-   bottom: 0;
-   left: 0;
-   width: 23%;
-   height: 7%;
-   padding: 10px;
+   justify-content: space-between;
+}
+
+.card-header__new-contents > a {
+  display:inline-flex;           
+  align-items:center;            
+  justify-content:center;    
+  gap: 5px;
 }
 
 .right-contents {
@@ -382,10 +378,11 @@ main::before {
    gap: 20px;
 }
 
+
 .keyword-card {
-   display: flex;
-   flex-direction: column;
-   height: 400px;
+   display: grid;
+   grid-template-rows: repeat(4,1fr);
+   height: 100%;
    margin: 0;
    padding: 0;
 }
@@ -509,23 +506,13 @@ main::before {
       width: 150px;
    }
 
-   #contents-review {
-      height: 700px;
-   }
-   .keyword-card {
-      height: 300px;
-   }
 
-   .new-contents-card-footer {
-      width: 30%;
-      height: 10%;
-   }
 }
 
 @media (max-width: 767px) {
    main::before {
       border-radius: 0 10% 0 0;
-      height: 1150px;
+      height: 920px;
    }
    #banner {
       height: 500px;
@@ -551,12 +538,6 @@ main::before {
 
    #contents-review {
       grid-template-columns: 1fr;
-      height: 900px;
-   }
-
-   .new-contents-card-footer {
-      height: 13%;
-      font-size: 10px;
    }
 
    #pet-selector {
@@ -584,10 +565,6 @@ main::before {
 }
 
 @media (max-width: 640px) {
-   main::before {
-      height: 1450px;
-   }
-
    /* 이미지 더 축소 및 재배치 */
    .img1 {
       width: 15%;
@@ -651,7 +628,7 @@ main::before {
 
 @media (max-width: 510px) {
    main::before {
-      height: 1350px;
+      height: 900px;
    }
 
    .section-title p {
@@ -683,14 +660,8 @@ main::before {
    .pet-img3 {
       width: 90px;
    }
-
    #rainy-dog {
       margin-top: 100px;
    }
 }
 
-@media (max-width: 430px) {
-   main::before {
-      height: 1270px;
-   }
-}

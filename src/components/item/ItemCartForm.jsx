@@ -143,10 +143,10 @@ const ItemCartForm = () => {
    }
    return (
       <section id="itemCart-section">
+         <h2 className="cart-title">장바구니</h2>
          <div className="cart-contents">
             {/* 좌측: 장바구니 리스트 */}
             <div className="cart-list">
-               <h2 className="cart-title">장바구니</h2>
 
                {loading && (
                   <div className="skeleton-list">
@@ -205,7 +205,7 @@ const ItemCartForm = () => {
             </div>
 
             {/* 우측: 결제 요약 */}
-            <div className="contents-card">
+            <div className="contents-card cart-payment">
                <div className="card-header">
                   <div className="window-btn">
                      <span className="red"></span>

@@ -30,8 +30,8 @@ const PetProfile = ({ pet = {} }) => {
                <p>
                   {pet.petType ?? '-'}/{pet.breed ?? '-'}
                </p>
-               <p>나이 {pet.age ?? '-'}</p>
-               <p>성별 {genderLabel(pet.gender)}</p>
+               <p>나이:  {pet.age ?? '-'}</p>
+               <p>성별:  {genderLabel(pet.gender)}</p>
             </div>
          </div>
       </article>

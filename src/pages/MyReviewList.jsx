@@ -55,11 +55,13 @@ function MyReviewList() {
                      <div className="review-card">
                         <div className="review-left">{r.ReviewImages.length > 0 ? <img src={`${import.meta.env.VITE_APP_API_URL}${r.ReviewImages[0].imgUrl}`} alt="리뷰 이미지" className="review-img" /> : <div className="review-noimg">이미지 없음</div>}</div>
 
-                        <div className="review-right">
-                           <p className="review-item">{r.Item.itemNm}</p>
-                           <p className="review-rating">⭐ {r.rating}</p>
-                           <p className="review-price">{r.Item.price}원</p>
-                           <p className="review-content">{r.reviewContent}</p>
+                  <div className="review-right">
+                     <p className="review-item">{r.Item.itemNm}</p>
+                     <div className='review-right__sub-info'>
+                     <p className="review-rating">⭐ {r.rating}</p>
+                     <p className="review-price">{r.Item.price}원</p>
+                     </div>
+                     <p className="review-content">{r.reviewContent}</p>
 
                            <div className="review-actions">
                               <Link to={`/review/edit/${r.id}`} state={{ review: r }} className="btn btn-edit">
