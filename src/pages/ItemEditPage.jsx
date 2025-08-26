@@ -17,12 +17,10 @@ function ItemEditPage() {
    if (loading) return <p>로딩 중...</p>
    if (error) return <p>에러 발생:{error}</p>
 
-   console.log(item)
    return (
-    <div className='blue-background'>
-            <ItemEditForm initialData={item} />
-             </div>
-
+      <div className="blue-background">
+         <ItemEditForm initialData={item} />
+      </div>
    )
 }
 

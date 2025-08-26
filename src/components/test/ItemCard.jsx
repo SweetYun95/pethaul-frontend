@@ -2,7 +2,6 @@ import { formatWithComma } from '../../utils/priceSet'
 import { Link } from 'react-router-dom'
 
 function ItemCard({ handleLike, item, imgSrc, liked, isSoldOut }) {
-   console.log('🎈🎈imgSrc:', imgSrc)
    return (
       <Link key={item.id} to={`/items/detail/${item.id}`} className="card">
          <div className="item-img like-btn">
