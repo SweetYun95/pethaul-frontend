@@ -5,26 +5,19 @@ import { useLocation, Link } from 'react-router-dom'
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
 import '../css/item/ItemSellList.css'
-<<<<<<< HEAD
+import { Pagination, Stack } from '@mui/material'
+
 
 export default function ItemSellList({ searchTerm }) {
    const location = useLocation()
    const sellCategory = location.state || ''
    const dispatch = useDispatch()
-   const { items = [], loading, error } = useSelector((s) => s.item)
+   const { items = [], loading, error, pagination } = useSelector((s) => s.item)
    const likes = useSelector((s) => s.like.idMap) || {}
    const user = useSelector((state) => state.auth.user)
-=======
-import { Pagination, Stack } from '@mui/material'
-export default function ItemSellList() {
-   const location = useLocation()
-   const sellCategory = location.state || ''
-   const dispatch = useDispatch()
-   const { items = [], pagination, loading, error } = useSelector((s) => s.item)
-
-   const likes = useSelector((s) => s.like.idsMap) || {}
    const [page, setPage] = useState(1)
->>>>>>> 503290e2f5ca8e2e98b11a3cafcdc51dad86ffbb
+
+
 
    // ====== 필터 상태 ======
    const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -36,10 +29,10 @@ export default function ItemSellList() {
 
    // ====== 초기 로드 ======
    useEffect(() => {
-<<<<<<< HEAD
+
       if (!sellCategory && !searchTerm) {
          console.log('여기서 실행')
-         dispatch(fetchItemsThunk({}))
+         dispatch(fetchItemsThunk({page, limit: 10, sellCategory}))
       } else if (!searchTerm && sellCategory) {
          console.log('여기서 실행 2')
          dispatch(fetchItemsThunk(sellCategory))
@@ -50,18 +43,15 @@ export default function ItemSellList() {
       if (user) {
          dispatch(fetchMyLikeIdsThunk())
       }
-   }, [dispatch, user, sellCategory, searchTerm])
-=======
-      dispatch(fetchItemsThunk({ page, limit: 10, sellCategory }))
+   }, [dispatch, user, sellCategory, searchTerm,page])
 
-      dispatch(fetchMyLikeIdsThunk())
-   }, [dispatch, sellCategory, page])
+   
 
    // 페이지 변경
    const handlePageChange = (e, value) => {
       setPage(value)
    }
->>>>>>> 503290e2f5ca8e2e98b11a3cafcdc51dad86ffbb
+
 
    // ====== 유틸 ======
    const buildImgUrl = (url) => {

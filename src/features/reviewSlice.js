@@ -184,12 +184,12 @@ export default reviewSlice.reducer
 /* ===== Selectors ===== */
 export const selectReviewList = (s) => s.review.list
 
-export const selectReviewPaging = (s) => ({
-   page: s.review.page,
-   size: s.review.size,
-   total: s.review.total,
-   hasMore: s.review.hasMore,
-})
+// export const selectReviewPaging = (s) => ({
+//    page: s.review.page,
+//    size: s.review.size,
+//    total: s.review.total,
+//    hasMore: s.review.hasMore,
+// })
 
 export const selectReviewListLoading = (s) => s.review.listLoading
 export const selectReviewListError   = (s) => s.review.listError
