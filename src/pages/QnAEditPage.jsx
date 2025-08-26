@@ -29,7 +29,7 @@ function QnAEditPage() {
    }
 
    return (
-      <div>
+      <div className='blue-background'>
          <QnABase mode="edit" initialData={qna} onSubmit={handleSubmit} />
       </div>
    )
