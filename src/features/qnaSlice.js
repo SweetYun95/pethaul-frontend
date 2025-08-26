@@ -3,9 +3,10 @@ import { getQna, createQna, getQnaDetail, editQna, enterComment, deleteQna } fro
 import shopmaxApi from '../api/axiosApi'
 
 // 문의 조회
-export const getQnaThunk = createAsyncThunk('qna/getQna', async ({ id, role }, { rejectWithValue }) => {
+export const getQnaThunk = createAsyncThunk('qna/getQna', async (data, { rejectWithValue }) => {
    try {
-      const response = await getQna({ id, role })
+      console.log('slice=========data:', data)
+      const response = await getQna(data)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '문의 조회 실패')
@@ -68,6 +69,7 @@ export const qnaSlice = createSlice({
    initialState: {
       qna: null,
       qnaList: [],
+      pagination: null,
       loading: false,
       error: null,
    },
@@ -82,6 +84,7 @@ export const qnaSlice = createSlice({
          .addCase(getQnaThunk.fulfilled, (state, action) => {
             state.loading = false
             state.qnaList = action.payload.data
+            state.pagination = action.payload.pagination
          })
          .addCase(getQnaThunk.rejected, (state, action) => {
             state.loading = false

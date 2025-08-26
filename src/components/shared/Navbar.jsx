@@ -248,7 +248,7 @@ function Navbar() {
                      </NavLink>
                   </li>
                   <li>
-                     <NavLink to="/myQnAlist">고객센터g</NavLink>
+                     <NavLink to="/myQnAlist">1:1 문의</NavLink>
                   </li>
                </ul>
 

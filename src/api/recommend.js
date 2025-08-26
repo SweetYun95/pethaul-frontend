@@ -6,9 +6,9 @@ const BASE_URL = import.meta.env.VITE_APP_PYTHON_API_URL
 const recommendApi = axios.create({
    baseURL: BASE_URL,
    headers: {
-      'Content-Type': 'application/json', // request, response 할때 json 객체로 주고 받겠다
+      'Content-Type': 'application/json',
    },
-   withCredentials: true, // 세션이나 쿠키를 request에 포함
+   withCredentials: true,
 })
 
 // 좋아요한 상품 목록을 기준으로 상품 추천

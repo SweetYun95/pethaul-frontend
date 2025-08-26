@@ -216,7 +216,6 @@ function OrderForm({ item, cartItems, order }) {
          const orderId = res?.data?.id ?? res?.data?.orderId
          if (orderId) {
             // 주문상세 라우트가 있을 때:
-            // navigate(`/orders/${orderId}`)
             alert(`주문이 완료되었습니다. 주문번호: ${orderId}`)
          } else {
             alert('주문이 완료되었습니다.')
@@ -228,7 +227,7 @@ function OrderForm({ item, cartItems, order }) {
          alert(msg)
          if (err?.response?.status === 401) {
             // 로그인 만료시 로그인 페이지로 유도 (필요시 라우팅 수정)
-            // navigate('/login', { state: { from: location.pathname } })
+            navigate('/login', { state: { from: location.pathname } })
          }
       }
    }
