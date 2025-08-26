@@ -42,8 +42,6 @@ function FindFormBase({ mode }) {
             setError(error)
          })
    }
-   console.log('🎈ids: ', ids)
-   console.log('🎈error: ', error)
    return (
       <section id="login-section">
          <div className="login-form">

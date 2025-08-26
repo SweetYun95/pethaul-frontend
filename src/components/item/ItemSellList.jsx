@@ -1,21 +1,14 @@
 // src/components/item/ItemSellList.jsx
+import { Pagination, Stack } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, Link } from 'react-router-dom'
+
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
-import '../css/item/ItemSellList.css'
-// <<<<<<< HEAD
 
-// export default function ItemSellList({ searchTerm }) {
-//    const location = useLocation()
-//    const sellCategory = location.state || ''
-//    const dispatch = useDispatch()
-//    const { items = [], loading, error } = useSelector((s) => s.item)
-//    const likes = useSelector((s) => s.like.idMap) || {}
-//    const user = useSelector((state) => state.auth.user)
-// =======
-import { Pagination, Stack } from '@mui/material'
+import '../css/item/ItemSellList.css'
+
 export default function ItemSellList() {
    const location = useLocation()
    const sellCategory = location.state || ''
@@ -24,7 +17,6 @@ export default function ItemSellList() {
 
    const likes = useSelector((s) => s.like.idsMap) || {}
    const [page, setPage] = useState(1)
-// >>>>>>> 503290e2f5ca8e2e98b11a3cafcdc51dad86ffbb
 
    // ====== 필터 상태 ======
    const [isFilterOpen, setIsFilterOpen] = useState(false)

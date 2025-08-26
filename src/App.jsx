@@ -24,10 +24,10 @@ import MyOrderList from './pages/MyOrderList'
 import ReviewCreatePage from './pages/ReviewCreatePage'
 import ReviewEditPage from './pages/ReviewEditPage'
 import MyReviewList from './pages/MyReviewList'
+import LatestReviewPage from './pages/LatestReviewPage.jsx'
 import QnACreatePage from './pages/QnACreatePage.jsx'
 import QnAEditPage from './pages/QnAEditPage.jsx'
 import QnAList from './components/QnA/QnAList.jsx'
-import LatestReviewPage from './pages/LatestReviewPage.jsx'
 import ContentsPage from './pages/ContentsPage'
 import ContentDetailPage from './pages/ContentDetailPage'
 import ContentUpsertPage from './pages/ContentUpsertPage'
@@ -101,7 +101,7 @@ function App() {
             <Route path="/cart" element={<ItemCartForm />} />
 
             {/* 주문/결제 */}
-            <Route path="/order/:id" element={<OrderPage />} />
+            <Route path="/order" element={<OrderPage />} />
             <Route path="/myorderlist" element={<MyOrderList />} />
 
             {/* 리뷰 */}

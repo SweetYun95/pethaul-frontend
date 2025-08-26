@@ -42,8 +42,6 @@ export const deleteItem = async (id) => {
 // 전체 상품 리스트 가져오기
 export const getItems = async (data) => {
    try {
-     
-
       const { page, limit, searchTerm = '', sellCategory = [] } = data
       const activeCategories = Array.isArray(sellCategory) ? sellCategory.filter(Boolean) : sellCategory ? [sellCategory] : []
       const response = await shopmaxApi.get('item', {
