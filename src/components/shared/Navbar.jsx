@@ -167,6 +167,18 @@ function Navbar() {
     closeUserMenu()
   }, [location.pathname, location.search, closeMenu, closeSearch, closeUserMenu])
 
+<<<<<<< HEAD
+   // -----------------------------
+   // 액션
+   // -----------------------------
+   const submitSearch = () => {
+      const q = query.trim()
+      if (!q) return
+      navigate(`/item?searchTerm=${q}`)
+      setQuery('')
+      closeSearch()
+   }
+=======
   // -----------------------------
   // 액션
   // -----------------------------
@@ -177,6 +189,7 @@ function Navbar() {
     setQuery('')
     closeSearch()
   }
+>>>>>>> 503290e2f5ca8e2e98b11a3cafcdc51dad86ffbb
 
   const handleLogin = () => {
     navigate('/login')
@@ -236,6 +249,24 @@ function Navbar() {
               )}
             </li>
 
+<<<<<<< HEAD
+                  <li>
+                     <NavLink to="/items/search?filter=시즌">
+                        SEASON
+                        <iconify-icon icon="fluent-emoji-flat:watermelon" width="16" height="16" />
+                     </NavLink>
+                  </li>
+                  <li>
+                     <NavLink to="/items/search?filter=이벤트&filter=기획전">
+                        이벤트/기획전
+                        <iconify-icon icon="fluent-emoji:star" width="16" height="16" />
+                     </NavLink>
+                  </li>
+                  <li>
+                     <NavLink to="/myQnAlist">1:1 문의</NavLink>
+                  </li>
+               </ul>
+=======
             <li>
               <NavLink to="/items/search?filter=시즌">
                 SEASON
@@ -252,6 +283,7 @@ function Navbar() {
               <NavLink to="/support">고객센터</NavLink>
             </li>
           </ul>
+>>>>>>> 503290e2f5ca8e2e98b11a3cafcdc51dad86ffbb
 
           {/* 우측 아이콘 바 */}
           <div className="right-icon-bar">

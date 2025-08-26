@@ -44,10 +44,8 @@ app.add_middleware(
 
 
 data = pd.read_sql(query,engine)
-# print('=======data=======',data)
 
 df=data[['userId','itemId']]
-print('=======df=======',df)
 
 user_en=LabelEncoder()
 item_en=LabelEncoder()
@@ -78,11 +76,8 @@ def recommend(user_id: int = Query(..., description="원본 user_id 입력"), to
         user_items=user_v,
         N=top_n,
     )
-    print('=====  item_indices:',  item_indices)
-    print('===== scores:', np.round((scores*100),3)) 
 
     item_de = item_en.inverse_transform(item_indices)
-    print('===== result:', item_de)
 
     res = [{'item':int(item_id), 'score':float(score)}
            for item_id, score in zip (item_de, scores)]
