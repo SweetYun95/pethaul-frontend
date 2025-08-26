@@ -4,13 +4,13 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 
 import ContentCard from '../contents/ContentCard'
-import '../css/slider/NewContentsSlider.css'
+import '../css/slider/CommonSlider.css'
 
-export default function NewContentsSlider({ posts = [], height = 480, space = 12 }) {
+export default function NewContentsSlider({ posts = [], height = 500, space = 12 }) {
   if (!Array.isArray(posts) || posts.length === 0) return null
 
   return (
-    <div className="nc-vertical">
+    <div className="commmon-vertical">
       <Swiper
         direction="vertical"                 // ✅ 세로
         slidesPerView={1}                    // ✅ 한 장
@@ -24,7 +24,7 @@ export default function NewContentsSlider({ posts = [], height = 480, space = 12
         style={{ height }}                   // 고정 높이 주고 싶으면 prop으로 조절
       >
         {posts.map((p, i) => (
-          <SwiperSlide key={p?.id ?? p?._id ?? i} className="nc-slide">
+          <SwiperSlide key={p?.id ?? p?._id ?? i} className="commmon-slide">
             <ContentCard item={p} post={p} />
           </SwiperSlide>
         ))}

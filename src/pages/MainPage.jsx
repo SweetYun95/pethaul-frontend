@@ -2,10 +2,14 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { fetchItemsThunk, fetchSortDataThunk } from '../features/itemSlice'
 import { fetchContentsThunk as fetchPostsThunk } from '../features/contentSlice'
+import { fetchNewReviewsThunk, selectReviewList } from '../features/reviewSlice'
+
+
 import NewContentsSlider from '../components/slider/NewContentsSlider'
+import ReviewSlider from '../components/slider/ReviewSlider'
 
 import './css/Main.css'
 import { createSelector } from '@reduxjs/toolkit'
@@ -33,6 +37,10 @@ function MainPage() {
    // NEW CONTENTS용
    const posts = useSelector(s => s.content?.posts ?? [])
 
+    // REVIEWS용 (둘 중 하나 택1)
+    const reviews = useSelector(selectReviewList, shallowEqual)
+
+
    // <댕댕이 장마 대비존> 섹션 데이터
    const selectEventData = createSelector(
       (state) => state.item.items,
@@ -47,6 +55,7 @@ function MainPage() {
       dispatch(fetchSortDataThunk(5))
       dispatch(fetchItemsThunk({ sellCategory: ['강아지/장마'] }))
       dispatch(fetchPostsThunk())
+      dispatch(fetchNewReviewsThunk({ page: 1, size: 6 }))
    }, [dispatch])
 
    //  전역 loading 대신, 메인데이터 유무로 로딩 판단
@@ -194,7 +203,7 @@ console.log('============topToday',topToday)
                         <span className="green"></span>
                         <span className="blue"></span>
                      </div>
-                     <div className='card-header__new-contents'>
+                     <div className='card-header__header'>
                      <span className="contents-card-title">NEW CONTENTS</span>
                      <Link to={'/contents'}>
                         보러가기<svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24"><path fill="currentColor" d="M16 11v2h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1H9v1H8v-1H7v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1V9h-1V8H9V7H8V6H7V5h1V4h1v1h1v1h1v1h1v1h1v1h1v1h1v1z"></path></svg>
@@ -233,9 +242,16 @@ console.log('============topToday',topToday)
                            <span className="green"></span>
                            <span className="blue"></span>
                         </div>
-                        <span className="contents-card-title">BEST REVIEW</span>
+                         <div className='card-header__header'>
+                               <span className="contents-card-title">BEST REVIEW</span>
+                              <Link to={'/reviews'}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24"><path fill="currentColor" d="M16 11v2h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1H9v1H8v-1H7v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1V9h-1V8H9V7H8V6H7V5h1V4h1v1h1v1h1v1h1v1h1v1h1v1h1v1z"></path></svg>
+                               </Link>
+                          </div>
                      </div>
-                     <div className="review-card">리뷰 1</div>
+                     <div className="review-card">
+                     <ReviewSlider reviews={reviews} />
+                     </div>
                   </div>
                </div>
             </section>

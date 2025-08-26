@@ -5,6 +5,7 @@ import { useLocation, Link } from 'react-router-dom'
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
 import '../css/item/ItemSellList.css'
+<<<<<<< HEAD
 
 export default function ItemSellList({ searchTerm }) {
    const location = useLocation()
@@ -13,6 +14,17 @@ export default function ItemSellList({ searchTerm }) {
    const { items = [], loading, error } = useSelector((s) => s.item)
    const likes = useSelector((s) => s.like.idMap) || {}
    const user = useSelector((state) => state.auth.user)
+=======
+import { Pagination, Stack } from '@mui/material'
+export default function ItemSellList() {
+   const location = useLocation()
+   const sellCategory = location.state || ''
+   const dispatch = useDispatch()
+   const { items = [], pagination, loading, error } = useSelector((s) => s.item)
+
+   const likes = useSelector((s) => s.like.idsMap) || {}
+   const [page, setPage] = useState(1)
+>>>>>>> 503290e2f5ca8e2e98b11a3cafcdc51dad86ffbb
 
    // ====== 필터 상태 ======
    const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -24,6 +36,7 @@ export default function ItemSellList({ searchTerm }) {
 
    // ====== 초기 로드 ======
    useEffect(() => {
+<<<<<<< HEAD
       if (!sellCategory && !searchTerm) {
          console.log('여기서 실행')
          dispatch(fetchItemsThunk({}))
@@ -38,6 +51,17 @@ export default function ItemSellList({ searchTerm }) {
          dispatch(fetchMyLikeIdsThunk())
       }
    }, [dispatch, user, sellCategory, searchTerm])
+=======
+      dispatch(fetchItemsThunk({ page, limit: 10, sellCategory }))
+
+      dispatch(fetchMyLikeIdsThunk())
+   }, [dispatch, sellCategory, page])
+
+   // 페이지 변경
+   const handlePageChange = (e, value) => {
+      setPage(value)
+   }
+>>>>>>> 503290e2f5ca8e2e98b11a3cafcdc51dad86ffbb
 
    // ====== 유틸 ======
    const buildImgUrl = (url) => {
@@ -374,6 +398,16 @@ export default function ItemSellList({ searchTerm }) {
             <div className="center">
                <p>검색된 상품이 없습니다.</p>
             </div>
+         )}
+         {/* 페이징 */}
+         {pagination && (
+            <Stack spacing={2} sx={{ mt: 3, mb: 3, alignItems: 'center' }}>
+               <Pagination
+                  count={pagination.totalPages} // 총 페이지 수
+                  page={page} // 현재 페이지
+                  onChange={handlePageChange} // 페이지 변경 핸들러
+               />
+            </Stack>
          )}
       </section>
    )

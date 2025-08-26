@@ -165,6 +165,7 @@ a {
    align-items: center;
    gap: 10px;
    border: 1px solid #000;
+   z-index: 3;
 }
 
 .window-btn {

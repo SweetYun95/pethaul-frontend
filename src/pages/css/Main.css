@@ -359,7 +359,7 @@ main::before {
    gap: 20px;
 }
 
-.card-header__new-contents {
+.card-header__header {
    width: 100%;
    display: flex;
    justify-content: space-between;
@@ -370,6 +370,10 @@ main::before {
   align-items:center;            
   justify-content:center;    
   gap: 5px;
+}
+
+.new-contents-card-body {
+   max-height: 500px;
 }
 
 .right-contents {

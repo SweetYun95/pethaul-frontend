@@ -1,6 +1,7 @@
 #itemCart-section {
   background-color: #F2FAFF;
   padding-top: 74px;
+  min-height: 1000px;
 }
 
 .cart-contents {
