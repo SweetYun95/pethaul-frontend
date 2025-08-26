@@ -17,7 +17,6 @@ function OrderPanel() {
       dispatch(fetchAllOrdersThunk())
    }, [dispatch])
 
-   console.log('🎈🎈🎈🎈🎈', orders)
    // 최초 로드/변경 시 셀렉트 박스 초기화
    useEffect(() => {
       if (Array.isArray(orders)) {

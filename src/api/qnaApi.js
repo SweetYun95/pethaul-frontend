@@ -2,9 +2,11 @@ import axios from 'axios'
 import shopmaxApi from './axiosApi'
 
 // 문의 조회
-export const getQna = async ({ id, role }) => {
+export const getQna = async (data) => {
+   console.log('api==========data', data)
+   const { id, role, page, limit } = data
    const response = await shopmaxApi.get('/qna', {
-      params: { id, role },
+      params: { id, role, page, limit },
    })
    return response
 }
