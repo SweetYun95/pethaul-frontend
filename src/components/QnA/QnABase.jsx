@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createQnaThunk, getQnaThunk } from '../../features/qnaSlice'
 import { useState } from 'react'
-import '../css/review/ReviewForm.css'
+import '../css/qna/QnAForm.css'
 
 function QnABase({ mode = 'create', initialData, onSubmit }) {
    const dispatch = useDispatch()
@@ -39,7 +39,7 @@ function QnABase({ mode = 'create', initialData, onSubmit }) {
 
    return (
       <section id="qna-section">
-         <h1 className="section-title">1:1 문의 {finalSubmitLabel}</h1>
+         <h1 className="section-title">1:1 문의</h1>
 
          <div className="contents-card">
             <div className="card-header">
@@ -48,19 +48,19 @@ function QnABase({ mode = 'create', initialData, onSubmit }) {
                   <span className="green"></span>
                   <span className="blue"></span>
                </div>
+               <span className="card-title">문의사항을 입력해주세요.</span>
             </div>
-
             <div className="create-qna">
                <form onSubmit={handleSubmit}>
                   {/* 문의 제목 */}
-                  <div>
+                  <div className='qna-input-section'>
                      <p>제목</p>
                      <input className="qna-title" placeholder="제목을 작성하세요." value={title} onChange={(e) => setTitle(e.target.value)} required />
                      {/* 문의 내용 */}
                   </div>
-                  <div>
+                  <div className='qna-input-section'>
                      <p>내용</p>
-                     <textarea className="qna-input" placeholder="여기에 문의 내용을 작성하세요. (최소 1자)" value={content} onChange={(e) => setContent(e.target.value)} rows={5} required />
+                     <textarea className="qna-textarea" placeholder="여기에 문의 내용을 작성하세요. (최소 1자)" value={content} onChange={(e) => setContent(e.target.value)} rows={5} required />
                   </div>
 
                   {/* 제출 */}

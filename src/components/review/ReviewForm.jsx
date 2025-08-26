@@ -137,14 +137,7 @@ export default function ReviewForm({
       <h1 className="section-title">{isEdit ? '리뷰 수정' : '리뷰 작성'}</h1>
 
       <div className="contents-card">
-        <div className="card-header">
-          <div className="window-btn">
-            <span className="red"></span>
-            <span className="green"></span>
-            <span className="blue"></span>
-          </div>
-          <span className="card-title">리뷰를 작성해주세요.</span>
-        </div>
+
 
         <div className="create-review">
           <h1 className="review-title">
@@ -181,7 +174,7 @@ export default function ReviewForm({
 
             {/* 리뷰 내용 */}
             <textarea
-              className="review-input"
+              className="review-textarea"
               placeholder="여기에 리뷰를 작성하세요. (최소 1자)"
               value={reviewContent}
               onChange={(e) => setReviewContent(e.target.value)}
