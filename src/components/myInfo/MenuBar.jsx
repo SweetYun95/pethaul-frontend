@@ -73,7 +73,9 @@ function MenuBar({ id }) {
                </div>
                <span className="card-title">1:1 문의</span>
             </div>
-            <div className="menubar-card">{orders?.length}</div>
+            <div className="menubar-card" onClick={() => navigate('/myQnAlist')}>
+               {orders?.length}
+            </div>
          </div>
       </section>
    )
