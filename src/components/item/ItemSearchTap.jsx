@@ -7,7 +7,7 @@ function ItemSearchTap({ onClose = () => {} }) {
    // Button 컴포넌트 수정: 클릭 시 onClose 호출
    const Button = ({ value, children }) => (
       <Link
-         to={`/items/search?filter=${value}`}
+         to={value ? `/items/search?filter=${value}` : '/item'}
          state={{ sellCategory: value ? value : '' }}
          onClick={onClose} // ✅ 클릭 시 닫기
          className="btn-link-reset"
@@ -27,8 +27,6 @@ function ItemSearchTap({ onClose = () => {} }) {
          <div className="item-search-tap__main-filter">
             <Button>전체상품보기</Button>
             <Link className="btn" to="/contents" onClick={onClose}>
-               {' '}
-               {/* ✅ 클릭 시 닫기 */}
                CONTENTS
             </Link>
          </div>
