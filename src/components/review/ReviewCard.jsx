@@ -12,7 +12,7 @@ const toAbs = (apiBase = '', url = '') => {
  * - MyReviewList와 동일한 마크업/클래스 사용
  * - actions 슬롯으로 버튼 영역을 주입 가능
  */
-export default function ReviewListCard({ review, apiBase, actions, className = '' }) {
+export default function ReviewCard({ review, apiBase, actions, className = '' }) {
   const dateStr = (review?.reviewDate ?? review?.createdAt ?? '').slice(0, 10)
   const imgs = Array.isArray(review?.ReviewImages) ? review.ReviewImages : []
   const firstImg = imgs.length ? (typeof imgs[0] === 'string' ? imgs[0] : imgs[0]?.imgUrl) : null

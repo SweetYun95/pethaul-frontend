@@ -173,17 +173,10 @@ export default reviewSlice.reducer
 /* ===== Selectors ===== */
 export const selectReviewList = (s) => s.review.list
 
-// export const selectReviewPaging = (s) => ({
-//    page: s.review.page,
-//    size: s.review.size,
-//    total: s.review.total,
-//    hasMore: s.review.hasMore,
-// })
-
 export const selectReviewListLoading = (s) => s.review.listLoading
 export const selectReviewListError = (s) => s.review.listError
 
-// ✅ 메모이즈된 페이징 셀렉터 (객체 참조 고정)
+// 메모이즈된 페이징 셀렉터 (객체 참조 고정)
 export const selectReviewPaging = createSelector(
    (s) => s.review.page,
    (s) => s.review.size,
