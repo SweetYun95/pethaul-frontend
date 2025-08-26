@@ -23,7 +23,7 @@ function QnACreatePage() {
    }
 
    return (
-      <div>
+      <div className='blue-background'>
          <QnABase onSubmit={handleSubmit} />
       </div>
    )

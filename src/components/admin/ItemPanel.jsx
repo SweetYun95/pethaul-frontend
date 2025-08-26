@@ -162,6 +162,7 @@ function ItemPanel({ searchTerm, sellCategory }) {
    // ---- Render ----
    return (
       <section id="itempanel-section">
+         <h1 className='admin-section-title'>상품 관리</h1>
          <div className="itempanel-contents">
             <div className="contents-card item">
                <div className="item-card-header">

@@ -48,6 +48,8 @@ function ChartPanel() {
   if (error) return <p>에러 발생: {error}</p>
 
   return (
+    <section id='chart-panel-section'>
+      <h1 className='admin-section-title'>매출 차트</h1>
     <div className="chart-panel">
       {/* 버튼 영역 */}
       <div className="chart-buttons">
@@ -129,6 +131,7 @@ function ChartPanel() {
 
      </div>
     </div>
+    </section>
   )
 }
 
