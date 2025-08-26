@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteReviewThunk, getUserReviewThunk } from '../features/reviewSlice'
 import { Link, useNavigate } from 'react-router-dom'
+
+import { deleteReviewThunk, getUserReviewThunk } from '../features/reviewSlice'
+
+import ReviewCard from '../components/review/ReviewCard'
+
 import './css/MyReviewList.css'
 
 function MyReviewList() {
-   const dispatch = useDispatch()
+ const dispatch = useDispatch()
    const navigate = useNavigate()
    const { reviews, loading, error, pagination } = useSelector((state) => state.review)
 
@@ -16,25 +20,33 @@ function MyReviewList() {
       dispatch(getUserReviewThunk({ page, limit: LIMIT }))
    }, [dispatch, page])
 
-   const handleReviewDelete = (id) => {
-      const res = confirm('정말 삭제하시겠습니까?')
-      if (!res) return
+  // 이미지 절대경로 베이스
+  const API = (`${import.meta.env.VITE_APP_API_URL || ''}`).replace(/\/$/, '')
 
-      dispatch(deleteReviewThunk(id))
-         .unwrap()
-         .then(() => {
-            alert('후기를 삭제했습니다!')
-            dispatch(getUserReviewThunk())
-            navigate('/myreviewlist')
-         })
-         .catch((error) => {
-            alert('후기 삭제에 실패했습니다: ' + error)
-            console.log('후기 삭제 중 에러 발생: ' + error)
-         })
-   }
 
+  useEffect(() => {
+    dispatch(getUserReviewThunk())
+  }, [dispatch])
+
+  const handleReviewDelete = (id) => {
+    const res = confirm('정말 삭제하시겠습니까?')
+    if (!res) return
+
+    dispatch(deleteReviewThunk(id))
+      .unwrap()
+      .then(() => {
+        alert('후기를 삭제했습니다!')
+        dispatch(getUserReviewThunk())
+        navigate('/myreviewlist')
+      })
+      .catch((error) => {
+        alert('후기 삭제에 실패했습니다: ' + error)
+        console.log('후기 삭제 중 에러 발생: ' + error)
+      })
+  }
+  
    if (loading) return <p>로딩 중...</p>
-   if (error) return <p>에러 발생: {error}</p>
+  if (error) return <p>에러 발생: {error}</p>
 
    return (
       <div className="dot-background">
@@ -91,6 +103,7 @@ function MyReviewList() {
          </section>
       </div>
    )
+
 }
 
 export default MyReviewList

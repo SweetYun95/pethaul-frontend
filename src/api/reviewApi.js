@@ -56,7 +56,7 @@ export const getUserReview = async (opts = {}) => {
 // 최신 리뷰 목록 — /review만 사용
 export const getLatestReviews = async (params = {}) => {
   try {
-    const res = await shopmaxApi.get('/review', { params }) // 서버가 page/size 무시해도 OK
+    const res = await shopmaxApi.get('/review', { params }) 
     const raw = res?.data
 
     // 응답 정규화

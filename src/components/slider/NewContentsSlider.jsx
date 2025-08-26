@@ -6,7 +6,7 @@ import 'swiper/css/pagination'
 import ContentCard from '../contents/ContentCard'
 import '../css/slider/CommonSlider.css'
 
-export default function NewContentsSlider({ posts = [], height = 480, space = 12 }) {
+export default function NewContentsSlider({ posts = [], height = 500, space = 12 }) {
   if (!Array.isArray(posts) || posts.length === 0) return null
 
   return (

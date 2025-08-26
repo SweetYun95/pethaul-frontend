@@ -1,6 +1,13 @@
 // src/features/reviewSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createReview, updateReview, getUserReview, deleteReview, getLatestReviews } from '../api/reviewApi'
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit'
+import {
+  createReview,
+  updateReview,
+  getUserReview,
+  deleteReview,
+  getLatestReviews,
+} from '../api/reviewApi'
+
 
 /* =========================
    최신 리뷰 목록
@@ -20,12 +27,14 @@ export const fetchNewReviewsThunk = createAsyncThunk('review/fetchNewList', asyn
 // 리뷰 등록하기
 export const createReviewThunk = createAsyncThunk('review/createReview', async (formData, { rejectWithValue }) => {
    try {
+
       const response = await createReview(formData)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '리뷰 등록 실패')
    }
 })
+
 
 // 리뷰 수정하기
 export const updateReviewThunk = createAsyncThunk('review/updateReview', async ({ formData, id }, { rejectWithValue }) => {
@@ -46,6 +55,7 @@ export const deleteReviewThunk = createAsyncThunk('review/deleteReview', async (
       return rejectWithValue(error.response?.data?.message || '리뷰 삭제 실패')
    }
 })
+
 
 //회원이 작성한 리뷰 조회하기
 export const getUserReviewThunk = createAsyncThunk('review/getUserReview', async ({ page = 1, limit = 10 } = {}, { rejectWithValue }) => {
@@ -133,6 +143,7 @@ export const reviewSlice = createSlice({
             state.error = action.payload
          })
 
+
       /* ===== 후기 삭제 ===== */
       builder
          .addCase(deleteReviewThunk.pending, (state) => {
@@ -170,13 +181,24 @@ export const reviewSlice = createSlice({
 
 export default reviewSlice.reducer
 
-/* ===== Selectors (NewContents와 동일 패턴) ===== */
+/* ===== Selectors ===== */
 export const selectReviewList = (s) => s.review.list
+
 export const selectReviewPaging = (s) => ({
    page: s.review.page,
    size: s.review.size,
    total: s.review.total,
    hasMore: s.review.hasMore,
 })
+
 export const selectReviewListLoading = (s) => s.review.listLoading
-export const selectReviewListError = (s) => s.review.listError
+export const selectReviewListError   = (s) => s.review.listError
+
+// ✅ 메모이즈된 페이징 셀렉터 (객체 참조 고정)
+export const selectReviewPaging = createSelector(
+  (s) => s.review.page,
+  (s) => s.review.size,
+  (s) => s.review.total,
+  (s) => s.review.hasMore,
+  (page, size, total, hasMore) => ({ page, size, total, hasMore })
+)
