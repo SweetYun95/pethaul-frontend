@@ -183,9 +183,6 @@ export default reviewSlice.reducer
 
 /* ===== Selectors ===== */
 export const selectReviewList = (s) => s.review.list
-
-
-
 export const selectReviewListLoading = (s) => s.review.listLoading
 export const selectReviewListError   = (s) => s.review.listError
 
