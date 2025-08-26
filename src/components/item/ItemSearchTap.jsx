@@ -4,33 +4,34 @@ import { Link } from 'react-router-dom'
 import '../css/item/ItemSearchTap.css'
 
 function ItemSearchTap({ onClose = () => {} }) {
-  // Button 컴포넌트 수정: 클릭 시 onClose 호출
-  const Button = ({ value, children }) => (
-    <Link
-      to="/item"
-      state={{ sellCategory: value ? value : '' }}
-      onClick={onClose}                 // ✅ 클릭 시 닫기
-      className="btn-link-reset"
-    >
-      <button type="button" className="btn">
-        {/* 아이콘 */}
-        {children && <span className="btn-icon">{children}</span>}
-        {/* 텍스트 */}
-        <span className="btn-label">{value}</span>
-      </button>
-    </Link>
-  )
+   // Button 컴포넌트 수정: 클릭 시 onClose 호출
+   const Button = ({ value, children }) => (
+      <Link
+         to={`/items/search?filter=${value}`}
+         state={{ sellCategory: value ? value : '' }}
+         onClick={onClose} // ✅ 클릭 시 닫기
+         className="btn-link-reset"
+      >
+         <button type="button" className="btn">
+            {/* 아이콘 */}
+            {children && <span className="btn-icon">{children}</span>}
+            {/* 텍스트 */}
+            <span className="btn-label">{value}</span>
+         </button>
+      </Link>
+   )
 
-  return (
-    <section id="item-search-tap">
-      {/* 전체 초기화 */}
-      <div className="item-search-tap__main-filter">
-        <Button>전체상품보기</Button>
-        <Link className="btn" to="/contents" onClick={onClose}> {/* ✅ 클릭 시 닫기 */}
-          CONTENTS
-        </Link>
-      </div>
-
+   return (
+      <section id="item-search-tap">
+         {/* 전체 초기화 */}
+         <div className="item-search-tap__main-filter">
+            <Button>전체상품보기</Button>
+            <Link className="btn" to="/contents" onClick={onClose}>
+               {' '}
+               {/* ✅ 클릭 시 닫기 */}
+               CONTENTS
+            </Link>
+         </div>
 
          <div className="filter-group">
             <h3>반려동물</h3>
