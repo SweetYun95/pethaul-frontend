@@ -2,7 +2,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { addToCartThunk } from '../../features/cartSlice'
-import ItemReviewList from '../review/ItemReviewList'
+import ItemReviewList from '../../pages/LatestReviewPage'
 import { Link } from 'react-router-dom'
 import '../css/item/ItemDetailForm.css'
 

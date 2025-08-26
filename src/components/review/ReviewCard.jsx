@@ -1,41 +1,64 @@
-// src/components/review/ItemReviewList.jsx
-import { memo, useMemo } from 'react'
-import ReviewCard from './ReviewCard'
+import '../css/review/ReviewCard.css'
+// 상대경로 → 절대경로
+const toAbs = (apiBase = '', url = '') => {
+  if (!url) return ''
+  if (/^https?:\/\//i.test(url)) return url
+  const base = (apiBase || '').replace(/\/$/, '')
+  return `${base}${url.startsWith('/') ? '' : '/'}${url}`
+}
 
 /**
- * 리뷰 카드 리스트
- * - item?.Reviews 또는 reviews 배열을 받아 렌더링
- * - limit > 0 이면 최대 개수 제한
- * - 스타일은 MyReviewList.css의 .review-list / .contents-card 등 재사용
+ * 공용 리뷰 카드
+ * - MyReviewList와 동일한 마크업/클래스 사용
+ * - actions 슬롯으로 버튼 영역을 주입 가능
  */
-function ItemReviewList({
-  item,
-  reviews,
-  limit = 0,
-  className = '',
-  emptyText = '아직 등록된 리뷰가 없습니다.',
-}) {
-  const list = useMemo(() => {
-    const base = Array.isArray(reviews)
-      ? reviews
-      : Array.isArray(item?.Reviews)
-      ? item.Reviews
-      : []
-    return limit > 0 ? base.slice(0, limit) : base
-  }, [reviews, item?.Reviews, limit])
-
-  if (!list.length) return <p className="review-empty">{emptyText}</p>
+export default function ReviewListCard({ review, apiBase, actions, className = '' }) {
+  const dateStr = (review?.reviewDate ?? review?.createdAt ?? '').slice(0, 10)
+  const imgs = Array.isArray(review?.ReviewImages) ? review.ReviewImages : []
+  const firstImg = imgs.length ? (typeof imgs[0] === 'string' ? imgs[0] : imgs[0]?.imgUrl) : null
+  const itemNm = review?.Item?.itemNm ?? '상품명'
+  const price  = review?.Item?.price
+  const rating = review?.rating ?? '-'
+  const content = review?.reviewContent ?? ''
 
   return (
-    <div className={`review-list ${className}`.trim()}>
-      {list.map((review, idx) => (
-        <ReviewCard
-          key={review?.id ?? `review-${idx}`}
-          review={review}
-        />
-      ))}
+    <div className={`contents-card ${className}`}>
+      <div className="card-header">
+        <div className="window-btn">
+          <span className="red"></span>
+          <span className="green"></span>
+          <span className="blue"></span>
+        </div>
+        <span className="contents-card-title">{dateStr}</span>
+      </div>
+
+      <div className="review-card">
+        <div className="review-left">
+          {firstImg ? (
+            <img
+              src={toAbs(apiBase, firstImg)}
+              alt="리뷰 이미지"
+              className="review-img"
+              loading="lazy"
+            />
+          ) : (
+            <div className="review-noimg">이미지 없음</div>
+          )}
+        </div>
+
+        <div className="review-right">
+          <p className="review-item">{itemNm}</p>
+
+          <div className="review-right__sub-info">
+            <p className="review-rating">⭐ {rating}</p>
+            <p className="review-price">{price != null ? `${price}원` : ''}</p>
+          </div>
+
+          <p className="review-content">{content}</p>
+
+          {actions ? <div className="review-actions">{actions}</div> : null}
+        </div>
+      </div>
     </div>
   )
 }
-
-export default memo(ItemReviewList)

@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { fetchItemsThunk, fetchSortDataThunk } from '../../features/itemSlice'
+import { fetchItemsThunk } from '../../features/itemSlice'
 import { useDispatch } from 'react-redux'
 
-import { Container } from '@mui/material'
 
 import ItemCardHeader from './ItemCardHeader'
 import ItemList from './ItemList'
 import { fetchMyLikedItemsThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
+
+import './css/ItemFilteredPage.css'
 
 function ItemFilteredPage() {
    const [searchParams] = useSearchParams()
@@ -23,13 +24,13 @@ function ItemFilteredPage() {
 
    return (
       <>
-         <div style={{ backgroundImage: 'url(../../public/images/ribbon.jpeg)', backgroundRepeat: 'repeat', backgroundSize: '20%', paddingTop: '74px' }}>
-            <Container>
+         <div className='ribbon-background'>
+            <section id='item-filter-section'>
                {/* 검색 카테고리 필터 */}
                <ItemCardHeader title={filters.join('/')} />
                {/* 상품 출력 리스트 */}
                <ItemList />
-            </Container>
+            </section>
          </div>
       </>
    )

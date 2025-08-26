@@ -2,90 +2,79 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteReviewThunk, getUserReviewThunk } from '../features/reviewSlice'
 import { Link, useNavigate } from 'react-router-dom'
-import './css/MyReviewList.css'   
+import ReviewCard from '../components/review/ReviewCard'
+import './css/MyReviewList.css'
 
 function MyReviewList() {
-   const dispatch = useDispatch()
-   const navigate = useNavigate()
-   const { reviews, loading, error } = useSelector((state) => state.review)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { reviews, loading, error } = useSelector((state) => state.review)
 
-   useEffect(() => {
-      dispatch(getUserReviewThunk())
-   }, [dispatch])
+  // 이미지 절대경로 베이스
+  const API = (`${import.meta.env.VITE_APP_API_URL || ''}`).replace(/\/$/, '')
 
-   const handleReviewDelete = (id) => {
-      const res = confirm('정말 삭제하시겠습니까?')
-      if (!res) return
+  useEffect(() => {
+    dispatch(getUserReviewThunk())
+  }, [dispatch])
 
-      dispatch(deleteReviewThunk(id))
-         .unwrap()
-         .then(() => {
-            alert('후기를 삭제했습니다!')
-            dispatch(getUserReviewThunk())
-            navigate('/myreviewlist')
-         })
-         .catch((error) => {
-            alert('후기 삭제에 실패했습니다: ' + error)
-            console.log('후기 삭제 중 에러 발생: ' + error)
-         })
-   }
+  const handleReviewDelete = (id) => {
+    const res = confirm('정말 삭제하시겠습니까?')
+    if (!res) return
 
-   if (loading) return <p>로딩 중...</p>
-   if (error) return <p>에러 발생: {error}</p>
+    dispatch(deleteReviewThunk(id))
+      .unwrap()
+      .then(() => {
+        alert('후기를 삭제했습니다!')
+        dispatch(getUserReviewThunk())
+        navigate('/myreviewlist')
+      })
+      .catch((error) => {
+        alert('후기 삭제에 실패했습니다: ' + error)
+        console.log('후기 삭제 중 에러 발생: ' + error)
+      })
+  }
 
-   return (
-      <div className='dot-background'>
-      <section id="myreview-section" >
-         <h2 className="section-title">리뷰 목록</h2>
+  if (loading) return <p>로딩 중...</p>
+  if (error) return <p>에러 발생: {error}</p>
 
-         <div className="review-list">
-            {reviews.map((r) => (
-               <div key={r.id} className="contents-card" >
-                  <div className="card-header">
-                    <div className="window-btn">
-                     <span className="red"></span>
-                     <span className="green"></span>
-                     <span className="blue"></span>
-                    </div>
-                 <span className="contents-card-title">{r.reviewDate.slice(0, 10)}</span>
-                  </div>
-                  <div className='review-card'>
-                  <div className="review-left">
-                     {r.ReviewImages.length > 0 ? (
-                        <img
-                           src={`${import.meta.env.VITE_APP_API_URL}${r.ReviewImages[0].imgUrl}`}
-                           alt="리뷰 이미지"
-                           className="review-img"
-                        />
-                     ) : (
-                        <div className="review-noimg">이미지 없음</div>
-                     )}
-                  </div>
+  return (
+    <div className="dot-background">
+      <section id="myreview-section">
+        <h2 className="section-title">리뷰 목록</h2>
 
-                  <div className="review-right">
-                     <p className="review-item">{r.Item.itemNm}</p>
-                     <div className='review-right__sub-info'>
-                     <p className="review-rating">⭐ {r.rating}</p>
-                     <p className="review-price">{r.Item.price}원</p>
-                     </div>
-                     <p className="review-content">{r.reviewContent}</p>
-
-                     <div className="review-actions">
-                        <Link to={`/review/edit/${r.id}`} state={{ review: r }} className="btn btn-edit">
-                           수정
-                        </Link>
-                        <button onClick={() => handleReviewDelete(r.id)} className="btn btn-delete">
-                           삭제
-                        </button>
-                     </div>
-                  </div>
-                  </div>
-               </div>
-            ))}
-         </div>
+        <div className="review-list">
+          {Array.isArray(reviews) && reviews.length > 0 ? (
+            reviews.map((r) => (
+              <ReviewCard
+                key={r.id}
+                review={r}
+                apiBase={API}
+                actions={
+                  <>
+                    <Link
+                      to={`/review/edit/${r.id}`}
+                      state={{ review: r }}
+                      className="btn btn-edit"
+                    >
+                      수정
+                    </Link>
+                    <button
+                      onClick={() => handleReviewDelete(r.id)}
+                      className="btn btn-delete"
+                    >
+                      삭제
+                    </button>
+                  </>
+                }
+              />
+            ))
+          ) : (
+            <p className="review-empty">아직 등록된 리뷰가 없습니다.</p>
+          )}
+        </div>
       </section>
-      </div>
-   )
+    </div>
+  )
 }
 
 export default MyReviewList

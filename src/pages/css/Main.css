@@ -372,6 +372,10 @@ main::before {
   gap: 5px;
 }
 
+.new-contents-card-body {
+   max-height: 500px;
+}
+
 .right-contents {
    display: grid;
    grid-template-rows: repeat(2, 1fr);

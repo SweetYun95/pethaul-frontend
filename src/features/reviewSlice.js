@@ -1,5 +1,5 @@
 // src/features/reviewSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit'
 import {
   createReview,
   updateReview,
@@ -26,7 +26,6 @@ export const fetchNewReviewsThunk = createAsyncThunk(
 /* =========================
    기존 CRUD & 내 리뷰
    ========================= */
-// 리뷰 등록하기
 export const createReviewThunk = createAsyncThunk(
   'review/createReview',
   async (formData, { rejectWithValue }) => {
@@ -39,7 +38,6 @@ export const createReviewThunk = createAsyncThunk(
   }
 )
 
-// 리뷰 수정하기
 export const updateReviewThunk = createAsyncThunk(
   'review/updateReview',
   async ({ formData, id }, { rejectWithValue }) => {
@@ -52,7 +50,6 @@ export const updateReviewThunk = createAsyncThunk(
   }
 )
 
-// 리뷰 삭제하기
 export const deleteReviewThunk = createAsyncThunk(
   'review/deleteReview',
   async (id, { rejectWithValue }) => {
@@ -65,7 +62,6 @@ export const deleteReviewThunk = createAsyncThunk(
   }
 )
 
-// 회원이 작성한 리뷰 조회하기
 export const getUserReviewThunk = createAsyncThunk(
   'review/getUserReview',
   async (_, { rejectWithValue }) => {
@@ -81,7 +77,7 @@ export const getUserReviewThunk = createAsyncThunk(
 export const reviewSlice = createSlice({
   name: 'review',
   initialState: {
-    // ✅ 최신 리뷰 리스트용 (NewContents 패턴)
+    // ✅ 최신 리뷰 리스트 상태
     list: [],
     page: 1,
     size: 10,
@@ -91,9 +87,9 @@ export const reviewSlice = createSlice({
     listError: null,
 
     // ✅ 기존 상태 유지
-    review: null,   // 단일 리뷰
-    reviews: [],    // 회원의 리뷰 모음 등 기존 리스트
-    loading: false, // CRUD/내 리뷰 로딩
+    review: null,
+    reviews: [],
+    loading: false,
     error: null,
   },
   reducers: {},
@@ -133,8 +129,6 @@ export const reviewSlice = createSlice({
       .addCase(createReviewThunk.fulfilled, (state, action) => {
         state.loading = false
         state.review = action.payload.review
-        // 목록 최상단 반영하고 싶으면 주석 해제
-        // if (action.payload?.review) state.list = [action.payload.review, ...state.list]
       })
       .addCase(createReviewThunk.rejected, (state, action) => {
         state.loading = false
@@ -150,7 +144,6 @@ export const reviewSlice = createSlice({
       .addCase(updateReviewThunk.fulfilled, (state, action) => {
         state.loading = false
         const id = action.payload
-        // 선택: 목록/내리뷰 동기화
         state.list = state.list.map((r) => (r.id === id ? { ...r, ...state.review } : r))
         state.reviews = state.reviews.map((r) => (r.id === id ? { ...r, ...state.review } : r))
       })
@@ -195,13 +188,16 @@ export const reviewSlice = createSlice({
 
 export default reviewSlice.reducer
 
-/* ===== Selectors (NewContents와 동일 패턴) ===== */
+/* ===== Selectors ===== */
 export const selectReviewList = (s) => s.review.list
-export const selectReviewPaging = (s) => ({
-  page: s.review.page,
-  size: s.review.size,
-  total: s.review.total,
-  hasMore: s.review.hasMore,
-})
 export const selectReviewListLoading = (s) => s.review.listLoading
-export const selectReviewListError = (s) => s.review.listError
+export const selectReviewListError   = (s) => s.review.listError
+
+// ✅ 메모이즈된 페이징 셀렉터 (객체 참조 고정)
+export const selectReviewPaging = createSelector(
+  (s) => s.review.page,
+  (s) => s.review.size,
+  (s) => s.review.total,
+  (s) => s.review.hasMore,
+  (page, size, total, hasMore) => ({ page, size, total, hasMore })
+)
