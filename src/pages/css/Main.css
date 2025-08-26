@@ -359,7 +359,7 @@ main::before {
    gap: 20px;
 }
 
-.card-header__new-contents {
+.card-header__header {
    width: 100%;
    display: flex;
    justify-content: space-between;

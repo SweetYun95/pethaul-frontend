@@ -1,4 +1,0 @@
-/* Swiper가 만든 래퍼에서 그림자/세로 안 잘리게 */
-.nc-viewport .swiper,
-.nc-viewport .swiper-wrapper,
-.nc-viewport .swiper-slide { overflow: visible; }

@@ -1,0 +1,14 @@
+/* src/components/css/review/ItemReviewList.css */
+.review-list {
+  display: grid;
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.review-empty {
+  font-size: 14px;
+  color: #777;
+  padding: 12px 0;
+}
