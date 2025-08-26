@@ -53,10 +53,10 @@ export const getUserReview = async (opts = {}) => {
    }
 }
 
-// 최신 리뷰 목록 — /review만 사용
+// 최신 리뷰 목록 — /review/latest 만 사용
 export const getLatestReviews = async (params = {}) => {
   try {
-    const res = await shopmaxApi.get('/review', { params }) 
+    const res = await shopmaxApi.get('/review/latest', { params }) 
     const raw = res?.data
 
     // 응답 정규화
