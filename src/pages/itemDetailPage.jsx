@@ -1,4 +1,4 @@
-import { Container, CircularProgress, Typography } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -18,32 +18,34 @@ function ItemDetailPage() {
 
    if (loading) {
       return (
-         <Container sx={{ textAlign: 'center', mt: 5 }}>
+            <div className='blue-background'>
             <CircularProgress />
-         </Container>
+         </div>
       )
    }
 
    if (error) {
       return (
-         <Container sx={{ textAlign: 'center', mt: 5 }}>
+             <div className='blue-background'>
+
             <Typography color="error">{error}</Typography>
-         </Container>
+         </div>
       )
    }
 
    if (!item) {
       return (
-         <Container sx={{ textAlign: 'center', mt: 5 }}>
+             <div className='blue-background'>
+
             <Typography>상품 정보를 불러올 수 없습니다.</Typography>
-         </Container>
+         </div>
       )
    }
 
    return (
-      <Container sx={{ mt: 5 }}>
+          <div className='blue-background'>
          <ItemDetailForm item={item} />
-      </Container>
+      </div>
    )
 }
 

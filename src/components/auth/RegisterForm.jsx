@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { checkUsername } from '../../api/authApi'
+import { checkEmail, checkUsername } from '../../api/authApi'
 import { registerUserThunk } from '../../features/authSlice'
 import { formatPhoneNumber } from '../../utils/phoneFormat'
 
-import '../css/RegisterForm.css'
+import '../css/auth/RegisterForm.css'
 
 function RegisterForm() {
    const dispatch = useDispatch()
@@ -26,6 +26,9 @@ function RegisterForm() {
    const [idChecking, setIdChecking] = useState(false)
    const [isIdAvailable, setIsIdAvailable] = useState(null)
 
+   const [isChangedEmail, setIsChangedEmail] = useState(false)
+   const [checkedEmail, setCheckedEmail] = useState(false)
+
    const handleChange = (e) => {
       const { name, value } = e.target
 
@@ -39,6 +42,14 @@ function RegisterForm() {
 
       if (name === 'userId') {
          setIsIdAvailable(null)
+      }
+      if (name === 'email') {
+         setIsChangedEmail(true)
+         setCheckedEmail(false)
+      }
+      if (name === 'email' && value.trim().length <= 0) {
+         setIsChangedEmail(false)
+         setCheckedEmail(true)
       }
    }
 
@@ -59,11 +70,34 @@ function RegisterForm() {
             alert('이미 사용 중인 아이디입니다')
             setIsIdAvailable(false)
          }
-      } catch (e) {
-         alert('중복 확인 중 오류가 발생했습니다')
+      } catch (error) {
+         alert('중복 확인 중 오류가 발생했습니다:', error)
          setIsIdAvailable(false)
       } finally {
          setIdChecking(false)
+      }
+   }
+
+   const handleEmailCheck = async () => {
+      try {
+         const email = form.email.trim()
+         if (!email) {
+            setCheckedEmail(true)
+         }
+         const res = await checkEmail(email)
+         if (res.status === 200) {
+            alert('사용 가능한 이메일입니다.')
+            setCheckedEmail(true)
+            setIsChangedEmail(false)
+         }
+      } catch (error) {
+         if (error.response?.status === 409) {
+            alert('이미 사용 중인 이메일입니다.')
+            setCheckedEmail(false)
+         } else {
+            alert('중복 확인 중 오류가 발생했습니다:', error)
+            setCheckedEmail(false)
+         }
       }
    }
 
@@ -80,13 +114,18 @@ function RegisterForm() {
          return
       }
 
+      if (!checkedEmail || isChangedEmail) {
+         alert('이메일 중복 확인이 필요하거나, 이미 사용 중인 이메일입니다.')
+         return
+      }
+
       try {
          const payload = {
             userId: form.userId,
             password: form.password,
             name: form.name,
             address: form.address,
-            phone: form.phone,
+            phoneNumber: form.phone, // 여기에 phoneNumber를 서버로 전달
             email: form.email,
             gender: form.gender || null,
          }
@@ -133,9 +172,14 @@ function RegisterForm() {
                      <p>전화번호</p>
                      <input label="전화번호" name="phone" value={form.phone} onChange={handleChange} placeholder="010-1234-5678" required />
                   </div>
-                  <div className="input-section">
+                  <div className="email-section">
                      <p>이메일(선택)</p>
-                     <input label="이메일 (선택)" name="email" value={form.email} onChange={handleChange} placeholder="abc1234@gmail.com" />
+                     <div className="email-inside">
+                        <input label="이메일 (선택)" name="email" value={form.email} onChange={handleChange} placeholder="abc1234@gmail.com" />
+                        <button onClick={handleEmailCheck} disabled={checkedEmail}>
+                           {idChecking ? <CircularProgress size={20} /> : '중복확인'}
+                        </button>
+                     </div>
                   </div>
                   <div className="input-section">
                      <p>주소</p>

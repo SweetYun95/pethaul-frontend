@@ -52,7 +52,6 @@ export const checkAuthStatus = async () => {
 export const checkUsername = async (userId) => {
    try {
       const response = await shopmaxApi.post('/auth/check-username', { userId })
-      console.log('아이디 중복 확인 response', response)
       return response
    } catch (error) {
       console.error(`아이디 중복 확인 오류: ${error}`)
@@ -60,19 +59,84 @@ export const checkUsername = async (userId) => {
    }
 }
 
+// 이메일 중복 확인
+export const checkEmail = async (email) => {
+   try {
+      const response = await shopmaxApi.post('/auth/check-email', { email })
+      return response
+   } catch (error) {
+      console.error(`이메일 중복 확인 오류: ${error}`)
+      throw error
+   }
+}
+
 // 구글 로그인 리다이렉트
 export const redirectToGoogleLogin = () => {
    window.location.href = `${BASE_API_URL}/auth/google`
-   // 배포 시에는 BASE_API_URL을 환경변수로 자동 적용하므로 별도 수정 불필요
 }
 
-// 구글 로그인(DB 저장용 요청 함수) - 나중에 백엔드에 POST 요청 필요 시 사용
+// 구글 로그인(DB 저장용 요청 함수)
 export const googleLoginUser = async (googleData) => {
    try {
       const response = await shopmaxApi.post('/auth/google/callback', googleData)
       return response
    } catch (error) {
       console.error(`구글 로그인 API 오류: ${error}`)
+      throw error
+   }
+}
+
+// 구글 로그인 상태 확인
+export const googleCheckStatus = async () => {
+   try {
+      const response = await shopmaxApi.get('/auth/googlecheck')
+      return response.data
+   } catch (error) {
+      console.error(`구글 로그인 상태 확인 오류: ${error}`)
+      throw error
+   }
+}
+
+// 핸드폰 번호로 id 찾기 (로컬 회원)
+export const findId = async (phoneNumber) => {
+   try {
+      const response = await shopmaxApi.post('/auth/findid', { phoneNumber })
+      return response
+   } catch (error) {
+      console.error(`ID 조회 중 오류: ${error}`)
+      throw error
+   }
+}
+
+// 임시 비밀번호 발급 (로컬 회원)
+export const updatePassword = async ({ userId, phoneNumber }) => {
+   try {
+      const response = await shopmaxApi.post('/auth/updatepw', { userId, phoneNumber })
+      return response
+   } catch (error) {
+      console.error(`임시 비밀번호 발급 중 오류: ${error}`)
+      throw error
+   }
+}
+
+// 회원 정보 수정
+export const updateMyInfo = async (data) => {
+   try {
+      const response = await shopmaxApi.put('/auth', data)
+      return response
+   } catch (error) {
+      console.error(`회원 정보 수정 중 오류: ${error}`)
+      throw error
+   }
+}
+
+// 비밀번호 확인
+export const verifyPassword = async (password) => {
+   try {
+      const response = await shopmaxApi.post('/auth/verify', { password })
+      return response
+   } catch (error) {
+      console.error(`비밀번호 확인 중 오류: ${error}`)
       throw error
    }
 }

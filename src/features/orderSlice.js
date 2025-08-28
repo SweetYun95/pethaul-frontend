@@ -1,6 +1,6 @@
 // src/features/orderSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createOrder, getOrders, getOrderById, cancelOrder } from '../api/orderApi'
+import { createOrder, getOrders, getOrderById, cancelOrder, updateOrderStatus, fetchAllOrders } from '../api/orderApi'
 
 // 주문 생성 Thunk
 export const createOrderThunk = createAsyncThunk('order/createOrder', async (orderData, { rejectWithValue }) => {
@@ -13,9 +13,9 @@ export const createOrderThunk = createAsyncThunk('order/createOrder', async (ord
 })
 
 // 주문 목록 조회 Thunk
-export const fetchOrdersThunk = createAsyncThunk('order/fetchOrders', async (_, { rejectWithValue }) => {
+export const fetchOrdersThunk = createAsyncThunk('order/fetchOrders', async ({ page = 1, limit = 10 } = {}, { rejectWithValue }) => {
    try {
-      const response = await getOrders()
+      const response = await getOrders({ page, limit })
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '주문 목록 조회 실패')
@@ -42,6 +42,26 @@ export const cancelOrderThunk = createAsyncThunk('order/cancelOrder', async (ord
    }
 })
 
+// 주문 상태 변경 Thunk
+export const updateOrderStatusThunk = createAsyncThunk('order/updateOrderStatus', async ({ orderId, status }, { rejectWithValue }) => {
+   try {
+      const response = await updateOrderStatus(orderId, status)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '주문 상태 변경 실패')
+   }
+})
+
+//관리자용 전체 주문 조회 Thunk
+export const fetchAllOrdersThunk = createAsyncThunk('order/fetchAllOrders', async (sort, { rejectWithValue }) => {
+   try {
+      const response = await fetchAllOrders(sort)
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '주문 조회 실패')
+   }
+})
+
 const orderSlice = createSlice({
    name: 'order',
    initialState: {
@@ -50,6 +70,7 @@ const orderSlice = createSlice({
       loading: false,
       error: null,
       successMessage: null,
+      pagination: null,
    },
    reducers: {
       clearOrderMessages(state) {
@@ -74,23 +95,22 @@ const orderSlice = createSlice({
             state.error = action.payload
          })
 
-      // 주문 목록 조회
-      builder
+         // 주문 목록 조회
          .addCase(fetchOrdersThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
          .addCase(fetchOrdersThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.orders = action.payload
+            state.orders = action.payload.orders
+            state.pagination = action.payload.pagination
          })
          .addCase(fetchOrdersThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
 
-      // 주문 상세 조회
-      builder
+         // 주문 상세 조회
          .addCase(fetchOrderByIdThunk.pending, (state) => {
             state.loading = true
             state.error = null
@@ -104,8 +124,7 @@ const orderSlice = createSlice({
             state.error = action.payload
          })
 
-      // 주문 취소
-      builder
+         // 주문 취소
          .addCase(cancelOrderThunk.pending, (state) => {
             state.loading = true
             state.error = null
@@ -117,6 +136,32 @@ const orderSlice = createSlice({
             state.orders = state.orders.map((order) => (order.id === action.payload.orderId ? { ...order, orderStatus: 'CANCEL' } : order))
          })
          .addCase(cancelOrderThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         //주문 상태 변경
+         .addCase(updateOrderStatusThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(updateOrderStatusThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.orders = action.payload
+         })
+         .addCase(updateOrderStatusThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 관리자용 전체 주문 조회
+         .addCase(fetchAllOrdersThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(fetchAllOrdersThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.orders = action.payload.orders
+         })
+         .addCase(fetchAllOrdersThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

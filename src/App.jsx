@@ -1,62 +1,148 @@
-import { Route, Routes } from 'react-router-dom'
+// src/App.jsx
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom' // ✅ useNavigate 추가
+import { useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 
 import Navbar from './components/shared/Navbar'
 import MainPage from './pages/MainPage'
-import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import LoginPage from './pages/LoginPage'
+import GoogleSuccessPage from './pages/GoogleSuccessPage'
 import TokenPage from './pages/TokenPage'
+import FindIdPage from './pages/FindIdPage'
+import FindPasswordPage from './pages/FindPasswordPage'
 import ItemSellListPage from './pages/ItemSellListPage'
 import ItemDetailPage from './pages/ItemDetailPage'
 import ItemCreatePage from './pages/ItemCreatePage'
-import OrderPage from './pages/OrderPage'
-import ReviewCreatePage from './pages/ReviewCreatePage'
-import AdminPage from './pages/AdminPage'
-import Footer from './components/shared/Footer'
-import GoogleSuccessPage from './pages/GoogleSuccessPage' // ✅ 추가
-
-import './App.css'
 import ItemEditPage from './pages/ItemEditPage'
-import MyPage from './pages/MyPage'
 import ItemLikePage from './pages/ItemLikePage'
 import ItemCartForm from './components/item/ItemCartForm'
+import ItemFilteredPage from './components/test/ItemFilteredPage'
+import ItemSortedPage from './components/test/ItemSortedPage'
+import OrderPage from './pages/OrderPage'
+import MyOrderList from './pages/MyOrderList'
+import ReviewCreatePage from './pages/ReviewCreatePage'
+import ReviewEditPage from './pages/ReviewEditPage'
+import MyReviewList from './pages/MyReviewList'
+import LatestReviewPage from './pages/LatestReviewPage.jsx'
+import QnACreatePage from './pages/QnACreatePage.jsx'
+import QnAEditPage from './pages/QnAEditPage.jsx'
+import QnAList from './components/QnA/QnAList.jsx'
+import ContentsPage from './pages/ContentsPage'
+import ContentDetailPage from './pages/ContentDetailPage'
+import ContentUpsertPage from './pages/ContentUpsertPage'
+import MyPage from './pages/MyPage'
+import EditMyInfoPage from './pages/EditMyInfoPage'
+import AdminPage from './pages/AdminPage'
+import MobileTabBar from './components/shared/MobileTabBar'
+import PetCreatePage from './pages/PetCreatePage'
+import PetEditPage from './pages/PetEditPage'
+import TestPage from './components/test/TestPage'
+import Footer from './components/shared/Footer'
+import VerifyModal from './components/verify/VerifyModal.jsx' // ✅ 모달 컴포넌트만 사용
 
+import { checkUnifiedAuthThunk } from './features/authSlice'
+import './App.css'
 
 function App() {
+   const location = useLocation()
+   const navigate = useNavigate() // ✅ 딥링크 방지용
+   const dispatch = useDispatch()
+
+   const backgroundLocation = location.state?.backgroundLocation
+   const isVerifyRoute = location.pathname === '/verify'
+   const shouldShowVerifyModal = Boolean(backgroundLocation) && isVerifyRoute
+
+   // ✅ /verify로 직접 진입(딥링크)하면 홈으로 돌려보내기 (페이지 라우트가 없으니 에러 방지)
+   useEffect(() => {
+      if (isVerifyRoute && !backgroundLocation) {
+         navigate('/', { replace: true })
+      }
+   }, [isVerifyRoute, backgroundLocation, navigate])
+
+   // 기존 인증 체크 (그대로)
+   const lastKeyRef = useRef('')
+   const lastTsRef = useRef(0)
+   useEffect(() => {
+      const sig = `${location.pathname}?${location.search || ''}`
+      const now = Date.now()
+      if (sig === lastKeyRef.current && now - lastTsRef.current < 100) return
+      lastKeyRef.current = sig
+      lastTsRef.current = now
+      dispatch(checkUnifiedAuthThunk())
+   }, [location.pathname, location.search, dispatch])
+
    return (
       <>
          <Navbar />
-         <Routes>
+
+         {/* 모달이 열리면 배경 라우트는 backgroundLocation으로 고정 */}
+         <Routes location={backgroundLocation || location}>
             <Route path="/" element={<MainPage />} />
-            {/* 로그인 페이지 */}
-            <Route path="/login" element={<LoginPage />} />
-            {/* 구글로그인 이동 */}
-            <Route path="/google-success" element={<GoogleSuccessPage />} /> {/* ✅ 추가 */}
-            {/* 회원가입 페이지 */}
+
+            {/* 인증 */}
             <Route path="/join" element={<RegisterPage />} />
-            {/* 토큰 발급 페이지 */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/google-success" element={<GoogleSuccessPage />} />
             <Route path="/token" element={<TokenPage />} />
-            {/* 상품리스트 */}
+            <Route path="/find-id" element={<FindIdPage />} />
+            <Route path="/find-password" element={<FindPasswordPage />} />
+
+            {/* 상품 */}
             <Route path="/item" element={<ItemSellListPage />} />
-            {/* 상품 상세 페이지 */}
             <Route path="/items/detail/:id" element={<ItemDetailPage />} />
-            {/* 좋아요한 상품 페이지 */}
+            <Route path="/items/create" element={<ItemCreatePage />} />
+            <Route path="/items/edit/:id" element={<ItemEditPage />} />
+            <Route path="/items/search" element={<ItemFilteredPage />} />
+            <Route path="/items/sorted" element={<ItemSortedPage />} />
+
+            {/* 좋아요/장바구니 */}
             <Route path="/likes/item" element={<ItemLikePage />} />
-            {/* 장바구니 페이지 */}
             <Route path="/cart" element={<ItemCartForm />} />
 
-            {/* 주문/결제 페이지 */}
+            {/* 주문/결제 */}
             <Route path="/order" element={<OrderPage />} />
-            {/* 리뷰 등록 */}
+            <Route path="/myorderlist" element={<MyOrderList />} />
+
+            {/* 리뷰 */}
             <Route path="/review/create" element={<ReviewCreatePage />} />
-            {/* 마이페이지 */}
-            <Route path="mypage" element={<MyPage />} />
-            {/* 관리자 전용 페이지 */}
+            <Route path="/review/edit/:id" element={<ReviewEditPage />} />
+            <Route path="/myreviewlist" element={<MyReviewList />} />
+            <Route path="/reviews" element={<LatestReviewPage />} />
+
+            {/* 1:1 문의 */}
+            <Route path="/qna" element={<QnACreatePage />} />
+            <Route path="/qna/edit/:id" element={<QnAEditPage />} />
+            <Route path="/myQnAlist" element={<QnAList />} />
+
+            {/* 공개 콘텐츠 */}
+            <Route path="/contents" element={<ContentsPage />} />
+            <Route path="/contents/:id" element={<ContentDetailPage />} />
+
+            {/* 콘텐츠 등록/수정 (UPSERT 단일 페이지) */}
+            <Route path="/contents/new" element={<ContentUpsertPage />} />
+            <Route path="/admin/contents/:id/edit" element={<ContentUpsertPage />} />
+
+            {/* 마이페이지/관리자 */}
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/edit" element={<EditMyInfoPage />} />
             <Route path="/admin" element={<AdminPage />} />
-            {/* 상품 등록 */}
-            <Route path="/items/create" element={<ItemCreatePage />} />
-            {/* 상품 수정 */}
-            <Route path="/items/edit/:id" element={<ItemEditPage />} />
+
+            {/* 펫 */}
+            <Route path="/pets" element={<PetCreatePage />} />
+            <Route path="/peteditpage" element={<PetEditPage />} />
+
+            {/* 기타 */}
+            <Route path="/test" element={<TestPage />} />
+
+            {/* 안전망 */}
+            <Route path="*" element={null} />
          </Routes>
+
+         {/* ✅ 모달 전용: 라우팅이 아니라 조건부 마운트 */}
+         {shouldShowVerifyModal && <VerifyModal />}
+
+         <MobileTabBar />
          <Footer />
       </>
    )

@@ -1,10 +1,8 @@
-import { Container } from '@mui/material'
-
-import ItemEditForm from '../components/item/ItemEditForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { fetchItemByIdThunk } from '../features/itemSlice'
+import ItemEditForm from '../components/item/ItemEditForm'
 
 function ItemEditPage() {
    const dispatch = useDispatch()
@@ -19,14 +17,10 @@ function ItemEditPage() {
    if (loading) return <p>로딩 중...</p>
    if (error) return <p>에러 발생:{error}</p>
 
-   console.log(item)
    return (
-      <>
-         <Container maxWidth="md" sx={{ marginTop: 10, marginBottom: 13 }}>
-            <h1>상품 수정</h1>
-            <ItemEditForm initialData={item} />
-         </Container>
-      </>
+      <div className="blue-background">
+         <ItemEditForm initialData={item} />
+      </div>
    )
 }
 

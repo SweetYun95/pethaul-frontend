@@ -3,7 +3,9 @@ import ItemCartForm from '../components/item/ItemCartForm'
 function ItemCartPage() {
    return (
       <>
-         <ItemCartForm />
+         <div className="blue-background">
+            <ItemCartForm />
+         </div>
       </>
    )
 }

@@ -1,30 +1,51 @@
-import { Container, Box } from '@mui/material'
-import { checkAuthStatusThunk } from '../features/authSlice'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { checkAuthStatusThunk } from '../features/authSlice'
+
 import Profile from '../components/myInfo/Profile'
 import OrderState from '../components/myInfo/OrderState'
 import MenuBar from '../components/myInfo/MenuBar'
-import PetProfile from '../components/myInfo/PetProfile'
+import PetProfileSlider from '../components/slider/PetProfileSlider'
+
+import { getUserPetsThunk } from '../features/petSlice'
+import './css/MyPage.css'
+
 function MyPage() {
-   const { user, loading, error } = useSelector((state) => state.auth)
    const dispatch = useDispatch()
+   const { user, loading: userLoading } = useSelector((state) => state.auth)
+   const { pets } = useSelector((state) => state.pet)
+   const { orders } = useSelector((state) => state.order)
+
    useEffect(() => {
       dispatch(checkAuthStatusThunk())
+      dispatch(getUserPetsThunk())
    }, [dispatch])
 
-   if (loading) return <p>로딩 중...</p>
-   if (error) return <p>에러 발생:{error}</p>
+   const latestOrder = [...orders].sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))[0]
+
+   const userId = user?.id ?? user?._id ?? user?.userId
+   const isGuest = !userId
 
    return (
-      <Container>
-         <Box display="flex">
-            <Profile user={user} />
-            <OrderState />
-         </Box>
-         {user?.id && <MenuBar id={user.id} />}
-         <PetProfile />
-      </Container>
+      <div className="dot-background">
+         <div className="mypage-container">
+            <h1 className="section-title mypage-title">마이페이지</h1>
+
+            {/* 프로필 + 주문상태 */}
+            <div className="mypage-grid">
+               <Profile user={user} loading={userLoading} />
+               <OrderState order={latestOrder} />
+            </div>
+
+            {/* 메뉴바 */}
+            <div className="mypage-menubar">
+               <MenuBar id={userId} isGuest={isGuest} />
+            </div>
+
+            {/* 펫 프로필 슬라이더 */}
+            <PetProfileSlider pets={pets} />
+         </div>
+      </div>
    )
 }
 
