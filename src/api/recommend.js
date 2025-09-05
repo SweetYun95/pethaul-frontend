@@ -1,5 +1,5 @@
 import axios from 'axios'
-import shopmaxApi from './axiosApi'
+import petHaulApi from './axiosApi'
 
 const BASE_URL = import.meta.env.VITE_APP_PYTHON_API_URL
 
@@ -23,7 +23,7 @@ export const recommendLikes = async (userId) => {
       error.status = 204
       throw error
    }
-   const responseFin = await shopmaxApi.post('/item/recommend', { items: recommendData.map((r) => r.item) })
+   const responseFin = await petHaulApi.post('/item/recommend', { items: recommendData.map((r) => r.item) })
 
    return responseFin.data
 }

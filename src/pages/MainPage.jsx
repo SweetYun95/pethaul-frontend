@@ -1,5 +1,5 @@
 // src/pages/MainPage.jsx
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
@@ -21,6 +21,10 @@ function MainPage() {
    const dispatch = useDispatch()
    const fetchedRef = useRef(false)
    const navigate = useNavigate()
+
+   // 로컬 상태로 요청 진행/에러 관리
+   const [loading, setLoading] = useState(true)
+   const [error, setError] = useState(null)
 
    //  메인 데이터만 구독 (list/검색 상태, 전역 loading 변화에 영향 안 받음)
    const mainData = useSelector((s) => s.item.main)
@@ -46,19 +50,41 @@ function MainPage() {
    )
    const eventData = useSelector(selectEventData)
 
-   // ✅ StrictMode(개발모드) 중복호출 가드
+   // ✅ StrictMode(개발모드) 중복호출 가드 + 로딩/에러 분리
    useEffect(() => {
       if (fetchedRef.current) return
       fetchedRef.current = true
-      dispatch(fetchSortDataThunk(5))
-      dispatch(fetchItemsThunk({ sellCategory: ['강아지/장마'] }))
-      dispatch(fetchPostsThunk())
-      dispatch(fetchNewReviewsThunk({ page: 1, size: 6 }))
+      ;(async () => {
+         try {
+            await Promise.allSettled([dispatch(fetchSortDataThunk(5)), dispatch(fetchItemsThunk({ sellCategory: ['강아지/장마'] })), dispatch(fetchPostsThunk()), dispatch(fetchNewReviewsThunk({ page: 1, size: 6 }))])
+         } catch (e) {
+            setError(e?.message || '데이터를 불러오지 못했습니다.')
+         } finally {
+            setLoading(false)
+         }
+      })()
    }, [dispatch])
 
-   //  전역 loading 대신, 메인데이터 유무로 로딩 판단
-   const isLoading = !mainData || topSales.length + topToday.length + newItems.length === 0
-   if (isLoading) return <p>로딩 중...</p>
+   // 1) 네트워크 요청 중
+   if (loading) return <p>로딩 중...</p>
+
+   // 2) 에러
+   if (error) return <p style={{ color: 'crimson' }}>오류: {String(error)}</p>
+
+   // 3) 요청은 끝났지만 비어 있음 (빈 상태 UI)
+   const total = topSales.length + topToday.length + newItems.length
+   if (!mainData || total === 0) {
+      return (
+         <main>
+            <div className="main">
+               <section style={{ padding: '40px', textAlign: 'center' }}>
+                  <h2>아직 보여줄 아이템이 없어요</h2>
+                  <p>조금 뒤에 다시 시도하거나, 필터를 바꿔보세요.</p>
+               </section>
+            </div>
+         </main>
+      )
+   }
 
    return (
       <main>
@@ -272,7 +298,7 @@ function MainPage() {
                <div className="card-list" style={{ marginTop: '10px' }}>
                   {eventData.map((item) => (
                      <div key={item.id} className="card">
-                        <img height="160" src={`${import.meta.env.VITE_APP_API_URL}${item.ItemImages[0]?.imgUrl}`} alt={`상품 ${item.itemNm}`} />
+                        <img height="160" src={buildImg(item.ItemImages[0]?.imgUrl)} alt={`상품 ${item.itemNm}`} />
                         <div className="card-text">
                            <p>상품 {item.itemNm}</p>
                            <p>{item.price}원</p>

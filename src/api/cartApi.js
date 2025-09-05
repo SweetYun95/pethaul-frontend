@@ -1,9 +1,9 @@
-import shopmaxApi from './axiosApi'
+import petHaulApi from './axiosApi'
 
 // 장바구니 전체 조회
 export const getCartItems = async (id) => {
    try {
-      const response = await shopmaxApi.get(`/cart/${id}`, {
+      const response = await petHaulApi.get(`/cart/${id}`, {
          withCredentials: true,
       })
       return response.data
@@ -16,7 +16,7 @@ export const getCartItems = async (id) => {
 // 장바구니에 상품 추가
 export const addToCart = async ({ itemId, count }) => {
    try {
-      const response = await shopmaxApi.post('/cart/add', { itemId, count }, { withCredentials: true })
+      const response = await petHaulApi.post('/cart/add', { itemId, count }, { withCredentials: true })
       return response.data
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -27,7 +27,7 @@ export const addToCart = async ({ itemId, count }) => {
 // 장바구니 수량 수정
 export const updateCartItem = async ({ itemId, count }) => {
    try {
-      const response = await shopmaxApi.put(`/cart/update/${itemId}`, { count }, { withCredentials: true })
+      const response = await petHaulApi.put(`/cart/update/${itemId}`, { count }, { withCredentials: true })
       return response.data
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -38,7 +38,7 @@ export const updateCartItem = async ({ itemId, count }) => {
 // 장바구니 상품 삭제
 export const deleteCartItem = async (itemId) => {
    try {
-      const response = await shopmaxApi.delete(`/cart/delete/${itemId}`, {
+      const response = await petHaulApi.delete(`/cart/delete/${itemId}`, {
          withCredentials: true,
       })
       return response.data

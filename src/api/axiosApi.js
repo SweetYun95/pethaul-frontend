@@ -5,7 +5,7 @@ const BASE_URL = import.meta.env.VITE_APP_API_URL
 const AUTH_KEY = import.meta.env.VITE_APP_AUTH_KEY
 
 //axios 인스턴스 생성
-const shopmaxApi = axios.create({
+const petHaulApi = axios.create({
    baseURL: BASE_URL,
    headers: {
       'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ const shopmaxApi = axios.create({
 })
 
 // 토큰 요청 인터셉터 추가
-shopmaxApi.interceptors.request.use(
+petHaulApi.interceptors.request.use(
    (config) => {
       const token = localStorage.getItem('token')
       if (token) {
@@ -26,4 +26,4 @@ shopmaxApi.interceptors.request.use(
    (error) => Promise.reject(error)
 )
 
-export default shopmaxApi
+export default petHaulApi

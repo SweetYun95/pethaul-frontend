@@ -1,11 +1,11 @@
 // src/api/reviewApi.js
-import shopmaxApi from './axiosApi'
+import petHaulApi from './axiosApi'
 
 // 리뷰 등록
 export const createReview = async (formData) => {
    try {
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-      const response = await shopmaxApi.post('/review', formData, config)
+      const response = await petHaulApi.post('/review', formData, config)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -17,7 +17,7 @@ export const createReview = async (formData) => {
 export const updateReview = async (formData, id) => {
    try {
       const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-      const response = await shopmaxApi.put(`/review/edit/${id}`, formData, config)
+      const response = await petHaulApi.put(`/review/edit/${id}`, formData, config)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -28,7 +28,7 @@ export const updateReview = async (formData, id) => {
 // 리뷰 삭제
 export const deleteReview = async (id) => {
    try {
-      const response = await shopmaxApi.delete(`review/${id}`)
+      const response = await petHaulApi.delete(`review/${id}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -43,7 +43,7 @@ export const getUserReview = async (opts = {}) => {
       const params = {}
       if (page != null) params.page = page
       if (limit != null) params.limit = limit
-      const response = await shopmaxApi.get(`/review`, {
+      const response = await petHaulApi.get(`/review`, {
          params,
       })
       return response
@@ -56,7 +56,7 @@ export const getUserReview = async (opts = {}) => {
 // 최신 리뷰 목록 — /review/latest 만 사용
 export const getLatestReviews = async (params = {}) => {
    try {
-      const res = await shopmaxApi.get('/review/latest', { params })
+      const res = await petHaulApi.get('/review/latest', { params })
       const raw = res?.data
 
       // 응답 정규화

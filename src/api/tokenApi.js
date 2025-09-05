@@ -1,9 +1,9 @@
-import shopmaxApi from './axiosApi'
+import petHaulApi from './axiosApi'
 
 // 토큰 발급
 export const getToken = async () => {
    try {
-      const response = await shopmaxApi.get('/token/get')
+      const response = await petHaulApi.get('/token/get')
 
       return response
    } catch (error) {
@@ -15,7 +15,7 @@ export const getToken = async () => {
 // 토큰 조회
 export const readToken = async () => {
    try {
-      const response = await shopmaxApi.get('/token/read')
+      const response = await petHaulApi.get('/token/read')
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -26,7 +26,7 @@ export const readToken = async () => {
 // 토큰 재발급
 export const refreshToken = async () => {
    try {
-      const response = await shopmaxApi.get('/token/refresh')
+      const response = await petHaulApi.get('/token/refresh')
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -37,7 +37,7 @@ export const refreshToken = async () => {
 // 토큰 상태 확인
 export const checkTokenStatus = async () => {
    try {
-      const response = await shopmaxApi.get('/token/checkTokenStatus')
+      const response = await petHaulApi.get('/token/checkTokenStatus')
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
