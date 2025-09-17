@@ -49,6 +49,7 @@ export const getItems = async (data) => {
          ? [sellCategory] // ["강아지"]
          : []
 
+
       const response = await shopmaxApi.get('item', {
          params: {
             page,

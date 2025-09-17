@@ -7,7 +7,6 @@ import { fetchItemsThunk, fetchSortDataThunk } from '../features/itemSlice'
 import { fetchContentsThunk as fetchPostsThunk } from '../features/contentSlice'
 import { fetchNewReviewsThunk, selectReviewList } from '../features/reviewSlice'
 
-
 import NewContentsSlider from '../components/slider/NewContentsSlider'
 import ReviewSlider from '../components/slider/ReviewSlider'
 
@@ -35,11 +34,10 @@ function MainPage() {
       [mainData]
    )
    // NEW CONTENTS용
-   const posts = useSelector(s => s.content?.posts ?? [])
+   const posts = useSelector((s) => s.content?.posts ?? [])
 
-    // REVIEWS용 (둘 중 하나 택1)
-    const reviews = useSelector(selectReviewList, shallowEqual)
-
+   // REVIEWS용 (둘 중 하나 택1)
+   const reviews = useSelector(selectReviewList, shallowEqual)
 
    // <댕댕이 장마 대비존> 섹션 데이터
    const selectEventData = createSelector(
@@ -47,7 +45,7 @@ function MainPage() {
       (items) => items.slice(0, 4)
    )
    const eventData = useSelector(selectEventData)
-   
+
    // ✅ StrictMode(개발모드) 중복호출 가드
    useEffect(() => {
       if (fetchedRef.current) return
@@ -60,7 +58,6 @@ function MainPage() {
 
    //  전역 loading 대신, 메인데이터 유무로 로딩 판단
    const isLoading = !mainData || topSales.length + topToday.length + newItems.length === 0
-console.log('============topToday',topToday)
    if (isLoading) return <p>로딩 중...</p>
 
    return (
@@ -203,17 +200,19 @@ console.log('============topToday',topToday)
                         <span className="green"></span>
                         <span className="blue"></span>
                      </div>
-                     <div className='card-header__header'>
-                     <span className="contents-card-title">NEW CONTENTS</span>
-                     <Link to={'/contents'}>
-                        보러가기<svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24"><path fill="currentColor" d="M16 11v2h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1H9v1H8v-1H7v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1V9h-1V8H9V7H8V6H7V5h1V4h1v1h1v1h1v1h1v1h1v1h1v1h1v1z"></path></svg>
-                     </Link>
+                     <div className="card-header__header">
+                        <span className="contents-card-title">NEW CONTENTS</span>
+                        <Link to={'/contents'}>
+                           보러가기
+                           <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24">
+                              <path fill="currentColor" d="M16 11v2h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1H9v1H8v-1H7v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1V9h-1V8H9V7H8V6H7V5h1V4h1v1h1v1h1v1h1v1h1v1h1v1h1v1z"></path>
+                           </svg>
+                        </Link>
                      </div>
                   </div>
                   <div className="new-contents-card-body">
                      <NewContentsSlider posts={posts} />
                   </div>
-
                </div>
 
                <div className="right-contents">
@@ -242,15 +241,17 @@ console.log('============topToday',topToday)
                            <span className="green"></span>
                            <span className="blue"></span>
                         </div>
-                         <div className='card-header__header'>
-                               <span className="contents-card-title">BEST REVIEW</span>
-                              <Link to={'/reviews'}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24"><path fill="currentColor" d="M16 11v2h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1H9v1H8v-1H7v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1V9h-1V8H9V7H8V6H7V5h1V4h1v1h1v1h1v1h1v1h1v1h1v1h1v1z"></path></svg>
-                               </Link>
-                          </div>
+                        <div className="card-header__header">
+                           <span className="contents-card-title">BEST REVIEW</span>
+                           <Link to={'/reviews'}>
+                              <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24">
+                                 <path fill="currentColor" d="M16 11v2h-1v1h-1v1h-1v1h-1v1h-1v1h-1v1H9v1H8v-1H7v-1h1v-1h1v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1V9h-1V8H9V7H8V6H7V5h1V4h1v1h1v1h1v1h1v1h1v1h1v1h1v1z"></path>
+                              </svg>
+                           </Link>
+                        </div>
                      </div>
                      <div className="review-card">
-                     <ReviewSlider reviews={reviews} />
+                        <ReviewSlider reviews={reviews} />
                      </div>
                   </div>
                </div>

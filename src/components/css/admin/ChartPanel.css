@@ -5,7 +5,10 @@
   width: 100%;
   max-width: 1200px;      
   margin: 0 auto;
-  padding: clamp(12px, 2vw, 24px);
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #eceff3;
 }
 
 :root { --chart-h: 300px; }          /* 큰 화면에선 살짝 낮게 */

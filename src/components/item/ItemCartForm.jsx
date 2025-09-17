@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-
+import { Link } from 'react-router-dom'
 import { fetchCartItemsThunk, updateCartItemThunk, deleteCartItemThunk } from '../../features/cartSlice'
 import { createOrderThunk } from '../../features/orderSlice'
 import { recommendLikesThunk } from '../../features/itemSlice'
@@ -111,43 +111,12 @@ const ItemCartForm = () => {
    // 총액(단가 * 수량 합)
    const totalPrice = useMemo(() => cartItems.reduce((acc, ci) => acc + toInt(ci.Item?.price, 0) * Math.max(1, toInt(ci.count, 1)), 0), [cartItems])
 
-   const handleSubmitOrder = async () => {
-      if (submitting || cartItems.length === 0) return
-
-      const items = cartItems.map((ci) => ({
-         itemId: ci.itemId ?? ci.Item?.id,
-         price: Math.max(0, toInt(ci.Item?.price, 0)), // 단가
-         quantity: Math.max(1, toInt(ci.count, 1)), // 수량
-      }))
-
-      const orderData = { items } // 서버가 userId/orderDate/orderStatus 처리
-
-      try {
-         setSubmitting(true)
-         const res = await dispatch(createOrderThunk(orderData))
-
-         if (res.meta.requestStatus === 'fulfilled') {
-            const orderId = res.payload?.orderId ?? res.payload?.order?.id ?? res.payload?.id
-            // 필요 시 장바구니 비우기/재조회
-            await dispatch(fetchCartItemsThunk(user?.id))
-            navigate(orderId ? `/order/${orderId}` : '/order/complete')
-         } else {
-            alert(res.payload || '주문 실패')
-         }
-      } catch (e) {
-         console.error(e)
-         alert('주문 처리 중 오류가 발생했습니다.')
-      } finally {
-         setSubmitting(false)
-      }
-   }
    return (
       <section id="itemCart-section">
          <h2 className="cart-title">장바구니</h2>
          <div className="cart-contents">
             {/* 좌측: 장바구니 리스트 */}
             <div className="cart-list">
-
                {loading && (
                   <div className="skeleton-list">
                      {Array.from({ length: 3 }).map((_, i) => (
@@ -227,9 +196,11 @@ const ItemCartForm = () => {
                         <p>총 결제 금액</p>
                         <p>{totalPrice.toLocaleString()}원</p>
                      </div>
-                     <button type="button" className="submit-btn" onClick={handleSubmitOrder} disabled={submitting || cartItems.length === 0}>
-                        {submitting ? '처리 중…' : '주문하기'}
-                     </button>
+                     <Link to="/order" state={{ cartItems }}>
+                        <button type="button" className="submit-btn" disabled={submitting || cartItems.length === 0}>
+                           {submitting ? '처리 중…' : '주문하기'}
+                        </button>
+                     </Link>
                   </div>
                </div>
             </div>

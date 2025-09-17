@@ -19,6 +19,7 @@ export default function ItemSellList({ searchTerm }) {
 
 
 
+
    // ====== 필터 상태 ======
    const [isFilterOpen, setIsFilterOpen] = useState(false)
    const [selectedCats, setSelectedCats] = useState(() => new Set())
