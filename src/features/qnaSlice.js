@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { getQna, createQna, getQnaDetail, editQna, enterComment, deleteQna } from '../api/qnaApi'
-import shopmaxApi from '../api/axiosApi'
+import petHaulApi from '../api/axiosApi'
 
 // 문의 조회
-export const getQnaThunk = createAsyncThunk('qna/getQna', async ({ id, role }, { rejectWithValue }) => {
+export const getQnaThunk = createAsyncThunk('qna/getQna', async (data, { rejectWithValue }) => {
    try {
-      const response = await getQna({ id, role })
+      console.log('slice=========data:', data)
+      const response = await petHaulApi.get(`/api/qna/${id}`)
       return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '문의 조회 실패')
@@ -25,7 +26,7 @@ export const getQnaDetailThunk = createAsyncThunk('qna/getQnaDetail', async (id,
 // 문의 작성
 export const createQnaThunk = createAsyncThunk('qna/createQna', async (data, { rejectWithValue }) => {
    try {
-      const response = await createQna(data)
+      const response = await petHaulApi.post('/api/qna/write', data)
 
       return response.data
    } catch (error) {
@@ -68,6 +69,7 @@ export const qnaSlice = createSlice({
    initialState: {
       qna: null,
       qnaList: [],
+      pagination: null,
       loading: false,
       error: null,
    },
@@ -82,6 +84,7 @@ export const qnaSlice = createSlice({
          .addCase(getQnaThunk.fulfilled, (state, action) => {
             state.loading = false
             state.qnaList = action.payload.data
+            state.pagination = action.payload.pagination
          })
          .addCase(getQnaThunk.rejected, (state, action) => {
             state.loading = false

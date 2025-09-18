@@ -1,9 +1,9 @@
-import shopmaxApi from './axiosApi'
+import petHaulApi from './axiosApi'
 
 //유저  펫 조회
 export const getUserPets = async () => {
    try {
-      const response = await shopmaxApi.get(`/pets`)
+      const response = await petHaulApi.get(`/pets`)
 
       return response
    } catch (error) {
@@ -20,7 +20,7 @@ export const createPet = async (formData) => {
             'Content-Type': 'multipart/form-data',
          },
       }
-      const response = await shopmaxApi.post('/pets', formData, config)
+      const response = await petHaulApi.post('/pets', formData, config)
 
       return response
    } catch (error) {
@@ -37,7 +37,7 @@ export const updatePet = async (id, formData) => {
             'Content-Type': 'multipart/form-data',
          },
       }
-      const response = await shopmaxApi.put(`/pets/edit/${id}`, formData, config)
+      const response = await petHaulApi.put(`/pets/edit/${id}`, formData, config)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -48,7 +48,7 @@ export const updatePet = async (id, formData) => {
 // 펫 삭제
 export const deletePet = async (id) => {
    try {
-      const response = await shopmaxApi.delete(`/pets/${id}`)
+      const response = await petHaulApi.delete(`/pets/${id}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)

@@ -1,10 +1,10 @@
 // src/api/orderApi.js
-import shopmaxApi from './axiosApi'
+import petHaulApi from './axiosApi'
 
 // 주문 생성
 export const createOrder = async (orderData) => {
    try {
-      const response = await shopmaxApi.post('/order', orderData)
+      const response = await petHaulApi.post('/order', orderData)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`) + console.error('API Request 오류:', error?.response?.data || error)
@@ -20,9 +20,8 @@ export const getOrders = async (opts = {}) => {
       if (page != null) params.page = page
       if (limit != null) params.limit = limit
 
-      // 백엔드 마운트 경로가 '/order'인지 '/orders'인지 확인하세요.
-      const response = await shopmaxApi.get('/order', { params })
-      return response // ✅ axios response 그대로 반환 (슬라이스 호환)
+      const response = await petHaulApi.get('/order', { params })
+      return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
       throw error
@@ -32,7 +31,7 @@ export const getOrders = async (opts = {}) => {
 // 주문 상세 조회
 export const getOrderById = async (orderId) => {
    try {
-      const response = await shopmaxApi.get(`/order/${orderId}`)
+      const response = await petHaulApi.get(`/order/${orderId}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -43,7 +42,7 @@ export const getOrderById = async (orderId) => {
 // 주문 취소
 export const cancelOrder = async (orderId) => {
    try {
-      const response = await shopmaxApi.patch(`/order/${orderId}/cancel`)
+      const response = await petHaulApi.patch(`/order/${orderId}/cancel`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -54,7 +53,7 @@ export const cancelOrder = async (orderId) => {
 //주문 상태 변경
 export const updateOrderStatus = async (orderId, status) => {
    try {
-      const response = await shopmaxApi.patch(`/order/${orderId}?status=${status}`)
+      const response = await petHaulApi.patch(`/order/${orderId}?status=${status}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
@@ -65,7 +64,7 @@ export const updateOrderStatus = async (orderId, status) => {
 //전체 주문 조회(관리자용)
 export const fetchAllOrders = async (sort) => {
    try {
-      const response = await shopmaxApi.get(`/order/all/admin?sort=${sort}`)
+      const response = await petHaulApi.get(`/order/all/admin?sort=${sort}`)
       return response
    } catch (error) {
       console.error(`API Request 오류: ${error}`)
