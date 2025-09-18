@@ -43,8 +43,13 @@ export const deleteItem = async (id) => {
 export const getItems = async (data) => {
    try {
       const { page, limit, searchTerm = '', sellCategory = [] } = data
-      const activeCategories = Array.isArray(sellCategory) ? sellCategory.filter(Boolean) : sellCategory ? [sellCategory] : []
-      const response = await petHaulApi.get('item', {
+      const activeCategories = Array.isArray(sellCategory)
+         ? sellCategory.filter(Boolean) // ["강아지", "고양이"]
+         : sellCategory
+         ? [sellCategory] // ["강아지"]
+         : []
+
+      const response = await shopmaxApi.get('item', {
          params: {
             page,
             limit,

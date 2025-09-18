@@ -1,22 +1,24 @@
 // src/components/item/ItemSellList.jsx
-import { Pagination, Stack } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, Link } from 'react-router-dom'
-
 import { fetchItemsThunk } from '../../features/itemSlice'
 import { toggleLikeThunk, fetchMyLikeIdsThunk } from '../../features/likeSlice'
-
 import '../css/item/ItemSellList.css'
+import { Pagination, Stack } from '@mui/material'
 
-export default function ItemSellList() {
+
+export default function ItemSellList({ searchTerm }) {
    const location = useLocation()
    const sellCategory = location.state || ''
    const dispatch = useDispatch()
-   const { items = [], pagination, loading, error } = useSelector((s) => s.item)
-
-   const likes = useSelector((s) => s.like.idsMap) || {}
+   const { items = [], loading, error, pagination } = useSelector((s) => s.item)
+   const likes = useSelector((s) => s.like.idMap) || {}
+   const user = useSelector((state) => state.auth.user)
    const [page, setPage] = useState(1)
+
+
+
 
    // ====== 필터 상태 ======
    const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -28,15 +30,29 @@ export default function ItemSellList() {
 
    // ====== 초기 로드 ======
    useEffect(() => {
-      dispatch(fetchItemsThunk({ page, limit: 10, sellCategory }))
 
-      dispatch(fetchMyLikeIdsThunk())
-   }, [dispatch, sellCategory, page])
+      if (!sellCategory && !searchTerm) {
+         console.log('여기서 실행')
+         dispatch(fetchItemsThunk({page, limit: 10, sellCategory}))
+      } else if (!searchTerm && sellCategory) {
+         console.log('여기서 실행 2')
+         dispatch(fetchItemsThunk(sellCategory))
+      } else {
+         console.log('여기서 실행 3')
+         dispatch(fetchItemsThunk({ searchTerm }))
+      }
+      if (user) {
+         dispatch(fetchMyLikeIdsThunk())
+      }
+   }, [dispatch, user, sellCategory, searchTerm,page])
+
+   
 
    // 페이지 변경
    const handlePageChange = (e, value) => {
       setPage(value)
    }
+
 
    // ====== 유틸 ======
    const buildImgUrl = (url) => {
